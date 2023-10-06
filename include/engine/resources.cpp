@@ -1,7 +1,7 @@
 #include <engine/resources.hpp>
 
 // get the current executable path
-std::string engine::Resources::get_current_dir()
+std::string Engine::Resources::get_current_dir()
 {
     char buff[MAX_PATH];
     GetModuleFileNameA(NULL, buff, MAX_PATH);
@@ -10,7 +10,7 @@ std::string engine::Resources::get_current_dir()
 }
 
 // get the file contents in string
-std::string engine::Resources::get_file_content(std::string relative_file_path)
+std::string Engine::Resources::get_file_content(std::string relative_file_path)
 {
     // opening the file
     std::ifstream file;

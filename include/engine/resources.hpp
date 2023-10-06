@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 
-namespace engine
+namespace Engine
 {
     // geting resources in the game resouces folder
     class Resources

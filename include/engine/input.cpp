@@ -1,6 +1,6 @@
 #include <engine/input.hpp>
 
-engine::Input::Input(Window& window)
+Engine::Input::Input(Window& window)
 {
     this->window = &window;
 
@@ -30,7 +30,7 @@ engine::Input::Input(Window& window)
 }
 
 // give key status eg. press, hold or release
-int engine::Input::getKeyStatus(int key)
+int Engine::Input::getKeyStatus(int key)
 {
     int action = keyboardInputs[key];
     int newAction = glfwGetKey(window->getWindow(), key);
@@ -43,7 +43,7 @@ int engine::Input::getKeyStatus(int key)
 }
 
 // get mouse button status eg. click, hold or release
-int engine::Input::getMouseButtonStatus(int mouseButton)
+int Engine::Input::getMouseButtonStatus(int mouseButton)
 {
     int action = mouseInputs[mouseButton];
     int newAction = glfwGetMouseButton(window->getWindow(), mouseButton);
@@ -56,7 +56,7 @@ int engine::Input::getMouseButtonStatus(int mouseButton)
 }
 
 // give mouse position
-std::tuple<double, double> engine::Input::getMousePos()
+std::tuple<double, double> Engine::Input::getMousePos()
 {
     std::tuple<double, double> mousePos = std::make_tuple(0.0, 0.0);
     glfwGetCursorPos(window->getWindow(), &std::get<0>(mousePos), &std::get<1>(mousePos));

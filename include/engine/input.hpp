@@ -11,7 +11,7 @@
 #include <engine/window.hpp>
 #include <unordered_map>
 
-namespace engine
+namespace Engine
 {
     // handle inputs of a window
     class Input
@@ -21,7 +21,7 @@ namespace engine
         int getMouseButtonStatus(int mouseButton);
         std::tuple<double, double> getMousePos();
     private:
-        Input(Window& window);
+        explicit Input(Window& window);
         std::unordered_map<int, int> keyboardInputs, mouseInputs;
         Window* window;
     };

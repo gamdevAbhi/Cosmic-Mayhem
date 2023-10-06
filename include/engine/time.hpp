@@ -3,7 +3,7 @@
 
 #include <chrono>
 
-namespace engine
+namespace Engine
 {
     // handle time in the game
     class Time

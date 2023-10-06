@@ -1,21 +1,25 @@
 #ifndef ENGINE_COMPONENT_HPP
 #define ENGINE_COMPONENT_HPP
 
-namespace engine
+#include <vector>
+
+namespace Engine
 {
+    class Actor;
+    
+    // base component class
     class Component
     {
     public:
-        virtual void awake();
-        virtual void start();
-        virtual void update();
-        virtual void fixedUpdate();
-        virtual void lateUpdate();
-        virtual void onDestroy();
-        Actor* getActor();
+        virtual void start() = 0;
+        virtual void update() = 0;
+        virtual void fixedUpdate() = 0;
+        virtual void lateUpdate() = 0;
+        virtual void onDestroy() = 0;
+        virtual Actor* getActor() final;
     private:
         Actor* actor;
-        inline static std::vector<Component*> components;
+        friend class Actor;
     };
 }
 

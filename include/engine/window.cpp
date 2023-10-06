@@ -1,6 +1,6 @@
 #include <engine/window.hpp>
 
-engine::Window::Window(const char* title, int width, int height)
+Engine::Window::Window(const char* title, int width, int height)
 {
     // giving hint to glfw
     glfwInit();
@@ -46,14 +46,14 @@ engine::Window::Window(const char* title, int width, int height)
 }
 
 // call every end of update loop for swapping buffers and to process all depended 
-void engine::Window::updateWindow()
+void Engine::Window::updateWindow()
 {
     glfwPollEvents();
     glfwSwapBuffers(glfwWindow);
 }
 
 // close the window and terminating glfw
-void engine::Window::close()
+void Engine::Window::close()
 {
     glfwDestroyWindow(glfwWindow);
     glfwTerminate();
@@ -61,7 +61,7 @@ void engine::Window::close()
 }
 
 // get the window width and height
-std::tuple<int, int> engine::Window::getSize()
+std::tuple<int, int> Engine::Window::getSize()
 {
     std::tuple<int, int> size = std::make_tuple(0, 0);
     glfwGetWindowSize(glfwWindow, &std::get<0>(size), &std::get<1>(size));
@@ -69,7 +69,7 @@ std::tuple<int, int> engine::Window::getSize()
 }
 
 // check if window should close or not
-bool engine::Window::shouldClose()
+bool Engine::Window::shouldClose()
 {
     if(glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE))
     {
@@ -80,13 +80,13 @@ bool engine::Window::shouldClose()
 }
 
 // forcing window to close
-void engine::Window::makeWindowClose()
+void Engine::Window::makeWindowClose()
 {
     glfwSetWindowShouldClose(glfwWindow, true);
 }
 
 // get glfw window
-GLFWwindow* engine::Window::getWindow()
+GLFWwindow* Engine::Window::getWindow()
 {
     return glfwWindow;
 }

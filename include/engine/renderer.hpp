@@ -3,9 +3,9 @@
 
 #include <engine/component.hpp>
 
-namespace engine
+namespace Engine
 {
-    class Renderer : Component
+    class Renderer : public Component
     {
 
     };

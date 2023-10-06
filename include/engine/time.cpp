@@ -1,13 +1,13 @@
 #include <engine/time.hpp>
 
 // call when update loop is start
-void engine::Time::frameStart()
+void Engine::Time::frameStart()
 {
     start = std::chrono::high_resolution_clock::now();
 }
 
 // call when udpate loop is end
-void engine::Time::frameEnd()
+void Engine::Time::frameEnd()
 {
     // calculating the total time taken for one frame
     std::chrono::time_point end = std::chrono::high_resolution_clock::now();
@@ -27,19 +27,19 @@ void engine::Time::frameEnd()
 }
 
 // get delta time
-double engine::Time::getDeltaTime()
+double Engine::Time::getDeltaTime()
 {
     return deltaTime;
 }
 
 // get last fps
-int engine::Time::getLastFPS()
+int Engine::Time::getLastFPS()
 {
     return lastFPS;
 }
 
 // get total run time of the application
-double engine::Time::getRunTime()
+double Engine::Time::getRunTime()
 {
     return runTime;
 }

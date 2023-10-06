@@ -7,7 +7,7 @@
 #include <windows.h>
 #include <iostream>
 
-namespace engine
+namespace Engine
 {
     // engine window class for creating and displaying window
     class Window
@@ -18,7 +18,7 @@ namespace engine
         std::tuple<int, int> getSize();
         void makeWindowClose();
     private:
-        explicit Window(const char* title, int width, int height);
+        Window(const char* title, int width, int height);
         void updateWindow();
         void close();
         bool shouldClose();
