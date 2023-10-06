@@ -1,5 +1,5 @@
-#ifndef WINDOW_HPP
-#define WINDOW_HPP
+#ifndef ENGINE_WINDOW_HPP
+#define ENGINE_WINDOW_HPP
 #define GLFW_INCLUDE_NONE
 
 #include <GLFW/glfw3.h>

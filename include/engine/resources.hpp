@@ -1,5 +1,5 @@
-#ifndef RESOURCES_H
-#define RESOURCES_H
+#ifndef ENGINE_RESOURCES_H
+#define ENGINE_RESOURCES_H
 
 #include <iostream>
 #include <windows.h>

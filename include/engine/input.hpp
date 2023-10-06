@@ -1,5 +1,5 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#ifndef ENGINE_INPUT_HPP
+#define ENGINE_INPUT_HPP
 #define GLFW_INCLUDE_NONE
 
 #define KEY_RELEASE GLFW_RELEASE

@@ -1,5 +1,5 @@
-#ifndef TIME_HPP
-#define TIME_HPP
+#ifndef ENGINE_TIME_HPP
+#define ENGINE_TIME_HPP
 
 #include <chrono>
 
