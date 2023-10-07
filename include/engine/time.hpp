@@ -6,7 +6,7 @@
 namespace Engine
 {
     // handle time in the game
-    class Time
+    class Time final
     {
     public:
         inline static float timeScale = 1.0f;

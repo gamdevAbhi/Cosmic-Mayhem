@@ -28,7 +28,7 @@ namespace Engine
         bool active;
         std::vector<Component*> components;
         inline static std::vector<Actor*> actors;
-        // deconstructor
+        // destructor
         ~Actor();
     };
 }
@@ -43,8 +43,9 @@ template <class T> void Engine::Actor::addComponent()
     T* component = new T();
     components.push_back(component);
     // adding actor ref and calling start function
-    static_cast<Component*>(component)->actor = this;
-    static_cast<Component*>(component)->start();
+    Component* base = static_cast<Component*>(component);
+    base->actor = this;
+    base->start();
 } 
 
 // get the first component of the specified component class

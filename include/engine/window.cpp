@@ -45,6 +45,13 @@ Engine::Window::Window(const char* title, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+// call at the start of new frame for clearing the frame
+void Engine::Window::clearWindow()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 // call every end of update loop for swapping buffers and to process all depended 
 void Engine::Window::updateWindow()
 {

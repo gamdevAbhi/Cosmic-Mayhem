@@ -10,13 +10,12 @@ std::string Engine::Resources::get_current_dir()
 }
 
 // get the file contents in string
-std::string Engine::Resources::get_file_content(std::string relative_file_path)
+std::string Engine::Resources::get_file_content(std::string file_path)
 {
     // opening the file
     std::ifstream file;
-    std::string file_full_path = get_current_dir() + relative_file_path;
 
-    file.open(file_full_path);
+    file.open(file_path);
 
     // checking if file is open
     if(file.is_open())
@@ -34,12 +33,13 @@ std::string Engine::Resources::get_file_content(std::string relative_file_path)
 
         content += "\0";
         file.close();
+
         return content;
     }
     else
     {
         // in case file not found or openned
-        std::cout << "Can't Read : " + file_full_path << std::endl;
+        std::cout << "Can't Read : " + file_path << std::endl;
         throw;
     }
 }

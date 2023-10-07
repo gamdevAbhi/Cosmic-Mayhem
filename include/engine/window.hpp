@@ -19,6 +19,7 @@ namespace Engine
         void makeWindowClose();
     private:
         Window(const char* title, int width, int height);
+        void clearWindow();
         void updateWindow();
         void close();
         bool shouldClose();

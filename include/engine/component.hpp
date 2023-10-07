@@ -10,15 +10,15 @@ namespace Engine
     // base component class
     class Component
     {
-    public:
+    protected:
+        virtual Actor* getActor() final;
+    private:
+        Actor* actor;
         virtual void start() = 0;
         virtual void update() = 0;
         virtual void fixedUpdate() = 0;
         virtual void lateUpdate() = 0;
         virtual void onDestroy() = 0;
-        virtual Actor* getActor() final;
-    private:
-        Actor* actor;
         friend class Actor;
     };
 }

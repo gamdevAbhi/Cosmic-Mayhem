@@ -13,7 +13,7 @@ namespace Engine
     {
     public: 
         static std::string get_current_dir();
-        static std::string get_file_content(std::string relative_file_path);
+        static std::string get_file_content(std::string file_path);
     };
 }
 
