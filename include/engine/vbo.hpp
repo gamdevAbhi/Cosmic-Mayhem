@@ -8,22 +8,15 @@
 
 namespace Engine
 {
-    struct vertex
-    {
-        glm::vec3 position;
-        glm::vec2 uv;
-    };
-
     class VBO
     {
-    private:
-        GLuint id;
-        VBO(std::vector<vertex>& vertices);
+    public:
+        VBO(GLsizeiptr size, const void* data);
         void bind();
         void unbind();
         void destroy();
-        friend class VAO;
-        friend class Renderer;
+    private:
+        GLuint id;
     };
 }
 

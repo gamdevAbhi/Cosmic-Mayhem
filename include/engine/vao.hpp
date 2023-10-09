@@ -8,14 +8,14 @@ namespace Engine
 {
     class VAO
     {
-    private:
+    public:
         VAO();
         void bind();
         void unbind();
         void link(VBO& vbo, GLint index, GLuint size, GLsizeiptr stride, void* offset);
         void destroy();
+    private:
         GLuint id;
-        friend class Renderer;
     };
 }
 

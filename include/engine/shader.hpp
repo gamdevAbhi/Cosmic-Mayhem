@@ -1,10 +1,10 @@
 #ifndef ENGINE_SHADER_H
 #define ENGINE_SHADER_H
 
-#define SHADER_NO_ERROR -1
-#define VERTEX_ERROR    0
-#define FRAGMENT_ERROR  1
-#define LINK_ERROR      2
+#define SHADER_NO_ERROR "SHADER_NO_ERROR"
+#define VERTEX_ERROR    "VERTEX_ERROR"
+#define FRAGMENT_ERROR  "FRAGMENT_ERROR"
+#define LINK_ERROR      "LINK_ERROR"
 
 #include <glad/glad.h>
 #include <engine/resources.hpp>
@@ -13,16 +13,17 @@
 namespace Engine
 {
     // shader class for render actor
-    class Shader
+    class Shader final
     {
     public:
         Shader(std::string vertex_relative_path, std::string fragment_relative_path);
         void use();
-        int getStatus();
+        GLint getLocation(const char* uniformName);
+        std::string getStatus();
         ~Shader();
     private:
         GLuint program;
-        int status;
+        std::string status;
         bool attach(const char* source_code, GLenum shader_type);
         bool checkShaderStatus(GLuint shader);
         bool checkLinkStatus();

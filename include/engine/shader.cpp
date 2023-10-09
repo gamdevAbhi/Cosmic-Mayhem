@@ -60,8 +60,13 @@ void Engine::Shader::use()
     glUseProgram(program);
 }
 
+GLint Engine::Shader::getLocation(const char* uniformName)
+{
+    return glGetUniformLocation(program, uniformName);
+}
+
 // return the shader status
-int Engine::Shader::getStatus()
+std::string Engine::Shader::getStatus()
 {
     return status;
 }

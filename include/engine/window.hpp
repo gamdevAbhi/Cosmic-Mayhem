@@ -10,7 +10,7 @@
 namespace Engine
 {
     // engine window class for creating and displaying window
-    class Window
+    class Window final
     {
     public:
         inline static const int screen_width = GetSystemMetrics(SM_CXSCREEN);
@@ -25,7 +25,8 @@ namespace Engine
         bool shouldClose();
         GLFWwindow* getWindow();
         GLFWwindow* glfwWindow;
-        friend class Input;
+    friend class Input;
+    friend class GameLoop;
     };
 }
 

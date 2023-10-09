@@ -30,6 +30,7 @@ namespace Engine
         inline static std::vector<Actor*> actors;
         // destructor
         ~Actor();
+        friend class GameLoop;
     };
 }
 
@@ -43,9 +44,8 @@ template <class T> void Engine::Actor::addComponent()
     T* component = new T();
     components.push_back(component);
     // adding actor ref and calling start function
-    Component* base = static_cast<Component*>(component);
-    base->actor = this;
-    base->start();
+    component->actor = this;
+    component->start();
 } 
 
 // get the first component of the specified component class
@@ -59,7 +59,7 @@ template <class T> T* Engine::Actor::getComponent()
         // searching if the specified component class instance exist in the actor
         for(int i = 0; i < this->components.size(); i++)
         {
-            ptr = static_cast<T*>(this->components[i]);
+            ptr = dynamic_cast<T*>(this->components[i]);
             if(ptr != nullptr) break;
         }
     }
@@ -78,7 +78,7 @@ template <class T> std::vector<T*> Engine::Actor::getComponents()
         // searching all the specified component class instance exist in the actor
         for(int i = 0; i < this->components.size(); i++)
         {
-            T* ptr = static_cast<T*>(this->components[i]);
+            T* ptr = dynamic_cast<T*>(this->components[i]);
             if(ptr != nullptr) list.push_back(ptr);
         }
     }
@@ -97,7 +97,7 @@ template <class T> void Engine::Actor::removeComponent()
         // searching if the specified component class instance exist in the actor
         for(int i = 0; i < this->components.size(); i++)
         {
-            if(static_cast<T*>(this->components[i]) != nullptr)
+            if(dynamic_cast<T*>(this->components[i]) != nullptr)
             {
                 // remove the component from the actor
                 delete this->components[i];

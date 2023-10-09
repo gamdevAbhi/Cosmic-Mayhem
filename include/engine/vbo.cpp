@@ -1,21 +1,21 @@
 #include <engine/vbo.hpp>
 
-Engine::VBO::VBO(std::vector<vertex>& vertices)
+Engine::VBO::VBO(GLsizeiptr size, const void* data)
 {
     glGenBuffers(1, &id);
     bind();
-    glBufferData(GL_VERTEX_ARRAY, vertices.size() * sizeof(vertex), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     unbind();
 }
 
 void Engine::VBO::bind()
 {
-    glBindBuffer(GL_VERTEX_ARRAY, id);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
 }
 
 void Engine::VBO::unbind()
 {
-    glBindBuffer(GL_VERTEX_ARRAY, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Engine::VBO::destroy()

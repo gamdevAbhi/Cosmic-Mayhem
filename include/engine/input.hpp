@@ -14,7 +14,7 @@
 namespace Engine
 {
     // handle inputs of a window
-    class Input
+    class Input final
     {
     public:
         int getKeyStatus(int key);
@@ -24,6 +24,7 @@ namespace Engine
         explicit Input(Window& window);
         std::unordered_map<int, int> keyboardInputs, mouseInputs;
         Window* window;
+    friend class GameLoop;
     };
 }
 

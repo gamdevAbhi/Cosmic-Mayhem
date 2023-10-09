@@ -6,7 +6,7 @@
 
 namespace Engine
 {
-    class Transform final : Component
+    class Transform final : public Component
     {
     public:
         inline static const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -17,11 +17,7 @@ namespace Engine
         glm::vec3 scale;
     private:
         void start();
-        inline void update() {};
-        inline void fixedUpdate() {};
-        inline void lateUpdate() {};
-        inline void onDestroy() {};
-        friend class Actor;
+    friend class Actor;
     };
 }
 

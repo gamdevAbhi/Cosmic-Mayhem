@@ -13,24 +13,12 @@
 
 namespace Engine
 {
-    class Renderer : Component
+    class Renderer : public Component
     {
     protected:
-        std::vector<vertex> vertices;
-        std::vector<GLuint> indices;
-        Renderer();
-    private:
-        // shader
-        // texture
-        VAO vao;
-        VBO vbo;
-        EBO ebo;
-        virtual void start() final;
-        virtual void update();
-        virtual void fixedUpdate();
-        virtual void lateUpdate();
-        virtual void onDestroy();
-        virtual void draw();
+        virtual void draw() = 0;
+        virtual ~Renderer();
+    friend class GameLoop;
     };
 }
 

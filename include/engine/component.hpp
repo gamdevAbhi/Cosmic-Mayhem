@@ -10,16 +10,23 @@ namespace Engine
     // base component class
     class Component
     {
+    public:
+        // get the attached actor
+        Actor* getActor();
     protected:
-        virtual Actor* getActor() final;
+        virtual ~Component();
     private:
         Actor* actor;
-        virtual void start() = 0;
-        virtual void update() = 0;
-        virtual void fixedUpdate() = 0;
-        virtual void lateUpdate() = 0;
-        virtual void onDestroy() = 0;
-        friend class Actor;
+        // called when component is add
+        virtual void start();
+        // called in every frame
+        virtual void update();
+        // called every specific time interval
+        virtual void fixedUpdate();
+        // called after update
+        virtual void lateUpdate();
+    friend class Actor;
+    friend class GameLoop;
     };
 }
 

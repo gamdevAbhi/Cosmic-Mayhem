@@ -8,13 +8,13 @@ namespace Engine
 {
     class EBO
     {
-    private:
-        GLuint id;
-        EBO(std::vector<GLuint>& indices);
+    public:
+        EBO(GLsizeiptr size, const void* data);
         void bind();
         void unbind();
         void destroy();
-        friend class Renderer;
+    private:
+        GLuint id;
     };
 }
 

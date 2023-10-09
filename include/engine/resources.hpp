@@ -9,7 +9,7 @@
 namespace Engine
 {
     // geting resources in the game resouces folder
-    class Resources
+    class Resources final
     {
     public: 
         static std::string get_current_dir();
