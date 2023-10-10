@@ -14,7 +14,7 @@ namespace Engine
         // get the attached actor
         Actor* getActor();
     protected:
-        virtual ~Component();
+        virtual ~Component() = 0;
     private:
         Actor* actor;
         // called when component is add
@@ -25,6 +25,8 @@ namespace Engine
         virtual void fixedUpdate();
         // called after update
         virtual void lateUpdate();
+        // called when component is destroying
+        virtual void onDestroy();
     friend class Actor;
     friend class GameLoop;
     };

@@ -2,7 +2,9 @@
 #define ENGINE_SPRITE_RENDERER_HPP
 
 #include <glad/glad.h>
+#include <engine/shader.hpp>
 #include <engine/renderer.hpp>
+#include <engine/camera.hpp>
 
 namespace Engine
 {
@@ -25,10 +27,8 @@ namespace Engine
         VAO* vao;
         VBO* vbo;
         EBO* ebo;
-        SpriteRenderer();
-        ~SpriteRenderer();
+        void start();
         virtual void draw();
-    friend class Actor;
     };
 }
 

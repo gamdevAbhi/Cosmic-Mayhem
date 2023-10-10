@@ -1,6 +1,7 @@
 #include <engine/spriteRenderer.hpp>
 
-Engine::SpriteRenderer::SpriteRenderer()
+// initialize the members of spriteRenderer
+void Engine::SpriteRenderer::start()
 {
     if(shader == nullptr)
     {
@@ -40,34 +41,35 @@ Engine::SpriteRenderer::SpriteRenderer()
     ebo->unbind();
 }
 
+// draw the actor
 void Engine::SpriteRenderer::draw()
 {
     Actor* actor = getActor();
     Transform* transform = actor->getComponent<Transform>();
 
-    glm::mat4 position(1.0f);
+    glm::mat4 translate(1.0f);
     glm::mat4 rotation(1.0f);
     glm::mat4 scale(1.0f);
 
-    position = glm::translate(position, transform->position);
+    translate = glm::translate(translate, transform->position);
     rotation = glm::mat4_cast(glm::quat(transform->rotation));
     scale = glm::scale(scale, transform->scale);
+
+    glm::mat4 world_transform = translate * rotation * scale;
     
     shader->use();
     vao->bind();
-    
+
+    Engine::Camera* camera = Engine::Camera::getRenderCamera();
+    if(camera == nullptr) return;
+
+    glm::mat4 cameraMatrix = camera->getMatrix();
+
     glUniform4fv(shader->getLocation("color"), 1, &color[0]);
+    glUniformMatrix4fv(shader->getLocation("camera_transform"), 1, GL_FALSE, &cameraMatrix[0][0]);
+    glUniformMatrix4fv(shader->getLocation("world_transform"), 1, GL_FALSE, &world_transform[0][0]);
 
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
     vao->unbind();
-}
-
-Engine::SpriteRenderer::~SpriteRenderer()
-{
-    vao->destroy();
-    vbo->destroy();
-    ebo->destroy();
-    vertices.clear();
-    indices.clear();
 }

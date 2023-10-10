@@ -9,5 +9,5 @@ void Engine::Component::start() {}
 void Engine::Component::update() {}
 void Engine::Component::lateUpdate() {}
 void Engine::Component::fixedUpdate() {}
-
+void Engine::Component::onDestroy() {}
 Engine::Component::~Component() {}

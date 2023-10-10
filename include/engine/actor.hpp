@@ -41,7 +41,7 @@ template <class T> void Engine::Actor::addComponent()
     if(std::is_same<T, Transform>::value) return;
     if(std::is_base_of<Component, T>::value == false) return;
     // adding the new component of the specified component class in the actor
-    T* component = new T();
+    Component* component = new T();
     components.push_back(component);
     // adding actor ref and calling start function
     component->actor = this;
@@ -100,6 +100,8 @@ template <class T> void Engine::Actor::removeComponent()
             if(dynamic_cast<T*>(this->components[i]) != nullptr)
             {
                 // remove the component from the actor
+                this->components[i]->onDestroy();
+                
                 delete this->components[i];
                 this->components.erase(this->components.begin() + i);
                 break;

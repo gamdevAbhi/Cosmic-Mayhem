@@ -10,6 +10,13 @@ int height)
 
     window = new Window(title.c_str(), width, height);
     input = new Input(*window);
+
+    Camera::gameWindow = window;
+    
+    Actor* camActor = Actor::createActor("Main Camera");
+    camActor->addComponent<Camera>();
+
+    Camera::renderCamera = camActor->getComponent<Camera>();
 }
 
 // called after game is ready to execute game loop

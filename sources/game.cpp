@@ -9,11 +9,9 @@ protected:
 void Mover::update()
 {
     Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
-    transform->position.x += Engine::Time::getDeltaTime() * 1.0f;
-    Engine::SpriteRenderer* renderer = getActor()->getComponent<Engine::SpriteRenderer>();
-    renderer->color.r = (float)(rand() % 100) / 100.0f;
-    renderer->color.g = (float)(rand() % 100) / 100.0f;
-    renderer->color.b = (float)(rand() % 100) / 100.0f;
+    transform->scale.x = 5.0f;
+    transform->scale.y = 5.0f;
+    transform->rotation.z += Engine::Time::getDeltaTime() * 2.5f;
 }
 
 int main()
@@ -23,6 +21,9 @@ int main()
     Engine::Actor* actor = Engine::Actor::createActor("test");
     actor->addComponent<Mover>();
     actor->addComponent<Engine::SpriteRenderer>();
+
+    Engine::Transform* camTrans = Engine::Camera::getRenderCamera()->getActor()->getComponent<Engine::Transform>();
+    camTrans->position.z = 2.0f;
 
     Engine::GameLoop::begin();
     return 0;

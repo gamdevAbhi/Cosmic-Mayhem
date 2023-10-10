@@ -15,9 +15,8 @@ namespace Engine
 {
     class Renderer : public Component
     {
-    protected:
+    private:
         virtual void draw() = 0;
-        virtual ~Renderer();
     friend class GameLoop;
     };
 }

@@ -2,11 +2,11 @@
 #define ENGINE_GAMELOOP_HPP
 
 #include <engine/actor.hpp>
+#include <engine/camera.hpp>
 #include <engine/component.hpp>
 #include <engine/ebo.hpp>
 #include <engine/input.hpp>
 #include <engine/renderer.hpp>
-#include <engine/resources.hpp>
 #include <engine/resources.hpp>
 #include <engine/shader.hpp>
 #include <engine/spriteRenderer.hpp>
@@ -15,7 +15,6 @@
 #include <engine/vao.hpp>
 #include <engine/vbo.hpp>
 #include <engine/window.hpp>
-
 
 namespace Engine
 {
