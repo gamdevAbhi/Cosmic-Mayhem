@@ -8,29 +8,16 @@ glm::mat4 Engine::Camera::getMatrix()
 
     Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
 
-    if(projectionMode == orthographic)
-    {
-        std::tuple<int, int> size = gameWindow->getSize();
+    std::tuple<int, int> size = gameWindow->getSize();
 
-        float x = (std::get<0>(size) / orthographicSize) / 2.0f;
-        float y = (std::get<1>(size) / orthographicSize) / 2.0f;
+    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
+    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
 
-        projection = glm::ortho(-x, x, -y, y, nearClip, farClip);
+    projection = glm::ortho(-x, x, -y, y, nearClip, farClip);
 
-        glm::vec3 camPos = transform->position;
+    glm::vec3 camPos = transform->getPosition(true);
 
-        view = glm::lookAt(camPos, glm::vec3(camPos.x, camPos.y, 0.0f), transform->up);
-    }
-    else
-    {
-        std::tuple<int, int> size = gameWindow->getSize();
-
-        float x = std::get<0>(size);
-        float y = std::get<1>(size);
-
-        projection = glm::perspective(fov, x / y, nearClip, farClip);
-        view = glm::lookAt(transform->position, transform->position + transform->forward, transform->up);
-    }
+    view = glm::lookAt(camPos, glm::vec3(camPos.x, camPos.y, 0.0f), transform->getUp(true));
 
     return projection * view;
 }

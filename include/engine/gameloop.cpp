@@ -14,9 +14,7 @@ int height)
     Camera::gameWindow = window;
     
     Actor* camActor = Actor::createActor("Main Camera");
-    camActor->addComponent<Camera>();
-
-    Camera::renderCamera = camActor->getComponent<Camera>();
+    Camera::renderCamera = camActor->addComponent<Camera>();
 }
 
 // called after game is ready to execute game loop

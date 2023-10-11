@@ -20,8 +20,10 @@ namespace Engine
     {
     public:
         glm::vec4 color;
+        void setOrder(int index);
     protected:
         inline static Shader* shader = nullptr;
+        int order;
         std::vector<vertex> vertices;
         std::vector<GLuint> indices;
         VAO* vao;

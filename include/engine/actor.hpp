@@ -16,7 +16,7 @@ namespace Engine
         std::string name;
         // member functions
         void setActive(bool status);
-        template <class T> void addComponent();
+        template <class T> T* addComponent();
         template <class T> T* getComponent();
         template <class T> std::vector<T*> getComponents(); 
         template <class T> void removeComponent();
@@ -35,17 +35,19 @@ namespace Engine
 }
 
 // add components to the actor
-template <class T> void Engine::Actor::addComponent()
+template <class T> T* Engine::Actor::addComponent()
 {
     // checking if template class is Transform or is not derived from the component class
-    if(std::is_same<T, Transform>::value) return;
-    if(std::is_base_of<Component, T>::value == false) return;
+    if(std::is_same<T, Transform>::value) return nullptr;
+    if(std::is_base_of<Component, T>::value == false) return nullptr;
     // adding the new component of the specified component class in the actor
     Component* component = new T();
     components.push_back(component);
     // adding actor ref and calling start function
     component->actor = this;
     component->start();
+
+    return dynamic_cast<T*>(component);
 } 
 
 // get the first component of the specified component class

@@ -5,6 +5,7 @@ Engine::Actor::~Actor()
     // deleting all components from the actor
     for(int i = 0; i < components.size(); i++)
     {
+        components[i]->onDestroy();
         delete components[i];
     }
 
@@ -19,7 +20,7 @@ Engine::Actor* Engine::Actor::createActor(std::string name)
     actor->name = name;
     actor->active = true;
     // creating transform component class
-    Transform* transform = new Transform();
+    Component* transform = new Transform();
     transform->actor = actor;
     transform->start();
     // adding the transform component and actor class
