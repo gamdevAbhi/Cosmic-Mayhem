@@ -3,6 +3,7 @@
 
 #include <engine/component.hpp>
 #include <engine/transform.hpp>
+#include <engine/handler.hpp>
 #include <iostream>
 #include <vector>
 
@@ -38,8 +39,8 @@ namespace Engine
 template <class T> T* Engine::Actor::addComponent()
 {
     // checking if template class is Transform or is not derived from the component class
-    if(std::is_same<T, Transform>::value) return nullptr;
-    if(std::is_base_of<Component, T>::value == false) return nullptr;
+    if(std::is_same<T, Transform>::value) Handler::error("adding transform is not allowed", name);
+    if(std::is_base_of<Component, T>::value == false) Handler::error("class must be derived from Component Class", name);
     // adding the new component of the specified component class in the actor
     Component* component = new T();
     components.push_back(component);
@@ -66,6 +67,8 @@ template <class T> T* Engine::Actor::getComponent()
         }
     }
 
+    if(ptr == nullptr) Handler::error(typeid(T).name() + " is not found", name);
+    
     return ptr;
 }
 

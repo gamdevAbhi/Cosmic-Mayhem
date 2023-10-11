@@ -12,6 +12,7 @@ int height)
     input = new Input(*window);
 
     Camera::gameWindow = window;
+    Handler::gameWindow = window;
     
     Actor* camActor = Actor::createActor("Main Camera");
     Camera::renderCamera = camActor->addComponent<Camera>();

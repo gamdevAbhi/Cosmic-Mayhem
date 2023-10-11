@@ -61,7 +61,9 @@ void Engine::SpriteRenderer::draw()
     world_transform[3][2] = -order;
     
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
-    if(camera == nullptr) return;
+
+    if(camera == nullptr) Handler::error("no rendering camera exist", getActor()->name);
+    
     glm::mat4 camera_matrix = camera->getMatrix();
 
     glUniform4fv(shader->getLocation("color"), 1, &color[0]);

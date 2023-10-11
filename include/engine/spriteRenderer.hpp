@@ -2,6 +2,7 @@
 #define ENGINE_SPRITE_RENDERER_HPP
 
 #include <glad/glad.h>
+#include <engine/handler.hpp>
 #include <engine/shader.hpp>
 #include <engine/renderer.hpp>
 #include <engine/camera.hpp>

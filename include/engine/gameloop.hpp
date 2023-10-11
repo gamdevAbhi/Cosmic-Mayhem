@@ -5,6 +5,7 @@
 #include <engine/camera.hpp>
 #include <engine/component.hpp>
 #include <engine/ebo.hpp>
+#include <engine/handler.hpp>
 #include <engine/input.hpp>
 #include <engine/renderer.hpp>
 #include <engine/resources.hpp>

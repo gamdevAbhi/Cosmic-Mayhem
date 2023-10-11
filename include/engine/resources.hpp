@@ -1,6 +1,7 @@
 #ifndef ENGINE_RESOURCES_H
 #define ENGINE_RESOURCES_H
 
+#include <engine/handler.hpp>
 #include <iostream>
 #include <windows.h>
 #include <fstream>
