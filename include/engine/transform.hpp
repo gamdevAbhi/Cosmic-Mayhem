@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <engine/component.hpp>
+#include <engine/handler.hpp>
 
 namespace Engine
 {
@@ -20,17 +21,22 @@ namespace Engine
         glm::vec3 getRotation(bool isWorld);
         glm::vec3 getScale(bool isWorld);
         glm::mat4 getMatrix();
+        Transform* getChild(int index);
+        int getChildsSize();
         void setPosition(bool isWorld, glm::vec3 position);
         void setRotation(bool isWorld, glm::vec3 rotation);
         void setScale(bool isWorld, glm::vec3 scale);
         void setParent(Transform* transform);
         Transform* getParent();
     protected:
-        void start();
         glm::vec3 localPosition;
         glm::vec3 localRotation;
         glm::vec3 localScale;
+        std::vector<Transform*> childs;
         Transform* parent = nullptr;
+        void start();
+        void removeChild(Transform* transform);
+        void addChild(Transform* transform);
     };
 }
 

@@ -72,7 +72,7 @@ std::string Engine::Shader::getStatus()
 }
 
 // delete the program
-Engine::Shader::~Shader()
+void Engine::Shader::destroy()
 {
     glDeleteProgram(program);
 }

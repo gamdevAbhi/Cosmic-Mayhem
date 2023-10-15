@@ -40,5 +40,6 @@ std::string Engine::Resources::get_file_content(std::string file_path)
     {
         // in case file not found or openned
         Handler::error("file path : " + file_path + " not found", "resources");
+        return std::string("");
     }
 }

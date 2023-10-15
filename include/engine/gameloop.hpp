@@ -10,6 +10,7 @@
 #include <engine/renderer.hpp>
 #include <engine/resources.hpp>
 #include <engine/shader.hpp>
+#include <engine/sprite.hpp>
 #include <engine/spriteRenderer.hpp>
 #include <engine/time.hpp>
 #include <engine/transform.hpp>
@@ -25,12 +26,15 @@ namespace Engine
         static void init(std::string title = "", int width = Window::screen_width / 2, 
         int height = Window::screen_height / 2);
         static void begin();
+        static Input* getInput();
+        static void clearScene();
     private:
         inline static std::string title = "";
         inline static int width = 0;
         inline static int height = 0;
         inline static Input* input = nullptr;
         inline static Window* window = nullptr;
+        static void clearActors();
     };
 }
 

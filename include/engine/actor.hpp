@@ -15,8 +15,10 @@ namespace Engine
     public:
         // members veriables
         std::string name;
+        bool manualDestroy;
         // member functions
         void setActive(bool status);
+        bool getActive();
         template <class T> T* addComponent();
         template <class T> T* getComponent();
         template <class T> std::vector<T*> getComponents(); 
@@ -24,9 +26,11 @@ namespace Engine
         // static member functions
         static Actor* createActor(std::string name);
         static void destroy(Actor* actor);
+    protected:
+        // protected member variable
+        bool active;
     private:
         // private member variable
-        bool active;
         std::vector<Component*> components;
         inline static std::vector<Actor*> actors;
         // destructor
@@ -66,8 +70,6 @@ template <class T> T* Engine::Actor::getComponent()
             if(ptr != nullptr) break;
         }
     }
-
-    if(ptr == nullptr) Handler::error(typeid(T).name() + " is not found", name);
     
     return ptr;
 }
@@ -97,21 +99,16 @@ template <class T> void Engine::Actor::removeComponent()
     // checking if template class is Transform
     if(std::is_same<T, Transform>::value) return;
     // checking if the template class is not derived from the component class 
-    if(std::is_base_of<Component, T>::value == true)
+    if(std::is_base_of<Component, T>::value == false) return;
+    // searching if the specified component class instance exist in the actor
+    for(int i = 0; i < this->components.size(); i++)
     {
-        // searching if the specified component class instance exist in the actor
-        for(int i = 0; i < this->components.size(); i++)
-        {
-            if(dynamic_cast<T*>(this->components[i]) != nullptr)
-            {
-                // remove the component from the actor
-                this->components[i]->onDestroy();
-                
-                delete this->components[i];
-                this->components.erase(this->components.begin() + i);
-                break;
-            }
-        }
+        if(dynamic_cast<T*>(this->components[i]) == nullptr) continue;
+        // remove the component from the actor
+        this->components[i]->onDestroy();
+        delete this->components[i];
+        this->components.erase(this->components.begin() + i);
+        break;
     }
 }
 

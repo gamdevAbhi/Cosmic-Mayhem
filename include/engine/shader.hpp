@@ -20,7 +20,7 @@ namespace Engine
         void use();
         GLint getLocation(const char* uniformName);
         std::string getStatus();
-        ~Shader();
+        void destroy();
     private:
         GLuint program;
         std::string status;

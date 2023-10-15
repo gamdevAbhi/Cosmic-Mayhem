@@ -12,12 +12,29 @@ Engine::Actor::~Actor()
     components.clear();
 }
 
+void Engine::Actor::setActive(bool status)
+{
+    Transform* transform = getComponent<Transform>();
+    Transform* parent = transform->getParent();
+
+    if(parent != nullptr && parent->actor->getActive() == false && status == true) return;
+    
+    active = status;
+    for(int i = 0; i < transform->getChildsSize(); i++) transform->getChild(i)->actor->setActive(status);
+}
+
+bool Engine::Actor::getActive()
+{
+    return active;
+}
+
 // get an actor
 Engine::Actor* Engine::Actor::createActor(std::string name)
 {
     // creating actor
     Actor* actor = new Actor();
     actor->name = name;
+    actor->manualDestroy = false;
     actor->active = true;
     // creating transform component class
     Component* transform = new Transform();
@@ -28,12 +45,6 @@ Engine::Actor* Engine::Actor::createActor(std::string name)
     actors.push_back(actor);
 
     return actor;
-}
-
-// set actor active status
-void Engine::Actor::setActive(bool status)
-{
-    this->active = status;
 }
 
 // destroy the actor

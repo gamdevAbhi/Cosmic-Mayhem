@@ -8,13 +8,23 @@
 #include <engine/vao.hpp>
 #include <engine/vbo.hpp>
 #include <engine/ebo.hpp>
+#include <bits/stdc++.h>
 
 namespace Engine
 {
     class Renderer : public Component
     {
-    private:
+    public:
+        virtual void setOrder(unsigned int index) = 0;
+        unsigned int getOrder();
+    protected:
+        unsigned int order;
         virtual void draw() = 0;
+        inline static bool shouldSort;
+        inline static std::vector<Renderer*> renderers;
+    private:
+        static bool compare(Renderer* left, Renderer* right);
+        static void beforeDraw();
     friend class GameLoop;
     };
 }

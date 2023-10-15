@@ -196,6 +196,8 @@ void Engine::Transform::setScale(bool isWorld, glm::vec3 scale)
 // set the parent transform
 void Engine::Transform::setParent(Engine::Transform* transform)
 {
+    if(parent != nullptr) parent->removeChild(this);
+    transform->addChild(this);
     parent = transform;
 }
 
@@ -203,4 +205,34 @@ void Engine::Transform::setParent(Engine::Transform* transform)
 Engine::Transform* Engine::Transform::getParent()
 {
     return parent;
+}
+
+// get the child
+Engine::Transform* Engine::Transform::getChild(int index)
+{
+    if(childs.size() <= index) Handler::error("child index is out of bound", "");
+    return childs[index];
+}
+
+// get total childs size
+int Engine::Transform::getChildsSize()
+{
+    return childs.size();
+}
+
+// add the child
+void Engine::Transform::addChild(Transform* transform)
+{
+    childs.push_back(transform);
+}
+
+// remove the child from the transform
+void Engine::Transform::removeChild(Transform* transform)
+{
+    for(int i = 0; i < childs.size(); i++)
+    {
+        if(childs[i] != transform) continue;
+        childs.erase(childs.begin() + i);
+        break;
+    }
 }

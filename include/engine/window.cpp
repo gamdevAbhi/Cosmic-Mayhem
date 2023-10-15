@@ -40,16 +40,17 @@ Engine::Window::Window(const char* title, int width, int height)
         close();
     }
 
-    // enabling depth test
-    glEnable(GL_DEPTH_TEST);
+    // enabling depth test and blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, width, height);
 }
 
 // call at the start of new frame for clearing the frame
 void Engine::Window::clearWindow()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 // call every end of update loop for swapping buffers and to process all depended 
