@@ -47,6 +47,7 @@ void Engine::SpriteRenderer::start()
     ebo->unbind();
 
     order = 0;
+    color = glm::vec4(1.f, 1.f, 1.f, 1.f);
     addRenderer(this);
 }
 

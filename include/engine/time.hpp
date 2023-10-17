@@ -11,6 +11,7 @@ namespace Engine
     public:
         inline static float timeScale = 1.0f;
         static double getDeltaTime();
+        static double getFixedDeltaTime();
         static double getRunTime();
         static int getLastFPS();
     private:

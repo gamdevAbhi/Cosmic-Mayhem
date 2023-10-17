@@ -29,6 +29,12 @@ void Engine::Time::frameEnd()
 // get delta time
 double Engine::Time::getDeltaTime()
 {
+    return deltaTime * timeScale;
+}
+
+// get fixed delta time
+double Engine::Time::getFixedDeltaTime()
+{
     return deltaTime;
 }
 
