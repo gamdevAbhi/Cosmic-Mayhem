@@ -12,6 +12,37 @@ unsigned int Engine::Renderer::getOrder()
     return order;
 }
 
+// add renderer to renderering
+void Engine::Renderer::addRenderer(Renderer* renderer)
+{
+    renderers.push_back(renderer);
+    shouldSort = true;
+}
+
+// remove renderer from rendering
+void Engine::Renderer::removeRenderer(Renderer* renderer)
+{
+    int i = 0;
+
+    while(i < renderers.size())
+    {
+        if(renderers[i] != renderer) 
+        {
+            i++;
+            continue;
+        }
+        renderers.erase(renderers.begin() + i);
+    }
+
+    shouldSort = true;
+}
+
+// call when order is changed
+void Engine::Renderer::orderChanged()
+{
+    shouldSort = true;
+}
+
 // calls before start drawing
 void Engine::Renderer::beforeDraw()
 {

@@ -28,6 +28,12 @@
                 "kind": "build",
                 "isDefault": true
             },
+            "dependsOn" : ["copy glfw dll"]
+        },
+        {
+            "type": "shell",
+            "label": "copy glfw dll",
+            "command": "cp glfw3.dll export\\${input:folder}",
             "dependsOn" : ["copy resources folder"]
         },
         {

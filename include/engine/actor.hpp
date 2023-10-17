@@ -17,18 +17,20 @@ namespace Engine
         std::string name;
         bool manualDestroy;
         // member functions
+        void setDestroy();
         void setActive(bool status);
         bool getActive();
         template <class T> T* addComponent();
         template <class T> T* getComponent();
         template <class T> std::vector<T*> getComponents(); 
-        template <class T> void removeComponent();
         // static member functions
         static Actor* createActor(std::string name);
-        static void destroy(Actor* actor);
     protected:
         // protected member variable
         bool active;
+        bool shouldDestroy;
+        static void destroy(Actor* actor);
+        static void destroy(Component* component);
     private:
         // private member variable
         std::vector<Component*> components;
@@ -91,25 +93,6 @@ template <class T> std::vector<T*> Engine::Actor::getComponents()
     }
 
     return list;
-}
-
-// remove the first component found of the specified component class in the actor
-template <class T> void Engine::Actor::removeComponent()
-{
-    // checking if template class is Transform
-    if(std::is_same<T, Transform>::value) return;
-    // checking if the template class is not derived from the component class 
-    if(std::is_base_of<Component, T>::value == false) return;
-    // searching if the specified component class instance exist in the actor
-    for(int i = 0; i < this->components.size(); i++)
-    {
-        if(dynamic_cast<T*>(this->components[i]) == nullptr) continue;
-        // remove the component from the actor
-        this->components[i]->onDestroy();
-        delete this->components[i];
-        this->components.erase(this->components.begin() + i);
-        break;
-    }
 }
 
 #endif

@@ -1,5 +1,6 @@
 #include <engine/transform.hpp>
 
+// start function
 void Engine::Transform::start()
 {
     localPosition = glm::vec3(0.0f);
@@ -218,6 +219,12 @@ Engine::Transform* Engine::Transform::getChild(int index)
 int Engine::Transform::getChildsSize()
 {
     return childs.size();
+}
+
+// set destroy
+void Engine::Transform::setDestroy()
+{
+    Handler::error("can't destroy transform", "transform");
 }
 
 // add the child

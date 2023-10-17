@@ -18,11 +18,14 @@ namespace Engine
         virtual void setOrder(unsigned int index) = 0;
         unsigned int getOrder();
     protected:
+        static void addRenderer(Renderer* renderer);
+        static void removeRenderer(Renderer* renderer);
+        static void orderChanged();
         unsigned int order;
         virtual void draw() = 0;
+    private:
         inline static bool shouldSort;
         inline static std::vector<Renderer*> renderers;
-    private:
         static bool compare(Renderer* left, Renderer* right);
         static void beforeDraw();
     friend class GameLoop;

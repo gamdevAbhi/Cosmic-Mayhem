@@ -13,7 +13,9 @@ namespace Engine
     public:
         // get the attached actor
         Actor* getActor();
+        virtual void setDestroy();
     protected:
+        bool shouldDestroy = false;
         virtual ~Component() = 0;
     private:
         Actor* actor;

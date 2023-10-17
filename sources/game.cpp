@@ -36,7 +36,33 @@ void Rotator::update()
     if(Engine::GameLoop::getInput()->getKeyStatus(GLFW_KEY_F) == KEY_PRESS)
     {
         Engine::Actor* actor = Engine::Actor::createActor("Test");
+        actor->getComponent<Engine::Transform>()->setParent(transform);
+        
+        float r = (std::rand() % 100) / 100.f;
+        float g = (std::rand() % 100) / 100.f;
+        float b = (std::rand() % 100) / 100.f;
+        float a = (50 + (std::rand() % 50)) / 100.f;
+
+        Engine::SpriteRenderer* renderer = actor->addComponent<Engine::SpriteRenderer>();
+        renderer->color = glm::vec4(r, g, b, a);
+        renderer->setOrder(1);
         actors++;
+    }
+
+    if(Engine::GameLoop::getInput()->getKeyStatus(GLFW_KEY_D) == KEY_PRESS)
+    {
+        for(int i = 0; i < transform->getChildsSize(); i++)
+        {
+            transform->getChild(i)->getActor()->getComponent<Engine::SpriteRenderer>()->setDestroy();
+        }
+    }
+
+    if(Engine::GameLoop::getInput()->getKeyStatus(GLFW_KEY_E) == KEY_PRESS)
+    {
+        for(int i = 0; i < transform->getChildsSize(); i++)
+        {
+            transform->getChild(i)->getActor()->addComponent<Engine::SpriteRenderer>()->setOrder(1);
+        }
     }
 }
 

@@ -65,7 +65,6 @@ void Engine::Window::close()
 {
     glfwDestroyWindow(glfwWindow);
     glfwTerminate();
-    free(glfwWindow);
 }
 
 // get the window width and height

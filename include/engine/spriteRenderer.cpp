@@ -47,15 +47,14 @@ void Engine::SpriteRenderer::start()
     ebo->unbind();
 
     order = 0;
-    shouldSort = true;
-    renderers.push_back(this);
+    addRenderer(this);
 }
 
 // set draw order
 void Engine::SpriteRenderer::setOrder(unsigned int index)
 {
     order = index;
-    shouldSort = true;
+    orderChanged();
 }
 
 // set texture
@@ -103,7 +102,6 @@ void Engine::SpriteRenderer::onDestroy()
     vao->destroy();
     vbo->destroy();
     ebo->destroy();
-    sprite->destroy();
 
-    shouldSort = true;
+    removeRenderer(this);
 }

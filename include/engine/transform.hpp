@@ -35,8 +35,10 @@ namespace Engine
         std::vector<Transform*> childs;
         Transform* parent = nullptr;
         void start();
+        void setDestroy();
         void removeChild(Transform* transform);
         void addChild(Transform* transform);
+    friend class Actor;
     };
 }
 

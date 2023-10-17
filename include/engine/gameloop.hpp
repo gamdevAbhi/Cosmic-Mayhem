@@ -34,6 +34,12 @@ namespace Engine
         inline static int height = 0;
         inline static Input* input = nullptr;
         inline static Window* window = nullptr;
+        static void getAllComponents(std::vector<Component*>& components);
+        static void callDestroy();
+        static void callFixedUpdate();
+        static void callUpdate();
+        static void callLateUpdate();
+        static void callDraw();
         static void clearActors();
     };
 }
