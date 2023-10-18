@@ -1,4 +1,4 @@
-#include <engine/spriteRenderer.hpp>
+#include <engine/spriterenderer.hpp>
 
 // initialize the members of spriteRenderer
 void Engine::SpriteRenderer::start()

@@ -61,6 +61,23 @@ glm::vec3 Engine::Transform::getForward(bool isWorld)
     }
 }
 
+// get the world position respective to the local transform
+glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
+{
+    glm::mat4 translate(1.0f);
+    glm::mat4 rotation(1.0f);
+    glm::mat4 scale(1.0f);
+
+    translate = glm::translate(translate, localPosition + localOffset);
+    rotation = glm::mat4_cast(glm::quat(localRotation));
+    scale = glm::scale(scale, localScale);
+
+    glm::mat4 matrix = translate * rotation * scale;
+    glm::mat4 worldMatrix = (parent != nullptr)? parent->getMatrix() * localMatrix : localMatrix;
+
+    return glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
+}
+
 // get the local or world position of the transform
 glm::vec3 Engine::Transform::getPosition(bool isWorld)
 {

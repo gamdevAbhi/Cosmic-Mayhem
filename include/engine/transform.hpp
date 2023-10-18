@@ -17,6 +17,7 @@ namespace Engine
         glm::vec3 getRight(bool isWorld);
         glm::vec3 getUp(bool isWorld);
         glm::vec3 getForward(bool isWorld);
+        glm::vec3 getWorldPosAt(glm::vec3 localOffset);
         glm::vec3 getPosition(bool isWorld);
         glm::vec3 getRotation(bool isWorld);
         glm::vec3 getScale(bool isWorld);

@@ -27,9 +27,12 @@ namespace Engine
         virtual void fixedUpdate();
         // called after update
         virtual void lateUpdate();
+        // called when collision detected
+        virtual void onCollision();
         // called when component is destroying
         virtual void onDestroy();
     friend class Actor;
+    friend class BoxCollider;
     friend class GameLoop;
     };
 }

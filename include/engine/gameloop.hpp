@@ -3,6 +3,7 @@
 
 #include <engine/actor.hpp>
 #include <engine/camera.hpp>
+#include <engine/boxcollider.hpp>
 #include <engine/component.hpp>
 #include <engine/ebo.hpp>
 #include <engine/handler.hpp>
@@ -11,7 +12,7 @@
 #include <engine/resources.hpp>
 #include <engine/shader.hpp>
 #include <engine/sprite.hpp>
-#include <engine/spriteRenderer.hpp>
+#include <engine/spriterenderer.hpp>
 #include <engine/time.hpp>
 #include <engine/transform.hpp>
 #include <engine/vao.hpp>

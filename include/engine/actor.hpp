@@ -38,6 +38,7 @@ namespace Engine
         // destructor
         ~Actor();
         friend class GameLoop;
+        friend class BoxCollider;
     };
 }
 
