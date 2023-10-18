@@ -4,7 +4,7 @@ void Cosmic::SpaceShip::start()
 {
     transform = getActor()->getComponent<Engine::Transform>();
     renderer = getActor()->getComponent<Engine::SpriteRenderer>();
-    shipSprite = new Engine::Sprite("\\resources\\sprites\\spaceship-test.png");
+    shipSprite = new Engine::Sprite("\\resources\\sprites\\spaceship_test.png");
 
     renderer->setSprite(shipSprite);
     renderer->setOrder(0);

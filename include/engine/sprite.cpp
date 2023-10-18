@@ -2,6 +2,12 @@
 
 Engine::Sprite::Sprite(std::string relative_file_path)
 {
+    if(Resources::is_file_exist(Resources::get_current_dir() + relative_file_path) == false)
+    {
+        Handler::debug(std::string("file not found : ") + relative_file_path, "sprite");
+        return;
+    }
+
     int width, height, numCh;
 
     stbi_set_flip_vertically_on_load(true);

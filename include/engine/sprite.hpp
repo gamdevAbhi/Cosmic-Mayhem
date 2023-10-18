@@ -2,6 +2,7 @@
 #define ENGINE_SPRITE_HPP
 
 #include <stb/stb_image.h>
+#include <engine/handler.hpp>
 #include <engine/resources.hpp>
 #include <iostream>
 

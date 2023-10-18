@@ -12,7 +12,8 @@ namespace Engine
     // geting resources in the game resouces folder
     class Resources final
     {
-    public: 
+    public:
+        static bool is_file_exist(std::string file_path); 
         static std::string get_current_dir();
         static std::string get_file_content(std::string file_path);
     };

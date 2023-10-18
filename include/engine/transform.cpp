@@ -6,6 +6,8 @@ void Engine::Transform::start()
     localPosition = glm::vec3(0.0f);
     localRotation = glm::vec3(0.0f);
     localScale = glm::vec3(1.0f);
+
+    updateMatrix();
 }
 
 // get the local or world right direction
@@ -144,8 +146,8 @@ glm::vec3 Engine::Transform::getScale(bool isWorld)
     }
 }
 
-// get the world matrix of the transform
-glm::mat4 Engine::Transform::getMatrix()
+// update the local matrix of the transform
+void Engine::Transform::updateMatrix()
 {
     glm::mat4 translate(1.0f);
     glm::mat4 rotation(1.0f);
@@ -155,10 +157,15 @@ glm::mat4 Engine::Transform::getMatrix()
     rotation = glm::mat4_cast(glm::quat(localRotation));
     scale = glm::scale(scale, localScale);
 
-    glm::mat4 local_transform = translate * rotation * scale;
-    glm::mat4 world_transform = (parent != nullptr)? parent->getMatrix() * local_transform : local_transform;
+    localMatrix = translate * rotation * scale;
+}
 
-    return world_transform;
+// get the world matrix of the transform
+glm::mat4 Engine::Transform::getMatrix()
+{
+    glm::mat4 worldMatrix = (parent != nullptr)? parent->getMatrix() * localMatrix : localMatrix;
+
+    return worldMatrix;
 }
 
 // set the local or world position of the transform
@@ -170,6 +177,8 @@ void Engine::Transform::setPosition(bool isWorld, glm::vec3 position)
         glm::vec3 world_position = getPosition(true);
         localPosition += position - world_position;
     }
+
+    updateMatrix();
 }
 
 // set the local or world rotation of the transform
@@ -181,6 +190,8 @@ void Engine::Transform::setRotation(bool isWorld, glm::vec3 rotation)
         glm::vec3 world_rotation = getRotation(true);
         localRotation += rotation - world_rotation;
     }
+
+    updateMatrix();
 }
 
 // set the local or world scale of the transform
@@ -192,11 +203,26 @@ void Engine::Transform::setScale(bool isWorld, glm::vec3 scale)
         glm::vec3 world_scale = getScale(true);
         localScale += scale - world_scale;
     }
+
+    updateMatrix();
 }
 
 // set the parent transform
 void Engine::Transform::setParent(Engine::Transform* transform)
 {
+    if(transform == this) 
+    {
+        Handler::debug("can't make parent of own transform", "transform");
+        return;
+    }
+
+    for(int i = 0; i < childs.size(); i++)
+    {
+        if(childs[i] != transform) continue;
+        Handler::debug("can't make parent of his own child", "transform");
+        return;
+    }
+
     if(parent != nullptr) parent->removeChild(this);
     transform->addChild(this);
     parent = transform;

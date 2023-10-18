@@ -32,9 +32,11 @@ namespace Engine
         glm::vec3 localPosition;
         glm::vec3 localRotation;
         glm::vec3 localScale;
+        glm::mat4 localMatrix;
         std::vector<Transform*> childs;
         Transform* parent = nullptr;
         void start();
+        void updateMatrix();
         void setDestroy();
         void removeChild(Transform* transform);
         void addChild(Transform* transform);
