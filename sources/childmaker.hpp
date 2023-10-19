@@ -15,7 +15,8 @@ namespace Cosmic
     protected:
         void start();
         void update();
-        void onCollision();
+        void onCollisionEnter(Engine::BoxCollider* boxCollider);
+        void onCollisionExit(Engine::BoxCollider* boxCollider);
     };
 }
 

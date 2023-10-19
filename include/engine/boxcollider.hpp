@@ -5,6 +5,7 @@
 #include <engine/actor.hpp>
 #include <engine/component.hpp>
 #include <engine/transform.hpp>
+#include <map>
 
 namespace Engine
 {
@@ -22,9 +23,11 @@ namespace Engine
         float down;
         bool isTrigger;
         Transform* transform;
+        std::map<BoxCollider*, bool> colliders;
         void start();
         void onDestroy();
         void call(BoxCollider* collider);
+        void stackUpdate();
         std::vector<glm::vec3> getVertices();
         std::vector<glm::vec3> getAxis();
         glm::vec2 getProjection(glm::vec3 axis);

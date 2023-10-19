@@ -16,8 +16,6 @@ void Cosmic::ChildMaker::start()
 
 void Cosmic::ChildMaker::update()
 {
-    indicator->setActive(false);
-
     if(input->getKeyStatus(GLFW_KEY_F) == KEY_PRESS)
     {
         Engine::Actor* child = Engine::Actor::createActor("Child");
@@ -43,7 +41,14 @@ void Cosmic::ChildMaker::update()
     }
 }
 
-void Cosmic::ChildMaker::onCollision()
+void Cosmic::ChildMaker::onCollisionEnter(Engine::BoxCollider* boxCollider)
 {
+    std::cout << boxCollider->getActor()->name << std::endl;
     indicator->setActive(true);
+}
+
+void Cosmic::ChildMaker::onCollisionExit(Engine::BoxCollider* boxCollider)
+{
+    std::cout << boxCollider->getActor()->name << std::endl;
+    indicator->setActive(false);
 }

@@ -14,6 +14,11 @@ void Engine::ColliderManager::startDetection()
             }
         }
     }
+
+    for(int i = 0; i < BoxCollider::boxColliders.size(); i++)
+    {
+        BoxCollider::boxColliders[i]->stackUpdate();
+    }
 }
 
 // checking collision between two box collider

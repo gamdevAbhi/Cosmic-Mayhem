@@ -6,6 +6,7 @@
 namespace Engine
 {
     class Actor;
+    class BoxCollider;
     
     // base component class
     class Component
@@ -28,7 +29,12 @@ namespace Engine
         // called after update
         virtual void lateUpdate();
         // called when collision detected
-        virtual void onCollision();
+        virtual void onCollisionEnter(BoxCollider* boxCollider);
+        virtual void onCollisionStay(BoxCollider* boxCollider);
+        virtual void onCollisionExit(BoxCollider* boxCollider);
+        virtual void onTriggerEnter(BoxCollider* boxCollider);
+        virtual void onTriggerStay(BoxCollider* boxCollider);
+        virtual void onTriggerExit(BoxCollider* boxCollider);
         // called when component is destroying
         virtual void onDestroy();
     friend class Actor;

@@ -51,11 +51,44 @@ void Engine::BoxCollider::onDestroy()
     }
 }
 
+// call collider related functions
 void Engine::BoxCollider::call(BoxCollider* collider)
 {
+    bool exist = false;
+
+    if(colliders.find(collider) != colliders.end()) 
+    {
+        colliders[collider] = true;
+        exist = true;
+    }
+    else colliders[collider] = true;
+
     for(int i = 0; i < getActor()->components.size(); i++)
     {
-        getActor()->components[i]->onCollision();
+        if(exist == false) getActor()->components[i]->onCollisionEnter(collider);
+        else getActor()->components[i]->onCollisionStay(collider);
+    }
+}
+
+// updating colliders stack
+void Engine::BoxCollider::stackUpdate()
+{
+    std::vector<BoxCollider*> notFounds;
+
+    for(auto i = colliders.begin(); i != colliders.end(); i++)
+    {
+        if(i->second == false) notFounds.push_back(i->first);
+        i->second = false;
+    }
+
+    for(int i = 0; i < notFounds.size(); i++)
+    {
+        colliders.erase(notFounds[i]);
+
+        for(int j = 0; j < getActor()->components.size(); j++)
+        {
+            getActor()->components[j]->onCollisionExit(notFounds[i]);
+        }
     }
 }
 
