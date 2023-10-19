@@ -78,18 +78,12 @@ glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
     glm::mat4 rotation(1.0f);
     glm::mat4 scale(1.0f);
 
-    glm::vec3 orientedOffset = getOrientedVector(localOffset);
-
-    translate = glm::translate(translate, localPosition + orientedOffset);
+    translate = glm::translate(translate, localPosition + getOrientedVector(localOffset));
     rotation = glm::mat4_cast(glm::quat(localRotation));
     scale = glm::scale(scale, localScale);
 
     glm::mat4 matrix = translate * rotation * scale;
     glm::mat4 worldMatrix = (parent != nullptr)? parent->getMatrix() * matrix : matrix;
-
-    float x = worldMatrix[3][0];
-    float y = worldMatrix[3][1];
-    float z = worldMatrix[3][2];
 
     return glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
 }
