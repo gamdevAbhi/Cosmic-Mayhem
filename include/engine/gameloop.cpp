@@ -41,6 +41,7 @@ void Engine::GameLoop::begin()
         callDestroy();
         callUpdate();
         callLateUpdate();
+        callCollision();
         callDraw();
 
         window->updateWindow();
@@ -140,6 +141,12 @@ void Engine::GameLoop::callLateUpdate()
         components[0]->lateUpdate();
         components.erase(components.begin());
     }
+}
+
+// call the collision detection
+void Engine::GameLoop::callCollision()
+{
+    ColliderManager::startDetection();
 }
 
 // call the draw of each renderers

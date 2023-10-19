@@ -7,7 +7,7 @@ void Cosmic::SpaceShip::start()
     shipSprite = new Engine::Sprite("\\resources\\sprites\\spaceship_test.png");
 
     renderer->setSprite(shipSprite);
-    renderer->setOrder(0);
+    renderer->setOrder(1);
 }
 
 void Cosmic::SpaceShip::moveForward()

@@ -3,10 +3,10 @@
 // call when added in actor
 void Engine::BoxCollider::start()
 {
-    left = 0.5f;
-    right = 0.5f;
-    up = 0.5f;
-    down = 0.5f;
+    left = 1.f;
+    right = 1.f;
+    up = 1.f;
+    down = 1.f;
     transform = getActor()->getComponent<Transform>();
     boxColliders.push_back(this);
 }
@@ -65,14 +65,10 @@ std::vector<glm::vec3> Engine::BoxCollider::getVertices()
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
-    glm::vec3 up_left_vertex = transform->getWorldPosAt(glm::vec3(-width.x, 
-    height.x, 0.0f));
-    glm::vec3 up_right_vertex = transform->getWorldPosAt(glm::vec3(width.y, 
-    height.x, 0.0f));
-    glm::vec3 down_left_vertex = transform->getWorldPosAt(glm::vec3(-width.x, 
-    -height.y, 0.0f));
-    glm::vec3 down_right_vertex = transform->getWorldPosAt(glm::vec3(width.y,
-    -height.y, 0.0f));
+    glm::vec3 up_left_vertex = transform->getWorldPosAt(glm::vec3(-width.x, height.x, 0.0f));
+    glm::vec3 up_right_vertex = transform->getWorldPosAt(glm::vec3(width.y, height.x, 0.0f));
+    glm::vec3 down_left_vertex = transform->getWorldPosAt(glm::vec3(-width.x, -height.y, 0.0f));
+    glm::vec3 down_right_vertex = transform->getWorldPosAt(glm::vec3(width.y, -height.y, 0.0f));
 
     std::vector<glm::vec3> vertices;
     
@@ -122,5 +118,5 @@ glm::vec2 Engine::BoxCollider::getProjection(glm::vec3 axis)
 // check if two projection is overlap or not
 bool Engine::BoxCollider::isOverLap(glm::vec2 project_1, glm::vec2 project_2)
 {
-    return project_2.x > project_1.y || project_1.x > project_2.y;
+    return !(project_1.x < project_1.y && project_1.y < project_2.x && project_2.x < project_2.y);
 }

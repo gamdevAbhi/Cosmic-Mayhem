@@ -9,10 +9,13 @@ namespace Cosmic
     {
     public:
         Engine::Transform* transform;
+        std::vector<Engine::Actor*> actors;
+        Engine::Actor* indicator;
         Engine::Input* input;
     protected:
         void start();
         void update();
+        void onCollision();
     };
 }
 

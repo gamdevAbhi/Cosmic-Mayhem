@@ -61,6 +61,16 @@ glm::vec3 Engine::Transform::getForward(bool isWorld)
     }
 }
 
+// get oriented vector from the current orientation
+glm::vec3 Engine::Transform::getOrientedVector(glm::vec3 vector)
+{
+    glm::vec3 orientedVector(0.0f);
+    orientedVector += vector.x * getRight(false);
+    orientedVector += vector.y * getUp(false);
+    orientedVector += vector.z * getForward(true);
+    return orientedVector;
+}
+
 // get the world position respective to the local transform
 glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
 {
@@ -68,12 +78,18 @@ glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
     glm::mat4 rotation(1.0f);
     glm::mat4 scale(1.0f);
 
-    translate = glm::translate(translate, localPosition + localOffset);
+    glm::vec3 orientedOffset = getOrientedVector(localOffset);
+
+    translate = glm::translate(translate, localPosition + orientedOffset);
     rotation = glm::mat4_cast(glm::quat(localRotation));
     scale = glm::scale(scale, localScale);
 
     glm::mat4 matrix = translate * rotation * scale;
-    glm::mat4 worldMatrix = (parent != nullptr)? parent->getMatrix() * localMatrix : localMatrix;
+    glm::mat4 worldMatrix = (parent != nullptr)? parent->getMatrix() * matrix : matrix;
+
+    float x = worldMatrix[3][0];
+    float y = worldMatrix[3][1];
+    float z = worldMatrix[3][2];
 
     return glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
 }
@@ -241,7 +257,7 @@ void Engine::Transform::setParent(Engine::Transform* transform)
     }
 
     if(parent != nullptr) parent->removeChild(this);
-    transform->addChild(this);
+    if(transform != nullptr) transform->addChild(this);
     parent = transform;
 }
 

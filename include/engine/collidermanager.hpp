@@ -12,6 +12,7 @@ namespace Engine
     protected:
         static void startDetection();
         static bool checkCollision(BoxCollider* collider1, BoxCollider* collider2);
+    friend class GameLoop;
     };
 }
 

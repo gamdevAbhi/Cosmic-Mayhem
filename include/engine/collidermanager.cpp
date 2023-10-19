@@ -28,6 +28,7 @@ bool Engine::ColliderManager::checkCollision(BoxCollider* collider1, BoxCollider
         glm::vec2 projection2 = collider2->getProjection(axises1[i]);
 
         if(BoxCollider::isOverLap(projection1, projection2) == false) return false;
+        if(BoxCollider::isOverLap(projection2, projection1) == false) return false;
     }
 
     for(int i = 0; i < axises2.size(); i++)
@@ -36,6 +37,7 @@ bool Engine::ColliderManager::checkCollision(BoxCollider* collider1, BoxCollider
         glm::vec2 projection2 = collider2->getProjection(axises2[i]);
 
         if(BoxCollider::isOverLap(projection1, projection2) == false) return false;
+        if(BoxCollider::isOverLap(projection2, projection1) == false) return false;
     }
 
     return true;

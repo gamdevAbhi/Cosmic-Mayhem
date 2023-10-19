@@ -12,6 +12,7 @@ int main()
     Engine::Actor* actor = Engine::Actor::createActor("Space Ship");
 
     actor->addComponent<Engine::SpriteRenderer>();
+    actor->addComponent<Engine::BoxCollider>();
     actor->addComponent<Cosmic::SpaceShip>();
     actor->addComponent<Cosmic::ShipHandler>();
     actor->addComponent<Cosmic::ChildMaker>();

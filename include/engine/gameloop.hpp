@@ -2,8 +2,9 @@
 #define ENGINE_GAMELOOP_HPP
 
 #include <engine/actor.hpp>
-#include <engine/camera.hpp>
 #include <engine/boxcollider.hpp>
+#include <engine/camera.hpp>
+#include <engine/collidermanager.hpp>
 #include <engine/component.hpp>
 #include <engine/ebo.hpp>
 #include <engine/handler.hpp>
@@ -39,6 +40,7 @@ namespace Engine
         static void callFixedUpdate();
         static void callUpdate();
         static void callLateUpdate();
+        static void callCollision();
         static void callDraw();
         static void clearActors();
     };
