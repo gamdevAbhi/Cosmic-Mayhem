@@ -1,16 +1,15 @@
-#ifndef COSMIC_SHIP_HANDLER_HPP
-#define COSMIC_SHIP_HANDLER_HPP
+#ifndef COSMIC_CHILD_MAKER_HPP
+#define COSMIC_CHILD_MAKER_HPP
 
 #include <engine/gameloop.hpp>
-#include "spaceship.hpp"
 
 namespace Cosmic
 {
-    class ShipHandler : public Engine::Component
+    class ChildMaker : public Engine::Component
     {
     public:
+        Engine::Transform* transform;
         Engine::Input* input;
-        SpaceShip* ship;
     protected:
         void start();
         void update();

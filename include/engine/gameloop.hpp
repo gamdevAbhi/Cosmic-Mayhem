@@ -8,7 +8,6 @@
 #include <engine/ebo.hpp>
 #include <engine/handler.hpp>
 #include <engine/input.hpp>
-#include <engine/renderer.hpp>
 #include <engine/resources.hpp>
 #include <engine/shader.hpp>
 #include <engine/sprite.hpp>
@@ -24,7 +23,7 @@ namespace Engine
     class GameLoop final
     {
     public:
-        static void init(std::string title = "", int width = Window::screen_width / 2, 
+        static void initialize(std::string title = "", int width = Window::screen_width / 2, 
         int height = Window::screen_height / 2);
         static void begin();
         static Input* getInput();

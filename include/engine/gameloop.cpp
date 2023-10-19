@@ -1,7 +1,7 @@
 #include <engine/gameloop.hpp>
 
 // create window and input for the game
-void Engine::GameLoop::init(std::string title, int width, 
+void Engine::GameLoop::initialize(std::string title, int width, 
 int height)
 {
     GameLoop::title = title;
@@ -10,6 +10,8 @@ int height)
 
     window = new Window(title.c_str(), width, height);
     input = new Input(*window);
+
+    SpriteRenderer::initialize();
 
     Camera::gameWindow = window;
     Handler::gameWindow = window;
@@ -143,13 +145,8 @@ void Engine::GameLoop::callLateUpdate()
 // call the draw of each renderers
 void Engine::GameLoop::callDraw()
 {
-    Renderer::beforeDraw();
-    
-    for(int i = 0; i < Renderer::renderers.size(); i++)
-    {
-        if(Renderer::renderers[i]->getActor()->active == false) continue;
-        Renderer::renderers[i]->draw();
-    }
+    SpriteRenderer::beforeDraw();
+    SpriteRenderer::draw();
 }
 
 // get the input class

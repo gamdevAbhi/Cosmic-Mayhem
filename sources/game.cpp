@@ -1,18 +1,20 @@
 #include <engine/gameloop.hpp>
 
 #include "spaceship.hpp"
-#include "shipHandler.hpp"
+#include "shiphandler.hpp"
 #include "follower.hpp"
+#include "childmaker.hpp"
 
 int main()
 {
-    Engine::GameLoop::init();
+    Engine::GameLoop::initialize();
 
     Engine::Actor* actor = Engine::Actor::createActor("Space Ship");
 
     actor->addComponent<Engine::SpriteRenderer>();
     actor->addComponent<Cosmic::SpaceShip>();
     actor->addComponent<Cosmic::ShipHandler>();
+    actor->addComponent<Cosmic::ChildMaker>();
 
     Engine::Camera::getRenderCamera()->orthographicSize = 25.f;
     Engine::Camera::getRenderCamera()->getActor()->getComponent<Engine::Transform>()->setPosition(true, glm::vec3(0.0f, 0.0f, 2.0f));
