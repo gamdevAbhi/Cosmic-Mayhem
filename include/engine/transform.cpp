@@ -6,6 +6,7 @@ void Engine::Transform::start()
     localPosition = glm::vec3(0.0f);
     localRotation = glm::vec3(0.0f);
     localScale = glm::vec3(1.0f);
+    isStatic = false;
 
     updateMatrix();
 }
@@ -173,6 +174,12 @@ glm::vec3 Engine::Transform::getScale(bool isWorld)
     }
 }
 
+// get static status
+bool Engine::Transform::getStaticStatus()
+{
+    return isStatic;
+}
+
 // update the local matrix of the transform
 void Engine::Transform::updateMatrix()
 {
@@ -198,6 +205,8 @@ glm::mat4 Engine::Transform::getMatrix()
 // set the local or world position of the transform
 void Engine::Transform::setPosition(bool isWorld, glm::vec3 position)
 {
+    if(isStatic == true) return;
+
     if(isWorld == false) localPosition = position;
     else
     {
@@ -211,6 +220,8 @@ void Engine::Transform::setPosition(bool isWorld, glm::vec3 position)
 // set the local or world rotation of the transform
 void Engine::Transform::setRotation(bool isWorld, glm::vec3 rotation)
 {
+    if(isStatic == true) return;
+
     if(isWorld == false) localRotation = rotation;
     else
     {
@@ -224,6 +235,8 @@ void Engine::Transform::setRotation(bool isWorld, glm::vec3 rotation)
 // set the local or world scale of the transform
 void Engine::Transform::setScale(bool isWorld, glm::vec3 scale)
 {
+    if(isStatic == true) return;
+
     if(isWorld == false) localScale = scale;
     else
     {
@@ -237,6 +250,12 @@ void Engine::Transform::setScale(bool isWorld, glm::vec3 scale)
 // set the parent transform
 void Engine::Transform::setParent(Engine::Transform* transform)
 {
+    if(isStatic == true)
+    {
+        Handler::debug("can't make parent because actor set to static", "transform");
+        return;
+    }
+
     if(transform == this) 
     {
         Handler::debug("can't make parent of own transform", "transform");
@@ -253,6 +272,12 @@ void Engine::Transform::setParent(Engine::Transform* transform)
     if(parent != nullptr) parent->removeChild(this);
     if(transform != nullptr) transform->addChild(this);
     parent = transform;
+}
+
+// set static status
+void Engine::Transform::setStatic(bool status)
+{
+    isStatic = status;
 }
 
 // get the parent transform

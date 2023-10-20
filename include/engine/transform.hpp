@@ -23,14 +23,17 @@ namespace Engine
         glm::vec3 getRotation(bool isWorld);
         glm::vec3 getScale(bool isWorld);
         glm::mat4 getMatrix();
+        bool getStaticStatus();
         Transform* getChild(int index);
+        Transform* getParent();
         int getChildsSize();
         void setPosition(bool isWorld, glm::vec3 position);
         void setRotation(bool isWorld, glm::vec3 rotation);
         void setScale(bool isWorld, glm::vec3 scale);
         void setParent(Transform* transform);
-        Transform* getParent();
+        void setStatic(bool status);
     protected:
+        bool isStatic;
         glm::vec3 localPosition;
         glm::vec3 localRotation;
         glm::vec3 localScale;

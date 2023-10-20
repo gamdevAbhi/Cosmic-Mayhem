@@ -30,6 +30,7 @@ void Cosmic::ChildMaker::update()
         Engine::Transform* transform = child->getComponent<Engine::Transform>();
         transform->setScale(true, glm::vec3(1.f, 1.f, 1.0f));
         transform->setPosition(true, this->transform->getWorldPosAt(glm::vec3(-4.f, 0.f, 0.0f)));
+        transform->setStatic(true);
         
         actors.push_back(child);
     }
