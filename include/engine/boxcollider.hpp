@@ -26,12 +26,13 @@ namespace Engine
         std::map<BoxCollider*, bool> colliders;
         void start();
         void onDestroy();
-        void call(BoxCollider* collider);
+        void call(BoxCollider* collider, glm::vec3 axis);
         void stackUpdate();
         std::vector<glm::vec3> getVertices();
         std::vector<glm::vec3> getAxis();
         glm::vec2 getProjection(glm::vec3 axis);
-        static bool isOverLap(glm::vec2 project_1, glm::vec2 project_2);
+        static bool isOverLap(glm::vec2 project1, glm::vec2 project2);
+        static double getOverLap(glm::vec2 project1, glm::vec2 project2);
         inline static std::vector<BoxCollider*> boxColliders;
     friend class ColliderManager;
     };

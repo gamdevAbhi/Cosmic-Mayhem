@@ -52,7 +52,7 @@ void Engine::BoxCollider::onDestroy()
 }
 
 // call collider related functions
-void Engine::BoxCollider::call(BoxCollider* collider)
+void Engine::BoxCollider::call(BoxCollider* collider, glm::vec3 axis)
 {
     bool exist = false;
 
@@ -63,10 +63,23 @@ void Engine::BoxCollider::call(BoxCollider* collider)
     }
     else colliders[collider] = true;
 
-    for(int i = 0; i < getActor()->components.size(); i++)
+    if(collider->isTrigger == false && isTrigger == false)
     {
-        if(exist == false) getActor()->components[i]->onCollisionEnter(collider);
-        else getActor()->components[i]->onCollisionStay(collider);
+        for(int i = 0; i < getActor()->components.size(); i++)
+        {
+            if(exist == false) getActor()->components[i]->onCollisionEnter(collider);
+            else getActor()->components[i]->onCollisionStay(collider);
+        }
+
+        transform->setPosition(true, transform->getPosition(true) + axis);
+    }
+    else if(isTrigger == true && collider->isTrigger == false)
+    {
+        for(int i = 0; i < getActor()->components.size(); i++)
+        {
+            if(exist == false) getActor()->components[i]->onTriggerEnter(collider);
+            else getActor()->components[i]->onTriggerStay(collider);
+        }
     }
 }
 
@@ -85,9 +98,19 @@ void Engine::BoxCollider::stackUpdate()
     {
         colliders.erase(notFounds[i]);
 
-        for(int j = 0; j < getActor()->components.size(); j++)
+        if(notFounds[i]->isTrigger == false && isTrigger == false)
         {
-            getActor()->components[j]->onCollisionExit(notFounds[i]);
+            for(int j = 0; j < getActor()->components.size(); j++)
+            {
+                getActor()->components[j]->onCollisionExit(notFounds[i]);
+            }
+        }
+        else if(isTrigger == true && notFounds[i]->isTrigger == false)
+        {
+            for(int j = 0; j < getActor()->components.size(); j++)
+            {
+                getActor()->components[j]->onTriggerExit(notFounds[i]);
+            }
         }
     }
 }
@@ -123,6 +146,9 @@ std::vector<glm::vec3> Engine::BoxCollider::getAxis()
     glm::vec3 x_axis = glm::vec3(-(vertices[0].y - vertices[2].y), vertices[0].x - vertices[2].x, 0.0f);
     glm::vec3 y_axis = glm::vec3(-(vertices[1].y - vertices[0].y), vertices[1].x - vertices[0].x, 0.0f);
 
+    x_axis = glm::normalize(x_axis);
+    y_axis = glm::normalize(y_axis);
+
     axis.push_back(x_axis);
     axis.push_back(y_axis);
 
@@ -149,7 +175,13 @@ glm::vec2 Engine::BoxCollider::getProjection(glm::vec3 axis)
 }
 
 // check if two projection is overlap or not
-bool Engine::BoxCollider::isOverLap(glm::vec2 project_1, glm::vec2 project_2)
+bool Engine::BoxCollider::isOverLap(glm::vec2 project1, glm::vec2 project2)
 {
-    return !(project_1.x < project_1.y && project_1.y < project_2.x && project_2.x < project_2.y);
+    return !(project1.y < project2.x || project2.y < project1.x);
+}
+
+double Engine::BoxCollider::getOverLap(glm::vec2 project1, glm::vec2 project2)
+{
+    if(project1.y > project2.x) return project1.y - project2.x;
+    else return project2.y - project1.x;
 }

@@ -19,9 +19,13 @@ void Cosmic::ChildMaker::update()
     if(input->getKeyStatus(GLFW_KEY_F) == KEY_PRESS)
     {
         Engine::Actor* child = Engine::Actor::createActor("Child");
+        
         child->addComponent<Engine::BoxCollider>();
+        if(actors.size() % 2 != 0) child->getComponent<Engine::BoxCollider>()->setTrigger(true);
+
         child->addComponent<Engine::SpriteRenderer>()->setOrder(0);
-        child->getComponent<Engine::SpriteRenderer>()->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        if(actors.size() % 2 == 0) child->getComponent<Engine::SpriteRenderer>()->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        else child->getComponent<Engine::SpriteRenderer>()->color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
         
         Engine::Transform* transform = child->getComponent<Engine::Transform>();
         transform->setScale(true, glm::vec3(1.f, 1.f, 1.0f));
@@ -43,12 +47,20 @@ void Cosmic::ChildMaker::update()
 
 void Cosmic::ChildMaker::onCollisionEnter(Engine::BoxCollider* boxCollider)
 {
-    std::cout << boxCollider->getActor()->name << std::endl;
     indicator->setActive(true);
 }
 
 void Cosmic::ChildMaker::onCollisionExit(Engine::BoxCollider* boxCollider)
 {
-    std::cout << boxCollider->getActor()->name << std::endl;
+    indicator->setActive(false);
+}
+
+void Cosmic::ChildMaker::onTriggerEnter(Engine::BoxCollider* boxCollider)
+{
+    indicator->setActive(true);
+}
+
+void Cosmic::ChildMaker::onTriggerExit(Engine::BoxCollider* boxCollider)
+{
     indicator->setActive(false);
 }

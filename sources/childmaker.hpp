@@ -17,6 +17,8 @@ namespace Cosmic
         void update();
         void onCollisionEnter(Engine::BoxCollider* boxCollider);
         void onCollisionExit(Engine::BoxCollider* boxCollider);
+        void onTriggerEnter(Engine::BoxCollider* boxCollider);
+        void onTriggerExit(Engine::BoxCollider* boxCollider);
     };
 }
 
