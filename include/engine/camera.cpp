@@ -22,6 +22,58 @@ glm::mat4 Engine::Camera::getMatrix()
     return projection * view;
 }
 
+// get the screen pos from the world pos
+glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
+{
+    Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
+    glm::vec3 distance = worldPosition - transform->getPosition(true);
+
+    glm::vec2 screenPos;
+    screenPos.x = distance.x * screenToWorldX * orthographicSize;
+    screenPos.y = distance.y * screenToWorldY * orthographicSize;
+
+    return screenPos;
+}
+
+// get the world pos from the screen pos
+glm::vec3 Engine::Camera::getScreenToWorldPos(glm::vec2 screenPos)
+{
+    Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
+
+    glm::vec3 worldPos;
+    worldPos.x = screenPos.x / (screenToWorldX * orthographicSize);
+    worldPos.y = screenPos.y / (screenToWorldY * orthographicSize);
+    worldPos.z = 0.0f;
+
+    return transform->getPosition(true) + worldPos;
+}
+
+// get if the transform visible in screen
+bool Engine::Camera::isOnScreen(Engine::Transform* transform)
+{
+    int width = std::get<0>(gameWindow->getSize());
+    int height = std::get<1>(gameWindow->getSize());
+
+    glm::vec3 scale = transform->getScale(true);
+    
+    std::vector<glm::vec3> vertices;
+    
+    vertices.push_back(transform->getWorldPosAt(glm::vec3(-scale.x, scale.y, 0.0f)));
+    vertices.push_back(transform->getWorldPosAt(glm::vec3(scale.x, scale.y, 0.0f)));
+    vertices.push_back(transform->getWorldPosAt(glm::vec3(-scale.x, -scale.y, 0.0f)));
+    vertices.push_back(transform->getWorldPosAt(glm::vec3(scale.x, -scale.y, 0.0f)));
+
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        glm::vec2 screenPos = getWorldToScreenPos(vertices[i]);
+
+        if(-width <= screenPos.x && screenPos.x <= width && 
+        -height <= screenPos.y && screenPos.y < height) return true;
+    }
+
+    return false;
+}
+
 // get the rendering camera
 Engine::Camera* Engine::Camera::getRenderCamera()
 {

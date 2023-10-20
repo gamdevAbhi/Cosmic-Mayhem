@@ -7,7 +7,7 @@
 
 int main()
 {
-    Engine::GameLoop::initialize();
+    Engine::GameLoop::initialize("game");
 
     Engine::Actor* actor = Engine::Actor::createActor("Space Ship");
 

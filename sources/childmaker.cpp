@@ -41,8 +41,11 @@ void Cosmic::ChildMaker::update()
     }
     else if(input->getKeyStatus(GLFW_KEY_I) == KEY_PRESS)
     {
+        glm::vec3 pos = transform->getPosition(true);
         std::cout << "Child = " << actors.size() << std::endl;
         std::cout << "Frame = " << Engine::Time::getLastFPS() << std::endl;
+        if(Engine::Camera::getRenderCamera()->isOnScreen(transform)) std::cout << "Visible" << std::endl;
+        else std::cout << "Non-Visible" << std::endl;
     }
 }
 
