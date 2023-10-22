@@ -20,8 +20,8 @@ void Cosmic::ChildMaker::update()
     {
         Engine::Actor* child = Engine::Actor::createActor("Child");
         
-        child->addComponent<Engine::BoxCollider>();
-        if(actors.size() % 2 != 0) child->getComponent<Engine::BoxCollider>()->setTrigger(true);
+        // child->addComponent<Engine::BoxCollider>();
+        // if(actors.size() % 2 != 0) child->getComponent<Engine::BoxCollider>()->setTrigger(true);
 
         child->addComponent<Engine::SpriteRenderer>()->setOrder(0);
         if(actors.size() % 2 == 0) child->getComponent<Engine::SpriteRenderer>()->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -41,11 +41,19 @@ void Cosmic::ChildMaker::update()
     }
     else if(input->getKeyStatus(GLFW_KEY_I) == KEY_PRESS)
     {
-        glm::vec3 pos = transform->getPosition(true);
+        Engine::Camera* camera = Engine::Camera::getRenderCamera();
+        glm::vec2 screenPos = camera->getWorldToScreenPos(transform->getPosition(true));
+        glm::vec3 worldPos = camera->getScreenToWorldPos(screenPos);
+
         std::cout << "Child = " << actors.size() << std::endl;
         std::cout << "Frame = " << Engine::Time::getLastFPS() << std::endl;
-        if(Engine::Camera::getRenderCamera()->isOnScreen(transform)) std::cout << "Visible" << std::endl;
-        else std::cout << "Non-Visible" << std::endl;
+        std::cout << "Location =" << " X : " <<  screenPos.x << " Y : " << screenPos.y << std::endl;
+        std::cout << "Location =" << " X : " <<  worldPos.x << " Y : " << worldPos.y << " Z : " << worldPos.z << std::endl;
+    }
+    else if(input->getKeyStatus(GLFW_KEY_G) == KEY_PRESS)
+    {
+        Engine::Transform* cTransform = Engine::Camera::getRenderCamera()->getActor()->getComponent<Engine::Transform>();
+        cTransform->setRotation(true, cTransform->getRotation(true) + glm::vec3(0.0f, 0.0f, 90.f));
     }
 }
 

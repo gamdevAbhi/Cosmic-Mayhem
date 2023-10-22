@@ -25,14 +25,15 @@ glm::mat4 Engine::Camera::getMatrix()
 // get the screen pos from the world pos
 glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
 {
-    Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
-    glm::vec3 distance = worldPosition - transform->getPosition(true);
+    glm::vec4 clipSpace = getMatrix() * glm::vec4(worldPosition, 1.0f);
+    glm::vec3 ndcSpace = glm::vec3(clipSpace.x, clipSpace.y, clipSpace.z);
+    glm::vec2 viewSize = glm::vec2(std::get<0>(gameWindow->getSize()), std::get<1>(gameWindow->getSize()));
 
-    glm::vec2 screenPos;
-    screenPos.x = distance.x * screenToWorldX * orthographicSize;
-    screenPos.y = distance.y * screenToWorldY * orthographicSize;
+    if(clipSpace.w != 0.0) ndcSpace = ndcSpace / clipSpace.w;
+    
+    glm::vec2 screenSpace = (glm::vec2(ndcSpace.x + 1.0f, ndcSpace.y + 1.0f) / 2.0f) * viewSize;
 
-    return screenPos;
+    return screenSpace;
 }
 
 // get the world pos from the screen pos
@@ -45,7 +46,7 @@ glm::vec3 Engine::Camera::getScreenToWorldPos(glm::vec2 screenPos)
     worldPos.y = screenPos.y / (screenToWorldY * orthographicSize);
     worldPos.z = 0.0f;
 
-    return transform->getPosition(true) + worldPos;
+    return transform->getPosition(true) + transform->getOrientedVector(worldPos);
 }
 
 // get if the transform visible in screen

@@ -21,8 +21,6 @@ namespace Engine
         bool isOnScreen(Transform* transform);
         static Camera* getRenderCamera();
     private:
-        inline static float worldToScreenY = 200.f;
-        inline static float worldToScreenX = 350.f;
         inline static float screenToWorldY = 1.92f;
         inline static float screenToWorldX = 1.95f;
         inline static Camera* renderCamera = nullptr;
