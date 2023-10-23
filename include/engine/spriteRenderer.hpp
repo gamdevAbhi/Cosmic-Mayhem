@@ -9,6 +9,7 @@
 #include <engine/handler.hpp>
 #include <engine/shader.hpp>
 #include <engine/sprite.hpp>
+#include <engine/quadtree.hpp>
 #include <algorithm>
 
 namespace Engine
@@ -31,12 +32,14 @@ namespace Engine
     protected:
         inline static Shader* shader = nullptr;
         inline static Sprite* defaultSprite = nullptr;
+        inline static QuadTree* root = nullptr;
         inline static std::vector<vertex> vertices;
         inline static std::vector<GLuint> indices;
         inline static VAO* vao;
         inline static VBO* vbo;
         inline static EBO* ebo;
         Sprite* sprite;
+        Children* children;
         unsigned int order;
         void start();
         static void add(SpriteRenderer* renderer);

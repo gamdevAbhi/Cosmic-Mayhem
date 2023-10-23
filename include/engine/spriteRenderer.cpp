@@ -12,6 +12,9 @@ void Engine::SpriteRenderer::initialize()
     // create default sprite
     defaultSprite = new Sprite("\\resources\\sprites\\default_sprite.png");
 
+    // create root of quadtree
+    root = new QuadTree(AABB(0, 0, 100));
+
     // create vertices
     vertices = std::vector<vertex>
     {
@@ -49,6 +52,21 @@ void Engine::SpriteRenderer::start()
     color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     sprite = defaultSprite;
     order = 0;
+    
+    glm::vec2 position = getActor()->getComponent<Transform>()->getPosition(true);
+    glm::vec2 scale = getActor()->getComponent<Transform>()->getScale(true);
+    children = new Children(this, AABB(position.x, position.y, std::max(std::abs(scale.x), std::abs(scale.y))));
+
+    while(true)
+    {
+        if(!root->boundary.contains(children->boundary)) root = root->expand();
+        else
+        {
+            root->insert(children);
+            break;
+        }
+    }
+
     add(this);
 }
 
@@ -75,6 +93,13 @@ void Engine::SpriteRenderer::draw()
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
     glm::mat4 camera_matrix = camera->getMatrix();
 
+    glm::vec2 position = camera->getActor()->getComponent<Transform>()->getPosition(true);
+    std::vector<Children*> childrens;
+
+    root->find(AABB(position.x, position.y, 14), childrens);
+
+    std::cout << childrens.size() << std::endl;
+
     for(int i = 0; i < renderers.size(); i++)
     {
         Actor* actor = renderers[i]->getActor();
@@ -100,6 +125,7 @@ void Engine::SpriteRenderer::draw()
 
 void Engine::SpriteRenderer::onDestroy()
 {
+    children->destroy();
     remove(this);
 }
 
