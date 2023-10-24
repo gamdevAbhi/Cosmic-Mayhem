@@ -119,7 +119,7 @@ void Engine::SpriteRenderer::draw()
     std::vector<Node*> nodes;
     std::vector<SpriteRenderer*> renderers;
 
-    root->find(AABB(position.x, position.y, camera->getDiagonal() / 2.0f), nodes);
+    root->find(AABB(position.x, position.y, camera->getDiagonal()), nodes);
 
     for(int i = 0; i < nodes.size(); i++) renderers.push_back(dynamic_cast<SpriteRenderer*>(nodes[i]->object));
 

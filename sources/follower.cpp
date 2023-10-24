@@ -7,11 +7,27 @@ void Cosmic::Follower::start()
 
 void Cosmic::Follower::lateUpdate()
 {
+    move();
+}
+
+void Cosmic::Follower::move()
+{
     glm::vec3 difference = target->getPosition(true) - transform->getPosition(true);
-    double length = glm::sqrt(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
-    glm::vec3 direction = glm::vec3(difference.x / length, difference.y / length, difference.z / length);
-    direction *= Engine::Time::getDeltaTime() * followSpeed;
-    direction.z = 0.f;
-    
-    transform->setPosition(true, transform->getPosition(true) + direction);
+    glm::vec3 direction = glm::normalize(difference);
+    direction.z = 0.0f;
+
+    glm::vec3 move = direction;
+    move *= Engine::Time::getDeltaTime() * followSpeed;
+
+    glm::vec3 finalPosition = transform->getPosition(true) + move;
+    float length = glm::length(target->getPosition(true) - finalPosition);
+
+    if(length > maxLength)
+    {
+        float diff = length - maxLength;
+        finalPosition = transform->getPosition(true) + glm::vec3(direction.x * diff,
+        direction.y * diff, 0.0f);
+    }
+
+    transform->setPosition(true, finalPosition);
 }

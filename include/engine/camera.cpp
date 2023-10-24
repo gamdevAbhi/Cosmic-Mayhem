@@ -14,7 +14,7 @@ glm::mat4 Engine::Camera::getMatrix()
     float y = (std::get<1>(size) / orthographicSize) / 2.0f;
 
     projection = glm::ortho(-x, x, -y, y, nearClip, farClip);
-
+    
     glm::vec3 camPos = transform->getPosition(true);
 
     view = glm::lookAt(camPos, glm::vec3(camPos.x, camPos.y, 0.0f), transform->getUp(true));
