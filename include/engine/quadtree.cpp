@@ -1,5 +1,6 @@
 #include <engine/quadtree.hpp>
 
+// constructor
 Engine::AABB::AABB(float _x, float _y, float _expand) :
 x(_x),
 y(_y),
@@ -7,6 +8,7 @@ expand(_expand)
 {
 }
 
+// check if the box is contained by the aabb
 bool Engine::AABB::contains(AABB box)
 {
     if(x - expand <= box.x - box.expand && x + expand >= box.x + box.expand
@@ -14,30 +16,34 @@ bool Engine::AABB::contains(AABB box)
     else return false;
 }
 
+// check if the two box intersects each other
 bool Engine::AABB::intersects(AABB box)
 {
     return !(x - expand >= box.x + box.expand || x + expand <= box.x - box.expand
     || y + expand <= box.y - box.expand || y - expand >= box.y + box.expand);
 }
 
-Engine::Children::Children(Engine::Component* _object, Engine::AABB _boundary) :
+// constructor
+Engine::Node::Node(Engine::Component* _object, Engine::AABB _boundary) :
 boundary(_boundary)
 {
     object = _object;
     parent = nullptr;
 }
 
-void Engine::Children::update(Engine::AABB _boundary)
+// updating the node
+void Engine::Node::update(Engine::AABB _boundary, Engine::QuadTree* root)
 {
     if(parent == nullptr) return;
 
     boundary = _boundary;
 
     parent->remove(this);
-    parent = nullptr;
+    root->insert(this);
 }
 
-void Engine::Children::destroy()
+// destroy the node
+void Engine::Node::destroy()
 {
     if(parent == nullptr) return;
 
@@ -45,54 +51,64 @@ void Engine::Children::destroy()
     parent = nullptr;
 }
 
+// constructor
 Engine::QuadTree::QuadTree(Engine::AABB _boundary) :
 devided(false),
 boundary(_boundary)
 {
 }
 
-bool Engine::QuadTree::insert(Children* children)
+// insert the node to the quad tree
+bool Engine::QuadTree::insert(Node* node)
 {
-    if(children == nullptr || children->object == nullptr) return false;
+    if(node == nullptr || node->object == nullptr) return false;
 
-    if(!boundary.contains(children->boundary)) return false;
+    if(!boundary.contains(node->boundary)) return false;
 
-    if(childrens.size() < capacity) 
+    if(nodes.size() < capacity && devided == false) 
     {
-        childrens.push_back(children);
-        children->parent = this;
+        nodes.push_back(node);
+        node->parent = this;
         return true;
     }
     
     if(devided == false) subdevide();
 
-    if(northEast->insert(children)) return true;
-    else if(northWest->insert(children)) return true;
-    else if(southEast->insert(children)) return true;
-    else if(southWest->insert(children)) return true;
-    else return false;
+    if(northEast->insert(node)) return true;
+    else if(northWest->insert(node)) return true;
+    else if(southEast->insert(node)) return true;
+    else if(southWest->insert(node)) return true;
+    else 
+    {
+        nodes.push_back(node);
+        node->parent = this;
+    }
+
+    return true;
 }
 
-
-bool Engine::QuadTree::remove(Children* obj)
+// remove the node from the quad tree
+bool Engine::QuadTree::remove(Node* node)
 {
-    if(obj == nullptr) return false;
+    if(node == nullptr) return false;
 
-    for(int i = 0; i < childrens.size(); i++)
+    for(int i = 0; i < nodes.size(); i++)
     {
-        if(childrens[i] == obj) childrens.erase(childrens.begin() + i);
+        if(nodes[i] != node) continue; 
+        nodes.erase(nodes.begin() + i);
         return true;
     }
     
     if(devided == false) return false; 
 
-    if(northEast->remove(obj)) return true;
-    else if(northWest->remove(obj)) return true;
-    else if(southEast->remove(obj)) return true;
-    else if(southWest->remove(obj)) return true;
+    if(northEast->remove(node)) return true;
+    else if(northWest->remove(node)) return true;
+    else if(southEast->remove(node)) return true;
+    else if(southWest->remove(node)) return true;
     else return false;
 }
 
+// subdevide the region into 4
 void Engine::QuadTree::subdevide()
 {
     devided = true;
@@ -111,20 +127,21 @@ void Engine::QuadTree::subdevide()
     southEast = new QuadTree(se);
     southWest = new QuadTree(sw);
 
-    std::vector<Children*> notIncluded;
+    std::vector<Node*> notIncluded;
 
-    for(int i = 0; i < childrens.size(); i++)
+    for(int i = 0; i < nodes.size(); i++)
     {
-        if(northEast->insert(childrens[i])) continue;
-        else if(northWest->insert(childrens[i])) continue;
-        else if(southEast->insert(childrens[i])) continue;
-        else if(southWest->insert(childrens[i])) continue;
-        notIncluded.push_back(childrens[i]);
+        if(northEast->insert(nodes[i])) continue;
+        else if(northWest->insert(nodes[i])) continue;
+        else if(southEast->insert(nodes[i])) continue;
+        else if(southWest->insert(nodes[i])) continue;
+        notIncluded.push_back(nodes[i]);
     }
 
-    childrens = notIncluded;
+    nodes = notIncluded;
 }
 
+// expand the quad tree
 Engine::QuadTree* Engine::QuadTree::expand()
 {
     AABB nBoundary(boundary.x + boundary.expand, boundary.y + boundary.expand, boundary.expand * 2.0f);
@@ -136,13 +153,14 @@ Engine::QuadTree* Engine::QuadTree::expand()
     return nTree;
 }
 
-void Engine::QuadTree::find(AABB _boundary, std::vector<Engine::Children*>& query)
+// find the nodes in quadtree that in the boundary
+void Engine::QuadTree::find(AABB _boundary, std::vector<Engine::Node*>& query)
 {
     if(boundary.intersects(_boundary) == false) return;
     
-    for(int i = 0; i < childrens.size(); i++)
+    for(int i = 0; i < nodes.size(); i++)
     {
-        if(_boundary.intersects(childrens[i]->boundary)) query.push_back(childrens[i]);
+        if(_boundary.intersects(nodes[i]->boundary)) query.push_back(nodes[i]);
     }
 
     if(devided == false) return;

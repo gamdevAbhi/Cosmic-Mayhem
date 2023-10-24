@@ -16,6 +16,7 @@ void Engine::Component::start() {}
 void Engine::Component::update() {}
 void Engine::Component::lateUpdate() {}
 void Engine::Component::fixedUpdate() {}
+void Engine::Component::onTransformChanged() {}
 void Engine::Component::onCollisionEnter(BoxCollider* boxCollider) {}
 void Engine::Component::onCollisionStay(BoxCollider* boxCollider) {}
 void Engine::Component::onCollisionExit(BoxCollider* boxCollder) {}

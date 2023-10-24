@@ -1,34 +1,47 @@
 #include <engine/collidermanager.hpp>
 
+// call for initialization
+void Engine::ColliderManager::initialize()
+{
+    root = new QuadTree(AABB(0, 0, 100));
+    BoxCollider::rootP = &root;
+}
+
 // start detecting collision
 void Engine::ColliderManager::startDetection()
 {
-    broadPhase();
-    narrowPhase();
+    std::vector<Node*> nodes;
 
-    for(int i = 0; i < BoxCollider::boxColliders.size(); i++)
+    root->find(root->boundary, nodes);
+
+    for(int i = 0; i < nodes.size(); i++)
     {
-        BoxCollider::boxColliders[i]->stackUpdate();
+        narrowPhase(nodes[i]);
+    }
+
+    for(int i = 0; i < nodes.size(); i++)
+    {
+        dynamic_cast<BoxCollider*>(nodes[i]->object)->stackUpdate();
     }
 }
 
-// broad phase collision detection
-void Engine::ColliderManager::broadPhase()
-{
-
-}
-
 // narrow phase collision detection
-void Engine::ColliderManager::narrowPhase()
+void Engine::ColliderManager::narrowPhase(Node* node)
 {
-    for(int i = 0; i < BoxCollider::boxColliders.size(); i++)
-    {        
-        for(int j = i + 1; j < BoxCollider::boxColliders.size(); j++)
+    std::vector<Node*> potentialCollisions;
+    node->parent->find(node->boundary, potentialCollisions);
+
+    BoxCollider* collider = dynamic_cast<BoxCollider*>(node->object);
+
+    for(int i = 0; i < potentialCollisions.size(); i++)
+    {
+        if(node == potentialCollisions[i]) continue;
+
+        BoxCollider* collider1 = dynamic_cast<BoxCollider*>(potentialCollisions[i]->object);
+
+        if(checkCollision(collider, collider1))
         {
-            if(checkCollision(BoxCollider::boxColliders[i], BoxCollider::boxColliders[j]))
-            {
-                collisionDetected(BoxCollider::boxColliders[i], BoxCollider::boxColliders[j]);
-            }
+            collisionDetected(collider, collider1);
         }
     }
 }

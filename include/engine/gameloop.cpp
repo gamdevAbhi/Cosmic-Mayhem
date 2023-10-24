@@ -12,6 +12,7 @@ int height)
     input = new Input(*window);
 
     SpriteRenderer::initialize();
+    ColliderManager::initialize();
 
     Camera::gameWindow = window;
     Handler::gameWindow = window;
@@ -149,10 +150,9 @@ void Engine::GameLoop::callCollision()
     ColliderManager::startDetection();
 }
 
-// call the draw of each renderers
+// call the draw for renderers
 void Engine::GameLoop::callDraw()
 {
-    SpriteRenderer::beforeDraw();
     SpriteRenderer::draw();
 }
 
@@ -170,7 +170,7 @@ void Engine::GameLoop::clearScene()
     while(i < Actor::actors.size())
     {
         if(Actor::actors[i]->manualDestroy) i++;
-        else Actor::destroy(Actor::actors[i]);
+        else Actor::actors[i]->setDestroy();
     }
 }
 

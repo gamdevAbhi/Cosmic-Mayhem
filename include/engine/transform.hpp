@@ -23,7 +23,6 @@ namespace Engine
         glm::vec3 getRotation(bool isWorld);
         glm::vec3 getScale(bool isWorld);
         glm::mat4 getMatrix();
-        bool getStaticStatus();
         Transform* getChild(int index);
         Transform* getParent();
         int getChildsSize();
@@ -31,17 +30,23 @@ namespace Engine
         void setRotation(bool isWorld, glm::vec3 rotation);
         void setScale(bool isWorld, glm::vec3 scale);
         void setParent(Transform* transform);
-        void setStatic(bool status);
     protected:
-        bool isStatic;
         glm::vec3 localPosition;
         glm::vec3 localRotation;
         glm::vec3 localScale;
+        glm::vec3 worldPosition;
+        glm::vec3 worldRotation;
+        glm::vec3 worldScale;
         glm::mat4 localMatrix;
+        glm::mat4 worldMatrix;
+        std::vector<Component*>* refSiblings;
         std::vector<Transform*> childs;
         Transform* parent = nullptr;
         void start();
         void updateMatrix();
+        void calculatePosition();
+        void calculateRotation();
+        void calculateScale();
         void setDestroy();
         void removeChild(Transform* transform);
         void addChild(Transform* transform);

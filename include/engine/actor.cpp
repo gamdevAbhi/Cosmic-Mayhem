@@ -49,6 +49,7 @@ Engine::Actor* Engine::Actor::createActor(std::string name)
     // creating transform component class
     Component* transform = new Transform();
     transform->actor = actor;
+    dynamic_cast<Transform*>(transform)->refSiblings = &actor->components;
     transform->start();
     // adding the transform component and actor class
     actor->components.push_back(transform);

@@ -39,19 +39,14 @@ namespace Engine
         inline static VBO* vbo;
         inline static EBO* ebo;
         Sprite* sprite;
-        Children* children;
+        Node* node;
         unsigned int order;
         void start();
-        static void add(SpriteRenderer* renderer);
-        static void remove(SpriteRenderer* renderer);
-        static void orderChanged();
+        void onTransformChanged();
         virtual void onDestroy();
     private:
-        inline static std::vector<SpriteRenderer*> renderers;
-        inline static bool shouldSort = false;
         static void initialize();
         static bool compare(SpriteRenderer* left, SpriteRenderer* right);
-        static void beforeDraw();
         static void draw();
     friend class GameLoop;
     };

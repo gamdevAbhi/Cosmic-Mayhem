@@ -9,9 +9,10 @@
 namespace Engine
 {
     class AABB;
-    class Children;
+    class Node;
     class QuadTree;
     
+    // AABB detection class
     class AABB
     {
     public:
@@ -23,39 +24,43 @@ namespace Engine
         bool intersects(AABB box);
     };
 
-    class Children
+    // node class for QuadTree
+    class Node
     {
     protected:
         Component* object;
         AABB boundary;
         QuadTree* parent;
-        Children(Component* _object, AABB _boundary);
-        void update(AABB _boundary);
+        Node(Component* _object, AABB _boundary);
+        void update(AABB _boundary, QuadTree* root);
         void destroy();
     friend class QuadTree;
     friend class SpriteRenderer;
+    friend class BoxCollider;
     friend class ColliderManager;
     };
 
+    // QuadTree class
     class QuadTree
     {
     protected:
         inline static int capacity = 4;
         bool devided;
         AABB boundary;
-        std::vector<Children*> childrens;
+        std::vector<Node*> nodes;
         QuadTree* northEast;
         QuadTree* northWest;
         QuadTree* southEast;
         QuadTree* southWest;
         QuadTree(AABB _boundary);
-        bool insert(Children* children);
-        bool remove(Children* children);
+        bool insert(Node* node);
+        bool remove(Node* node);
         void subdevide();
         QuadTree* expand();
-        void find(AABB boundary, std::vector<Children*>& query);
-    friend class Children;
+        void find(AABB boundary, std::vector<Node*>& query);
+    friend class Node;
     friend class SpriteRenderer;
+    friend class BoxCollider;
     friend class ColliderManager;
     };
 }

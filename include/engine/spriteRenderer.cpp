@@ -55,26 +55,48 @@ void Engine::SpriteRenderer::start()
     
     glm::vec2 position = getActor()->getComponent<Transform>()->getPosition(true);
     glm::vec2 scale = getActor()->getComponent<Transform>()->getScale(true);
-    children = new Children(this, AABB(position.x, position.y, std::max(std::abs(scale.x), std::abs(scale.y))));
+
+    float x = std::abs(scale.x) * 2;
+    float y = std::abs(scale.y) * 2;
+    float diagonal = std::sqrt(std::pow(x, 2) + std::pow(y, 2));
+
+    node = new Node(this, AABB(position.x, position.y, diagonal / 2.0f));
 
     while(true)
     {
-        if(!root->boundary.contains(children->boundary)) root = root->expand();
+        if(!root->boundary.contains(node->boundary)) root = root->expand();
         else
         {
-            root->insert(children);
+            root->insert(node);
             break;
         }
     }
+}
 
-    add(this);
+void Engine::SpriteRenderer::onTransformChanged()
+{
+    glm::vec2 position = getActor()->getComponent<Transform>()->getPosition(true);
+    glm::vec2 scale = getActor()->getComponent<Transform>()->getScale(true);
+
+    float x = std::abs(scale.x) * 2;
+    float y = std::abs(scale.y) * 2;
+    float diagonal = std::sqrt(std::pow(x, 2) + std::pow(y, 2));
+
+    AABB boundary = AABB(position.x, position.y, diagonal / 2.0f);
+    
+    while(true)
+    {
+        if(!root->boundary.contains(boundary)) root = root->expand();
+        else break;
+    }
+
+    node->update(boundary, root);
 }
 
 // set draw order
 void Engine::SpriteRenderer::setOrder(unsigned int index)
 {
     order = index;
-    orderChanged();
 }
 
 // set sprite
@@ -94,11 +116,14 @@ void Engine::SpriteRenderer::draw()
     glm::mat4 camera_matrix = camera->getMatrix();
 
     glm::vec2 position = camera->getActor()->getComponent<Transform>()->getPosition(true);
-    std::vector<Children*> childrens;
+    std::vector<Node*> nodes;
+    std::vector<SpriteRenderer*> renderers;
 
-    root->find(AABB(position.x, position.y, 14), childrens);
+    root->find(AABB(position.x, position.y, camera->getDiagonal() / 2.0f), nodes);
 
-    std::cout << childrens.size() << std::endl;
+    for(int i = 0; i < nodes.size(); i++) renderers.push_back(dynamic_cast<SpriteRenderer*>(nodes[i]->object));
+
+    std::sort(renderers.begin(), renderers.end(), compare);
 
     for(int i = 0; i < renderers.size(); i++)
     {
@@ -125,8 +150,7 @@ void Engine::SpriteRenderer::draw()
 
 void Engine::SpriteRenderer::onDestroy()
 {
-    children->destroy();
-    remove(this);
+    node->destroy();
 }
 
 // compare two sprite renderer
@@ -139,57 +163,4 @@ bool Engine::SpriteRenderer::compare(Engine::SpriteRenderer *left, Engine::Sprit
 unsigned int Engine::SpriteRenderer::getOrder()
 {
     return order;
-}
-
-// add renderer to renderering
-void Engine::SpriteRenderer::add(SpriteRenderer* renderer)
-{
-    renderers.push_back(renderer);
-    shouldSort = true;
-}
-
-// remove renderer from rendering
-void Engine::SpriteRenderer::remove(SpriteRenderer* renderer)
-{
-    int i = 0;
-
-    while(i < renderers.size())
-    {
-        if(renderers[i] != renderer) 
-        {
-            i++;
-            continue;
-        }
-        renderers.erase(renderers.begin() + i);
-    }
-
-    shouldSort = true;
-}
-
-// call when order is changed
-void Engine::SpriteRenderer::orderChanged()
-{
-    shouldSort = true;
-}
-
-// calls before start drawing
-void Engine::SpriteRenderer::beforeDraw()
-{
-    if(shouldSort == false) return;
-
-    int index = 0;
-
-    // removing null renderers
-    while(index < renderers.size())
-    {
-        if(renderers[index] != nullptr) index++;
-        else
-        {
-            renderers.erase(renderers.begin() + index);
-        }
-    }
-
-    // sorting
-    std::sort(renderers.begin(), renderers.end(), compare);
-    shouldSort = false;
 }

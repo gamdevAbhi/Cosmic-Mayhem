@@ -7,8 +7,28 @@ void Engine::BoxCollider::start()
     right = 1.f;
     up = 1.f;
     down = 1.f;
+    fixed_x = false;
+    fixed_y = false;
     transform = getActor()->getComponent<Transform>();
-    boxColliders.push_back(this);
+
+    glm::vec2 width = getWidth();
+    glm::vec2 height = getHeight();
+
+    float max_x = width.x + width.y;
+    float max_y = height.x + height.y;
+
+    float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+    node = new Node(this, AABB(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f));
+
+    while(true)
+    {
+        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand();
+        else
+        {
+            (*rootP)->insert(node);
+            break;
+        }
+    }
 }
 
 // set boundary of collider (all float should be positive)
@@ -18,6 +38,42 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
     this->right = right;
     this->up = up;
     this->down = down;
+
+    glm::vec2 width = getWidth();
+    glm::vec2 height = getHeight();
+
+    float max_x = width.x + width.y;
+    float max_y = height.x + height.y;
+
+    float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+    AABB boundary(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f);
+
+    while(true)
+    {
+        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand();
+        else break;
+    }
+
+    node->update(boundary, *rootP);
+}
+
+// set fixed position
+void Engine::BoxCollider::setFixed(bool x, bool y)
+{
+    fixed_x = x;
+    fixed_y = y;
+}
+
+// get fixed position
+std::tuple<bool, bool> Engine::BoxCollider::getFixed()
+{
+    return std::tuple<bool, bool>(fixed_x, fixed_y);
+}
+
+// on transform changed
+void Engine::BoxCollider::onTransformChanged()
+{
+    isMoved = true;
 }
 
 // get width of the collider (left, right)
@@ -43,12 +99,7 @@ void Engine::BoxCollider::setTrigger(bool isTrigger)
 // call when component is removed
 void Engine::BoxCollider::onDestroy()
 {
-    for(int i = 0; i < boxColliders.size(); i++)
-    {
-        if(boxColliders[i] != this) continue;
-        boxColliders.erase(boxColliders.begin() + i);
-        break;
-    }
+    node->destroy();
 }
 
 // call collider related functions
@@ -70,6 +121,9 @@ void Engine::BoxCollider::call(BoxCollider* collider, glm::vec3 axis)
             if(exist == false) getActor()->components[i]->onCollisionEnter(collider);
             else getActor()->components[i]->onCollisionStay(collider);
         }
+
+        if(fixed_x == true) axis.x = 0.f;
+        if(fixed_y == true) axis.y = 0.f;
 
         transform->setPosition(true, transform->getPosition(true) + axis);
     }
@@ -112,6 +166,26 @@ void Engine::BoxCollider::stackUpdate()
                 getActor()->components[j]->onTriggerExit(notFounds[i]);
             }
         }
+    }
+
+    if(isMoved == true)
+    {
+        glm::vec2 width = getWidth();
+        glm::vec2 height = getHeight();
+
+        float max_x = width.x + width.y;
+        float max_y = height.x + height.y;
+
+        float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+        AABB boundary(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f);
+
+        while(true)
+        {
+            if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand();
+            else break;
+        }
+
+        node->update(boundary, *rootP);
     }
 }
 

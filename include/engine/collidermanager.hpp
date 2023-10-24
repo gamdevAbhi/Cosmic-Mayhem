@@ -12,9 +12,10 @@ namespace Engine
     protected:
         inline static glm::vec3 currentAxis;
         inline static double currentOverlap;
+        inline static QuadTree* root;
+        static void initialize();
         static void startDetection();
-        static void broadPhase();
-        static void narrowPhase();
+        static void narrowPhase(Node* node);
         static void collisionDetected(BoxCollider* collider1, BoxCollider* collider2);
         static bool checkCollision(BoxCollider* collider1, BoxCollider* collider2);
     friend class GameLoop;

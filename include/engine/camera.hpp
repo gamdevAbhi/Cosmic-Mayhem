@@ -18,9 +18,11 @@ namespace Engine
         glm::mat4 getMatrix();
         glm::vec2 getWorldToScreenPos(glm::vec3 worldPosition);
         glm::vec3 getScreenToWorldPos(glm::vec2 screenPos);
-        bool isOnScreen(Transform* transform);
+        float getDiagonal();
         static Camera* getRenderCamera();
     private:
+        inline static float worldToScreenY = 200.f;
+        inline static float worldToScreenX = 350.f;
         inline static float screenToWorldY = 1.92f;
         inline static float screenToWorldX = 1.95f;
         inline static Camera* renderCamera = nullptr;

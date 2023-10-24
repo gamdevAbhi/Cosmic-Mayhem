@@ -28,6 +28,8 @@ namespace Engine
         virtual void fixedUpdate();
         // called after update
         virtual void lateUpdate();
+        // called when transform is changed
+        virtual void onTransformChanged();
         // called when collision detected
         virtual void onCollisionEnter(BoxCollider* boxCollider);
         virtual void onCollisionStay(BoxCollider* boxCollider);
@@ -38,6 +40,7 @@ namespace Engine
         // called when component is destroying
         virtual void onDestroy();
     friend class Actor;
+    friend class Transform;
     friend class BoxCollider;
     friend class GameLoop;
     };

@@ -20,13 +20,12 @@ void Cosmic::ChildMaker::update()
     {
         Engine::Actor* child = Engine::Actor::createActor("Child");
         
-        // child->addComponent<Engine::BoxCollider>();
-        // if(actors.size() % 2 != 0) child->getComponent<Engine::BoxCollider>()->setTrigger(true);
+        child->addComponent<Engine::BoxCollider>();
+        if(actors.size() % 2 != 0) child->getComponent<Engine::BoxCollider>()->setTrigger(true);
 
         Engine::Transform* transform = child->getComponent<Engine::Transform>();
         transform->setScale(true, glm::vec3(1.f, 1.f, 1.0f));
         transform->setPosition(true, this->transform->getWorldPosAt(glm::vec3(-4.f, 0.f, 0.0f)));
-        transform->setStatic(true);
 
         child->addComponent<Engine::SpriteRenderer>()->setOrder(0);
         if(actors.size() % 2 == 0) child->getComponent<Engine::SpriteRenderer>()->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
