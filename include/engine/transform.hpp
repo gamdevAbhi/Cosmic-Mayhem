@@ -43,13 +43,15 @@ namespace Engine
         std::vector<Transform*> childs;
         Transform* parent = nullptr;
         void start();
-        void updateMatrix();
-        void calculatePosition();
-        void calculateRotation();
-        void calculateScale();
+        void updateWorldMatrix();
+        void updateLocalMatrix();
         void setDestroy();
         void removeChild(Transform* transform);
         void addChild(Transform* transform);
+        static glm::vec3 calculatePosition(glm::mat4 matrix);
+        static glm::vec3 calculateRotation(glm::mat4 matrix);
+        static glm::vec3 calculateScale(glm::mat4 matrix);
+        static glm::vec3 fixRotation(glm::vec3 rotation);
     friend class Actor;
     };
 }

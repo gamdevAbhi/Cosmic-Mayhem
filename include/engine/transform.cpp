@@ -7,7 +7,7 @@ void Engine::Transform::start()
     localRotation = glm::vec3(0.0f);
     localScale = glm::vec3(1.0f);
 
-    updateMatrix();
+    updateWorldMatrix();
 }
 
 // get the local or world right direction
@@ -109,22 +109,27 @@ glm::vec3 Engine::Transform::getScale(bool isWorld)
     else return worldScale;
 }
 
-// calculate world position
-void Engine::Transform::calculatePosition()
+// calculate the position from the matrix
+glm::vec3 Engine::Transform::calculatePosition(glm::mat4 matrix)
 {
-    worldPosition.x = worldMatrix[3][0];
-    worldPosition.y = worldMatrix[3][1];
-    worldPosition.z = worldMatrix[3][2];
+    glm::vec3 position;
+    
+    position.x = matrix[3][0];
+    position.y = matrix[3][1];
+    position.z = matrix[3][2];
+    
+    return position;
 }
 
-// calculating the world rotation
-void Engine::Transform::calculateRotation()
+// calculating the rotation from the matrix
+glm::vec3 Engine::Transform::calculateRotation(glm::mat4 matrix)
 {
     glm::mat3 rotationMatrix;
+    glm::vec3 scale = calculateScale(matrix);
 
-    rotationMatrix[0] = worldMatrix[0] / worldScale.x;
-    rotationMatrix[1] = worldMatrix[1] / worldScale.y;
-    rotationMatrix[2] = worldMatrix[2] / worldScale.z;
+    rotationMatrix[0] = matrix[0] / scale.x;
+    rotationMatrix[1] = matrix[1] / scale.y;
+    rotationMatrix[2] = matrix[2] / scale.z;
     
     float roll = 0;
     float pitch = 0;
@@ -152,24 +157,44 @@ void Engine::Transform::calculateRotation()
         }
     }
 
-    worldRotation = glm::vec3(roll * 180.0f / glm::pi<float>(), pitch * 180.0f / glm::pi<float>(), 
+    glm::vec3 rotation = glm::vec3(roll * 180.0f / glm::pi<float>(), pitch * 180.0f / glm::pi<float>(), 
     yaw * 180.0f / glm::pi<float>());
-}
-
-// for calculating world scale
-void Engine::Transform::calculateScale()
-{
     
-    worldScale.x = glm::sqrt(worldMatrix[0][0] * worldMatrix[0][0] + worldMatrix[0][1] * worldMatrix[0][1] 
-    + worldMatrix[0][2] * worldMatrix[0][2]);
-    worldScale.y = glm::sqrt(worldMatrix[1][0] * worldMatrix[1][0] + worldMatrix[1][1] * worldMatrix[1][1] 
-    + worldMatrix[1][2] * worldMatrix[1][2]);
-    worldScale.z = glm::sqrt(worldMatrix[2][0] * worldMatrix[2][0] + worldMatrix[2][1] * worldMatrix[2][1] 
-    + worldMatrix[2][2] * worldMatrix[2][2]);
+    return rotation;
 }
 
-// update the local & world matrix of the transform
-void Engine::Transform::updateMatrix()
+// for calculating the scale from the matrix
+glm::vec3 Engine::Transform::calculateScale(glm::mat4 matrix)
+{
+    glm::vec3 scale;
+
+    scale.x = glm::sqrt(matrix[0][0] * matrix[0][0] + matrix[0][1] * matrix[0][1] 
+    + matrix[0][2] * matrix[0][2]);
+    scale.y = glm::sqrt(matrix[1][0] * matrix[1][0] + matrix[1][1] * matrix[1][1] 
+    + matrix[1][2] * matrix[1][2]);
+    scale.z = glm::sqrt(matrix[2][0] * matrix[2][0] + matrix[2][1] * matrix[2][1] 
+    + matrix[2][2] * matrix[2][2]);
+
+    return scale;
+}
+
+glm::vec3 Engine::Transform::fixRotation(glm::vec3 rotation)
+{
+    glm::vec3 fixRotation;
+
+    fixRotation.x = (rotation.x - (int)rotation.x) + (int)rotation.x % 360;
+    fixRotation.y = (rotation.y - (int)rotation.y) + (int)rotation.y % 360;
+    fixRotation.z = (rotation.z - (int)rotation.z) + (int)rotation.z % 360;
+
+    if(fixRotation.x < 0) fixRotation.x = 360.f + fixRotation.x;
+    if(fixRotation.y < 0) fixRotation.y = 360.f + fixRotation.y;
+    if(fixRotation.z < 0) fixRotation.z = 360.f + fixRotation.z;
+
+    return fixRotation;
+}
+
+// update the world matrix of the transform
+void Engine::Transform::updateWorldMatrix()
 {
     glm::mat4 translate(1.0f);
     glm::mat4 rotation(1.0f);
@@ -182,11 +207,34 @@ void Engine::Transform::updateMatrix()
     localMatrix = translate * rotation * scale;
     worldMatrix = (parent != nullptr)? parent->getMatrix() * localMatrix : localMatrix;
 
-    calculatePosition();
-    calculateScale();
-    calculateRotation();
+    worldPosition = calculatePosition(worldMatrix);
+    worldRotation = calculateRotation(worldMatrix);
+    worldScale = calculateScale(worldMatrix);
 
-    for(int i = 0; i < childs.size(); i++) childs[i]->updateMatrix();
+    for(int i = 0; i < childs.size(); i++) childs[i]->updateWorldMatrix();
+
+    for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
+}
+
+// update the local matrix of the transform
+void Engine::Transform::updateLocalMatrix()
+{
+    glm::mat4 translate(1.0f);
+    glm::mat4 rotation(1.0f);
+    glm::mat4 scale(1.0f);
+
+    translate = glm::translate(translate, worldPosition);
+    rotation = glm::mat4_cast(glm::quat(worldRotation));
+    scale = glm::scale(scale, worldScale);
+
+    worldMatrix = translate * rotation * scale;
+    localMatrix = (parent != nullptr)? glm::inverse(parent->getMatrix()) * worldMatrix : worldMatrix;
+
+    localPosition = calculatePosition(localMatrix);
+    localRotation = calculateRotation(localMatrix);
+    localScale = calculateScale(localMatrix);
+
+    for(int i = 0; i < childs.size(); i++) childs[i]->updateWorldMatrix();
 
     for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
 }
@@ -200,40 +248,46 @@ glm::mat4 Engine::Transform::getMatrix()
 // set the local or world position of the transform
 void Engine::Transform::setPosition(bool isWorld, glm::vec3 position)
 {
-    if(isWorld == false) localPosition = position;
+    if(isWorld == false) 
+    {
+        localPosition = position;
+        updateWorldMatrix();
+    }
     else
     {
-        glm::vec3 world_position = getPosition(true);
-        localPosition += position - world_position;
+        worldPosition = position;
+        updateLocalMatrix();
     }
-
-    updateMatrix();
 }
 
 // set the local or world rotation of the transform
 void Engine::Transform::setRotation(bool isWorld, glm::vec3 rotation)
 {
-    if(isWorld == false) localRotation = rotation;
+    if(isWorld == false)
+    {
+        localRotation = fixRotation(rotation);
+        updateWorldMatrix();
+    }
     else
     {
-        glm::vec3 world_rotation = getRotation(true);
-        localRotation += rotation - world_rotation;
+        worldRotation = fixRotation(rotation);
+        updateLocalMatrix();
     }
-
-    updateMatrix();
 }
 
 // set the local or world scale of the transform
 void Engine::Transform::setScale(bool isWorld, glm::vec3 scale)
 {
-    if(isWorld == false) localScale = scale;
+    if(isWorld == false)
+    {
+        localScale = scale;
+        updateWorldMatrix();
+    } 
     else
     {
-        glm::vec3 world_scale = getScale(true);
-        localScale += scale - world_scale;
+        worldScale = scale;
+        updateLocalMatrix();
     }
-
-    updateMatrix();
 }
 
 // set the parent transform
@@ -254,8 +308,10 @@ void Engine::Transform::setParent(Engine::Transform* transform)
 
     if(parent != nullptr) parent->removeChild(this);
     if(transform != nullptr) transform->addChild(this);
+    
     parent = transform;
-    updateMatrix();
+
+    updateLocalMatrix();
 }
 
 // get the parent transform

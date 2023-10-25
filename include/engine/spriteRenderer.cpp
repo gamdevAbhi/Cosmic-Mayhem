@@ -113,7 +113,7 @@ void Engine::SpriteRenderer::draw()
     vao->bind();
 
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
-    glm::mat4 camera_matrix = camera->getMatrix();
+    glm::mat4 camera_matrix = camera->getOrtho();
 
     glm::vec2 position = camera->getActor()->getComponent<Transform>()->getPosition(true);
     std::vector<Node*> nodes;

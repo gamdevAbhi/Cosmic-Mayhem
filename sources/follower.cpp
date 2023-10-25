@@ -1,33 +1,24 @@
 #include "follower.hpp"
 
+// ataching the references
 void Cosmic::Follower::start()
 {
     transform = getActor()->getComponent<Engine::Transform>();
 }
 
+// moving the follower to the target
 void Cosmic::Follower::lateUpdate()
 {
-    move();
-}
+    transform->setParent(target);
 
-void Cosmic::Follower::move()
-{
-    glm::vec3 difference = target->getPosition(true) - transform->getPosition(true);
-    glm::vec3 direction = glm::normalize(difference);
-    direction.z = 0.0f;
+    glm::vec3 position = transform->getPosition(false);
+    float newY = position.y + (Engine::Time::getDeltaTime() * followSpeed);
 
-    glm::vec3 move = direction;
-    move *= Engine::Time::getDeltaTime() * followSpeed;
+    if(newY < -maxDistance) newY = -maxDistance;
+    else if(newY > 0.f) newY = 0.f;
 
-    glm::vec3 finalPosition = transform->getPosition(true) + move;
-    float length = glm::length(target->getPosition(true) - finalPosition);
+    transform->setPosition(false, glm::vec3(0.f, newY, position.z));
+    transform->setParent(nullptr);
 
-    if(length > maxLength)
-    {
-        float diff = length - maxLength;
-        finalPosition = transform->getPosition(true) + glm::vec3(direction.x * diff,
-        direction.y * diff, 0.0f);
-    }
-
-    transform->setPosition(true, finalPosition);
+    transform->setRotation(true, target->getRotation(true));
 }

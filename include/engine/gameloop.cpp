@@ -19,6 +19,7 @@ int height)
     
     Actor* camActor = Actor::createActor("Main Camera");
     Camera::renderCamera = camActor->addComponent<Camera>();
+    Camera::renderCamera->updateOrtho();
 }
 
 // called after game is ready to execute game loop
@@ -61,7 +62,8 @@ void Engine::GameLoop::callDestroy()
 
     for(int i = 0; i < Actor::actors.size(); i++)
     {
-        if(Actor::actors[i]->shouldDestroy == true) actors.push_back(Actor::actors[i]);
+        if(Actor::actors[i]->shouldDestroy == true
+        && Actor::actors[i] != Camera::renderCamera->actor) actors.push_back(Actor::actors[i]);
         else
         {
             std::vector<Component*> components;
@@ -122,6 +124,7 @@ void Engine::GameLoop::callUpdate()
     std::vector<Component*> components;
 
     getAllComponents(components);
+    Camera::renderCamera->updateOrtho();
 
     while(components.size() > 0)
     {
