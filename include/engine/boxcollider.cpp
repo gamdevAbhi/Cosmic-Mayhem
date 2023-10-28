@@ -16,19 +16,17 @@ void Engine::BoxCollider::start()
 
     float max_x = width.x + width.y;
     float max_y = height.x + height.y;
-
     float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+
     node = new Node(this, AABB(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f));
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand();
-        else
-        {
-            (*rootP)->insert(node);
-            break;
-        }
+        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        else break;
     }
+    
+    (*rootP)->insert(node);
 }
 
 // set boundary of collider (all float should be positive)
@@ -44,13 +42,13 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
 
     float max_x = width.x + width.y;
     float max_y = height.x + height.y;
-
     float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+    
     AABB boundary(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f);
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand();
+        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
         else break;
     }
 
@@ -175,13 +173,13 @@ void Engine::BoxCollider::stackUpdate()
 
         float max_x = width.x + width.y;
         float max_y = height.x + height.y;
-
         float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+
         AABB boundary(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f);
 
         while(true)
         {
-            if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand();
+            if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
             else break;
         }
 

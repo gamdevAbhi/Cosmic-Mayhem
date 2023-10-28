@@ -3,23 +3,23 @@
 #include "spaceship.hpp"
 #include "shiphandler.hpp"
 #include "follower.hpp"
-#include "childmaker.hpp"
 
 int main()
 {
     Engine::GameLoop::initialize("game");
 
-    Engine::Actor* actor = Engine::Actor::createActor("Space Ship");
+    Engine::Actor* spaceShip = Engine::Actor::createActor("Space Ship");
+    Engine::Actor* starManager = Engine::Actor::createActor("Star Manager");
 
-    actor->addComponent<Engine::SpriteRenderer>();
-    actor->addComponent<Engine::BoxCollider>();
-    actor->addComponent<Cosmic::SpaceShip>();
-    actor->addComponent<Cosmic::ShipHandler>();
-    actor->addComponent<Cosmic::ChildMaker>();
+    spaceShip->addComponent<Engine::SpriteRenderer>();
+    spaceShip->addComponent<Engine::BoxCollider>();
+    spaceShip->addComponent<Cosmic::SpaceShip>();
+    spaceShip->addComponent<Cosmic::ShipHandler>();
 
-    Engine::Camera::getRenderCamera()->orthographicSize = 25.f;
-    Engine::Camera::getRenderCamera()->getActor()->getComponent<Engine::Transform>()->setPosition(true, glm::vec3(0.0f, 0.0f, 2.0f));
-    Engine::Camera::getRenderCamera()->getActor()->addComponent<Cosmic::Follower>()->target = actor->getComponent<Engine::Transform>();
+    Engine::Camera* camera = Engine::Camera::getRenderCamera();
+    camera->orthographicSize = 25.f;
+    camera->getActor()->getComponent<Engine::Transform>()->setPosition(true, glm::vec3(0.0f, 0.0f, 2.0f));
+    camera->getActor()->addComponent<Cosmic::Follower>()->target = spaceShip->getComponent<Engine::Transform>();
 
     Engine::GameLoop::begin();
 

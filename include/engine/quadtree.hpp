@@ -56,7 +56,7 @@ namespace Engine
         bool insert(Node* node);
         bool remove(Node* node);
         void subdevide();
-        QuadTree* expand();
+        QuadTree* expand(AABB _boundary);
         void find(AABB boundary, std::vector<Node*>& query);
     friend class Node;
     friend class SpriteRenderer;

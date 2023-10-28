@@ -142,13 +142,45 @@ void Engine::QuadTree::subdevide()
 }
 
 // expand the quad tree
-Engine::QuadTree* Engine::QuadTree::expand()
+Engine::QuadTree* Engine::QuadTree::expand(AABB _boundary)
 {
-    AABB nBoundary(boundary.x + boundary.expand, boundary.y + boundary.expand, boundary.expand * 2.0f);
-    QuadTree* nTree = new QuadTree(nBoundary);
-    nTree->subdevide();
-    delete nTree->southWest;
-    nTree->southWest = this;
+    QuadTree* nTree = nullptr;
+
+    float x = _boundary.x - boundary.x;
+    float y = _boundary.y - boundary.y;
+
+    if(x > 0.f && y <= 0.f)
+    {
+        AABB nBoundary(boundary.x + boundary.expand, boundary.y - boundary.expand, boundary.expand * 2.0f);
+        nTree = new QuadTree(nBoundary);
+        nTree->subdevide();
+        delete nTree->northWest;
+        nTree->northWest = this;
+    }
+    else if(x < 0.f && y <= 0.f)
+    {
+        AABB nBoundary(boundary.x - boundary.expand, boundary.y - boundary.expand, boundary.expand * 2.0f);
+        nTree = new QuadTree(nBoundary);
+        nTree->subdevide();
+        delete nTree->northEast;
+        nTree->northEast = this;
+    }
+    else if(x >= 0.f && y > 0.f)
+    {
+        AABB nBoundary(boundary.x + boundary.expand, boundary.y + boundary.expand, boundary.expand * 2.0f);
+        nTree = new QuadTree(nBoundary);
+        nTree->subdevide();
+        delete nTree->southWest;
+        nTree->southWest = this;
+    }
+    else
+    {
+        AABB nBoundary(boundary.x - boundary.expand, boundary.y + boundary.expand, boundary.expand * 2.0f);
+        nTree = new QuadTree(nBoundary);
+        nTree->subdevide();
+        delete nTree->southEast;
+        nTree->southEast = this;
+    }
 
     return nTree;
 }

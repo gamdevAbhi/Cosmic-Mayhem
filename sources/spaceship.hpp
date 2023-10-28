@@ -9,7 +9,7 @@ namespace Cosmic
     {
     public:
         double forwardSpeed = 5.f;
-        double backwardSpeed = 3.5f;
+        double backwardSpeed = 4.5f;
         double rotateSpeed = 6.f;
         void moveForward();
         void moveBackward();

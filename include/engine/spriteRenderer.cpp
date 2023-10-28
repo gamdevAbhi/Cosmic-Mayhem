@@ -64,13 +64,11 @@ void Engine::SpriteRenderer::start()
 
     while(true)
     {
-        if(!root->boundary.contains(node->boundary)) root = root->expand();
-        else
-        {
-            root->insert(node);
-            break;
-        }
+        if(!root->boundary.contains(node->boundary)) root = root->expand(node->boundary);
+        else break;
     }
+
+    root->insert(node);
 }
 
 void Engine::SpriteRenderer::onTransformChanged()
@@ -86,7 +84,7 @@ void Engine::SpriteRenderer::onTransformChanged()
     
     while(true)
     {
-        if(!root->boundary.contains(boundary)) root = root->expand();
+        if(!root->boundary.contains(boundary)) root = root->expand(boundary);
         else break;
     }
 
