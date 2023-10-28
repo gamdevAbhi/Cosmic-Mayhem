@@ -5,11 +5,7 @@ void Cosmic::SpaceShip::start()
     transform = getActor()->getComponent<Engine::Transform>();
     renderer = getActor()->getComponent<Engine::SpriteRenderer>();
     shipSprite = new Engine::Sprite("\\resources\\sprites\\Spaceship.png");
-
     renderer->setSprite(shipSprite);
-    renderer->setOrder(0);
-
-    transform->setPosition(true, glm::vec3(-212.f, -213.f, 0.f));
 }
 
 void Cosmic::SpaceShip::moveForward()

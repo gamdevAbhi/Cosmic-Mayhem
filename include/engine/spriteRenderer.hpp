@@ -29,10 +29,12 @@ namespace Engine
         void setOrder(unsigned int index);
         unsigned int getOrder();
         void setSprite(Sprite* sprite);
+        static int lastRenderCount();
     protected:
         inline static Shader* shader = nullptr;
         inline static Sprite* defaultSprite = nullptr;
         inline static QuadTree* root = nullptr;
+        inline static int count = 0;
         inline static std::vector<vertex> vertices;
         inline static std::vector<GLuint> indices;
         inline static VAO* vao;

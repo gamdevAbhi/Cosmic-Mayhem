@@ -7,12 +7,11 @@ namespace Cosmic
 {
     class Follower : public Engine::Component
     {
-    public:
+    protected:
         double followSpeed = 3.5f;
         double maxDistance = 1.75f;
         Engine::Transform* target;
         Engine::Transform* transform;
-    protected:
         void start();
         void lateUpdate();
     };

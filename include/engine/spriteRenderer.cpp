@@ -104,6 +104,12 @@ void Engine::SpriteRenderer::setSprite(Sprite* sprite)
     else this->sprite = sprite;
 }
 
+// get last render count
+int Engine::SpriteRenderer::lastRenderCount()
+{
+    return count;
+}
+
 // draw the actor
 void Engine::SpriteRenderer::draw()
 {
@@ -122,6 +128,8 @@ void Engine::SpriteRenderer::draw()
     for(int i = 0; i < nodes.size(); i++) renderers.push_back(dynamic_cast<SpriteRenderer*>(nodes[i]->object));
 
     std::sort(renderers.begin(), renderers.end(), compare);
+    
+    count = 0;
 
     for(int i = 0; i < renderers.size(); i++)
     {
@@ -140,8 +148,9 @@ void Engine::SpriteRenderer::draw()
         renderers[i]->sprite->bind();
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         renderers[i]->sprite->unbind();
+
+        count++;
     }
-    
 
     vao->unbind();
 }

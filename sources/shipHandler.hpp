@@ -8,10 +8,14 @@ namespace Cosmic
 {
     class ShipHandler : public Engine::Component
     {
-    public:
-        Engine::Input* input;
-        SpaceShip* ship;
     protected:
+        Engine::Input* input;
+        Engine::Transform* transform;
+        SpaceShip* shipComponent;
+        Engine::Actor* backBoost;
+        Engine::Actor* frontBoost;
+        Engine::Actor* leftBoost;
+        Engine::Actor* rightBoost;
         void start();
         void update();
     };

@@ -6,6 +6,18 @@ glm::mat4 Engine::Camera::getOrtho()
     return ortho;
 }
 
+// get the boundary of the camera
+glm::vec2 Engine::Camera::getBoundary()
+{
+    glm::vec2 boundary;
+    std::tuple<int, int> size = gameWindow->getSize();
+    
+    boundary.x = (std::get<0>(size) / orthographicSize) / 2.0f;
+    boundary.y = (std::get<1>(size) / orthographicSize) / 2.0f;
+
+    return boundary;
+}
+
 // set destroy
 void Engine::Camera::setDestroy()
 {

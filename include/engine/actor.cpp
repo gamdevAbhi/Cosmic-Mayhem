@@ -58,6 +58,23 @@ Engine::Actor* Engine::Actor::createActor(std::string name)
     return actor;
 }
 
+// get actor by name
+Engine::Actor* Engine::Actor::getActor(std::string name)
+{
+    for(int i = 0; i < actors.size(); i++)
+    {
+        if(actors[i]->name == name) return actors[i];
+    }
+
+    return nullptr;
+}
+
+// get total actor count
+int Engine::Actor::getActorCount()
+{
+    return actors.size();
+}
+
 // destroy the actor
 void Engine::Actor::destroy(Actor* actor)
 {

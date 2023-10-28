@@ -4,6 +4,12 @@
 void Cosmic::Follower::start()
 {
     transform = getActor()->getComponent<Engine::Transform>();
+    target = Engine::Actor::getActor("Space Ship")->getComponent<Engine::Transform>();
+
+    glm::vec3 pos = target->getPosition(true);
+    pos.z = 3.f;
+
+    transform->setPosition(true, pos);
 }
 
 // moving the follower to the target

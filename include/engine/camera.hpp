@@ -17,6 +17,7 @@ namespace Engine
         float farClip = 100.0f;
         float orthographicSize = 10.0f;
         glm::mat4 getOrtho();
+        glm::vec2 getBoundary();
         glm::vec2 getWorldToScreenPos(glm::vec3 worldPosition);
         glm::vec3 getScreenToWorldPos(glm::vec2 screenPos);
         float getDiagonal();

@@ -25,6 +25,8 @@ namespace Engine
         template <class T> std::vector<T*> getComponents(); 
         // static member functions
         static Actor* createActor(std::string name);
+        static Actor* getActor(std::string name);
+        static int getActorCount();
     protected:
         // protected member variable
         bool active;
