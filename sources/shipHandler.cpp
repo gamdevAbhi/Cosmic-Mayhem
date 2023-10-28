@@ -63,4 +63,14 @@ void Cosmic::ShipHandler::update()
         shipComponent->moveBackward();
         backBoost->setActive(true);
     }
+
+    if(input->getKeyStatus(GLFW_KEY_I) == KEY_HOLD)
+    {
+        std::cout << "Last Frame Per Second(s) :" << std::endl;
+        std::cout << Engine::Time::getLastFPS() << std::endl;
+        std::cout << "Total Actors :" << std::endl;
+        std::cout << Engine::Actor::getActorCount() << std::endl;
+        std::cout << "Last Render Count :" << std::endl;
+        std::cout << Engine::SpriteRenderer::lastRenderCount() << std::endl;
+    }
 }
