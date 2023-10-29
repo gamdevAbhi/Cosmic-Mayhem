@@ -16,6 +16,7 @@ namespace Cosmic
         Engine::Actor* frontBoost;
         Engine::Actor* leftBoost;
         Engine::Actor* rightBoost;
+        Engine::Actor* muzzle;
         void start();
         void update();
     };

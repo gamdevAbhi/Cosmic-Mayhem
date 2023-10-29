@@ -15,12 +15,15 @@ namespace Engine
     public:
         void setBoundary(float left, float right, float up, float down);
         void setFixed(bool x, bool y);
+        void setTag(int tag);
+        int getTag();
         std::tuple<bool, bool> getFixed();
         glm::vec2 getWidth();
         glm::vec2 getHeight();
         void setTrigger(bool isTrigger);
     protected:
         inline static QuadTree** rootP = nullptr;
+        int tag;
         float left;
         float right;
         float up;

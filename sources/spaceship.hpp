@@ -3,6 +3,8 @@
 
 #include <engine/gameloop.hpp>
 
+#include "bullet.hpp"
+
 namespace Cosmic
 {
     class SpaceShip : public Engine::Component
@@ -15,10 +17,13 @@ namespace Cosmic
         void moveBackward();
         void rotateLeft();
         void rotateRight();
+        void shoot();
     protected:
         Engine::Transform* transform;
+        Engine::Transform* shootOrigin;
         Engine::SpriteRenderer* renderer;
         Engine::Sprite* shipSprite;
+        Engine::Sprite* bulletSprite;
         void start();
         void onDestroy();
     };

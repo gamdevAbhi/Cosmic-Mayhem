@@ -3,6 +3,7 @@
 // call when added in actor
 void Engine::BoxCollider::start()
 {
+    tag = 0;
     left = 1.f;
     right = 1.f;
     up = 1.f;
@@ -60,6 +61,18 @@ void Engine::BoxCollider::setFixed(bool x, bool y)
 {
     fixed_x = x;
     fixed_y = y;
+}
+
+// set tag
+void Engine::BoxCollider::setTag(int tag)
+{
+    this->tag = tag;
+}
+
+// get tag
+int Engine::BoxCollider::getTag()
+{
+    return tag;
 }
 
 // get fixed position

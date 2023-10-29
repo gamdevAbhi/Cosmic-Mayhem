@@ -1,8 +1,39 @@
 #include <engine/collidermanager.hpp>
 
+void Engine::ColliderManager::addTag(std::string tag, bool selfRelation)
+{
+    if(tags.find(tag) != tags.end()) return;
+    tags[tag] = tags.size();
+    if(selfRelation) relations[tags[tag]].push_back(tags[tag]);
+    relations[tags[tag]].push_back(tags["default"]);
+    relations[tags["default"]].push_back(tags[tag]);
+}
+
+int Engine::ColliderManager::getTag(std::string tag)
+{
+    if(tags.find(tag) != tags.end()) return tags[tag];
+    else return -1;
+}
+
+void Engine::ColliderManager::addRelation(int tag1, int tag2)
+{
+    if(tag1 == -1 || tag2 == -1) return;
+
+    for(int i = 0; i < relations[tag1].size(); i++)
+    {
+        if(relations[tag1][i] == tag2) return;
+    }
+    
+    relations[tag1].push_back(tag2);
+    relations[tag2].push_back(tag1);
+}
+
 // call for initialization
 void Engine::ColliderManager::initialize()
 {
+    tags["default"] = 0;
+    relations[0].push_back(0);
+    
     root = new QuadTree(AABB(0, 0, 100));
     BoxCollider::rootP = &root;
 }
@@ -38,6 +69,8 @@ void Engine::ColliderManager::narrowPhase(Node* node)
         if(node == potentialCollisions[i]) continue;
 
         BoxCollider* collider1 = dynamic_cast<BoxCollider*>(potentialCollisions[i]->object);
+        
+        if(!hasRelation(collider->tag, collider1->tag)) continue;
 
         if(checkCollision(collider, collider1))
         {
@@ -121,4 +154,14 @@ bool Engine::ColliderManager::checkCollision(BoxCollider* collider1, BoxCollider
     currentOverlap = overlap;
 
     return true;
+}
+
+// check if relation exist
+bool Engine::ColliderManager::hasRelation(int tag1, int tag2)
+{
+    if(relations.find(tag1) == relations.end() || relations.find(tag2) == relations.end()) return false;
+
+    for(int i = 0; i < relations[tag1].size(); i++) if(relations[tag1][i] == tag2) return true;
+    
+    return false;
 }

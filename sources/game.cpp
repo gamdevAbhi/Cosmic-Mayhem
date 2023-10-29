@@ -3,10 +3,23 @@
 #include "shiphandler.hpp"
 #include "follower.hpp"
 #include "starmanager.hpp"
+#include "collectiblemanager.hpp"
 
 int main()
 {
     Engine::GameLoop::initialize("game");
+
+    Engine::ColliderManager::addTag("Space Ship", false);
+    Engine::ColliderManager::addTag("Bullet", false);
+    Engine::ColliderManager::addTag("Collectibles", false);
+    Engine::ColliderManager::addTag("Asteroid", true);
+
+    Engine::ColliderManager::addRelation(Engine::ColliderManager::getTag("Space Ship"), 
+    Engine::ColliderManager::getTag("Collectibles"));
+    Engine::ColliderManager::addRelation(Engine::ColliderManager::getTag("Space Ship"),
+    Engine::ColliderManager::getTag("Asteroid"));
+    Engine::ColliderManager::addRelation(Engine::ColliderManager::getTag("Bullet"),
+    Engine::ColliderManager::getTag("Asteroid"));
 
     Engine::Actor* spaceShip = Engine::Actor::createActor("Space Ship");
     spaceShip->addComponent<Cosmic::ShipHandler>();
@@ -14,6 +27,9 @@ int main()
 
     Engine::Actor* starManager = Engine::Actor::createActor("Star Manager");
     starManager->addComponent<Cosmic::StarManager>();
+
+    Engine::Actor* collectibleManager = Engine::Actor::createActor("Collectible Manager");
+    collectibleManager->addComponent<Cosmic::CollectibleManager>();
 
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
     camera->orthographicSize = 25.f;

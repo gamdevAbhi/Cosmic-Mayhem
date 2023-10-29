@@ -9,7 +9,7 @@ namespace Cosmic
     {
     protected:
         double followSpeed = 3.5f;
-        double maxDistance = 1.75f;
+        double maxDistance = 0.8f;
         Engine::Transform* target;
         Engine::Transform* transform;
         void start();
