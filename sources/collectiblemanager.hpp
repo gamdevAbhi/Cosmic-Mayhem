@@ -13,6 +13,7 @@ namespace Cosmic
         int max = 20;
         float expand = 40.f;
         Engine::Transform* target;
+        ShipHandler* shiphandler;
         Engine::Sprite* collectibleSprite;
         void start();
         void update();

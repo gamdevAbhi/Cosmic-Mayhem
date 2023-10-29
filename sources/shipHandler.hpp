@@ -8,6 +8,8 @@ namespace Cosmic
 {
     class ShipHandler : public Engine::Component
     {
+    public:
+        void addScore(int value);
     protected:
         Engine::Input* input;
         Engine::Transform* transform;
@@ -17,6 +19,7 @@ namespace Cosmic
         Engine::Actor* leftBoost;
         Engine::Actor* rightBoost;
         Engine::Actor* muzzle;
+        int score = 0;
         void start();
         void update();
     };

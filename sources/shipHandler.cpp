@@ -1,5 +1,11 @@
 #include "shiphandler.hpp"
 
+void Cosmic::ShipHandler::addScore(int value)
+{
+    score += value;
+    std::cout << score << std::endl;
+}
+
 void Cosmic::ShipHandler::start()
 {
     input = Engine::GameLoop::getInput();

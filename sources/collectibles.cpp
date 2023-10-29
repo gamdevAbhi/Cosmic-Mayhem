@@ -29,7 +29,7 @@ void Cosmic::Collectibles::onTriggerEnter(Engine::BoxCollider* collider)
 {
     if(collider->getTag() != desiredTag) return;
 
-    std::cout << value << std::endl;
+    shiphandler->addScore(value);
 
     getActor()->setDestroy(); 
 }

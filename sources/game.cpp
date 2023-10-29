@@ -4,6 +4,7 @@
 #include "follower.hpp"
 #include "starmanager.hpp"
 #include "collectiblemanager.hpp"
+#include "asteroidmanager.hpp"
 
 int main()
 {
@@ -31,8 +32,11 @@ int main()
     Engine::Actor* collectibleManager = Engine::Actor::createActor("Collectible Manager");
     collectibleManager->addComponent<Cosmic::CollectibleManager>();
 
+    Engine::Actor* asteroidManager = Engine::Actor::createActor("Asteroid Manager");
+    asteroidManager->addComponent<Cosmic::AsteroidManager>();
+
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
-    camera->orthographicSize = 25.f;
+    camera->orthographicSize = 15.5f;
     camera->getActor()->addComponent<Cosmic::Follower>();
 
     Engine::GameLoop::begin();

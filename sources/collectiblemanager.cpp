@@ -2,11 +2,12 @@
 
 void Cosmic::CollectibleManager::start()
 {
-    target = Engine::Actor::getActor("Space Ship")->getComponent<Engine::Transform>();
+    Engine::Actor* ship = Engine::Actor::getActor("Space Ship");
+    target = ship->getComponent<Engine::Transform>();
+    shiphandler = ship->getComponent<ShipHandler>();
     collectibleSprite = new Engine::Sprite("\\resources\\sprites\\Collectible.png");
 }
 
-// need fix
 void Cosmic::CollectibleManager::update()
 {
     while(Cosmic::Collectibles::getCount() < max)
@@ -21,8 +22,9 @@ void Cosmic::CollectibleManager::update()
 
         collectible->getComponent<Engine::Transform>()->setPosition(true, origin);
         collectible->getComponent<Engine::Transform>()->setScale(true, glm::vec3(0.6f, 0.6f, 1.f));
-        collectible->addComponent<Cosmic::Collectibles>()->target = target;
-        collectible->getComponent<Cosmic::Collectibles>()->maxLength = std::sqrt((std::pow(expand, 2) + std::pow(expand, 2)));
+        collectible->addComponent<Collectibles>()->target = target;
+        collectible->getComponent<Collectibles>()->maxLength = std::sqrt((std::pow(expand, 2) + std::pow(expand, 2)));
+        collectible->getComponent<Collectibles>()->shiphandler = shiphandler;
         collectible->addComponent<Engine::SpriteRenderer>()->setSprite(collectibleSprite);
     }
 }

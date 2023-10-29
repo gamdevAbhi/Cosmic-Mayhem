@@ -3,12 +3,15 @@
 
 #include <engine/gameloop.hpp>
 
+#include "shiphandler.hpp"
+
 namespace Cosmic
 {
     class Collectibles : public Engine::Component
     {
     public:
         Engine::Transform* target;
+        ShipHandler* shiphandler;        
         float maxLength;
         static int getCount();
     protected:
