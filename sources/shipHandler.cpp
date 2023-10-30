@@ -18,6 +18,9 @@ void Cosmic::ShipHandler::start()
     collider->setBoundary(0.4f, 0.4f, 0.5f, 0.5f);
 
     shipComponent = getActor()->addComponent<SpaceShip>();
+    health = getActor()->addComponent<Health>();
+    health->setHealth(100);
+    health->shouldDestroy = false;
 
     backBoost = Engine::Actor::createActor("Back Boost");
     frontBoost = Engine::Actor::createActor("Front Boost");
@@ -27,28 +30,23 @@ void Cosmic::ShipHandler::start()
 
     backBoost->getComponent<Engine::Transform>()->setParent(transform);
     backBoost->getComponent<Engine::Transform>()->setPosition(false, glm::vec3(0.f));
-    backBoost->addComponent<Engine::SpriteRenderer>()->setSprite(new Engine::Sprite(
-    "\\resources\\sprites\\Back Boost.png"));
+    backBoost->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::backBoost);
     
     frontBoost->getComponent<Engine::Transform>()->setParent(transform);
     frontBoost->getComponent<Engine::Transform>()->setPosition(false, glm::vec3(0.f));
-    frontBoost->addComponent<Engine::SpriteRenderer>()->setSprite(new Engine::Sprite(
-    "\\resources\\sprites\\Front Boost.png"));
+    frontBoost->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::frontBoost);
     
     leftBoost->getComponent<Engine::Transform>()->setParent(transform);
     leftBoost->getComponent<Engine::Transform>()->setPosition(false, glm::vec3(0.f));
-    leftBoost->addComponent<Engine::SpriteRenderer>()->setSprite(new Engine::Sprite(
-    "\\resources\\sprites\\Left Boost.png"));
+    leftBoost->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::leftBoost);
     
     rightBoost->getComponent<Engine::Transform>()->setParent(transform);
     rightBoost->getComponent<Engine::Transform>()->setPosition(false, glm::vec3(0.f));
-    rightBoost->addComponent<Engine::SpriteRenderer>()->setSprite(new Engine::Sprite(
-    "\\resources\\sprites\\Right Boost.png"));
+    rightBoost->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::rightBoost);
 
     muzzle->getComponent<Engine::Transform>()->setParent(transform);
     muzzle->getComponent<Engine::Transform>()->setPosition(false, glm::vec3(0.f));
-    muzzle->addComponent<Engine::SpriteRenderer>()->setSprite(new Engine::Sprite(
-    "\\resources\\sprites\\Muzzle.png"));
+    muzzle->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::muzzle);
 }
 
 void Cosmic::ShipHandler::update()
@@ -58,6 +56,11 @@ void Cosmic::ShipHandler::update()
     rightBoost->setActive(false);
     leftBoost->setActive(false);
     muzzle->setActive(true);
+
+    if(health->getHealth() <= 0)
+    {
+        Engine::Time::timeScale = 0.f;
+    }
 
     if(input->getKeyStatus(GLFW_KEY_A) == KEY_HOLD)
     {

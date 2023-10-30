@@ -4,6 +4,7 @@
 #include <engine/gameloop.hpp>
 
 #include "bullet.hpp"
+#include "spritemanager.hpp"
 
 namespace Cosmic
 {
@@ -21,11 +22,7 @@ namespace Cosmic
     protected:
         Engine::Transform* transform;
         Engine::Transform* shootOrigin;
-        Engine::SpriteRenderer* renderer;
-        Engine::Sprite* shipSprite;
-        Engine::Sprite* bulletSprite;
         void start();
-        void onDestroy();
     };
 }
 

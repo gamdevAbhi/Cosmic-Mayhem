@@ -5,23 +5,28 @@
 #include "starmanager.hpp"
 #include "collectiblemanager.hpp"
 #include "asteroidmanager.hpp"
+#include "spritemanager.hpp"
 
-int main()
+void initTag()
 {
-    Engine::GameLoop::initialize("game");
+    int spaceship = Engine::ColliderManager::addTag("Space Ship", false);
+    int bullet = Engine::ColliderManager::addTag("Bullet", false);
+    int collectibles = Engine::ColliderManager::addTag("Collectibles", false);
+    int asteroid = Engine::ColliderManager::addTag("Asteroid", true);
 
-    Engine::ColliderManager::addTag("Space Ship", false);
-    Engine::ColliderManager::addTag("Bullet", false);
-    Engine::ColliderManager::addTag("Collectibles", false);
-    Engine::ColliderManager::addTag("Asteroid", true);
+    Engine::ColliderManager::addRelation(spaceship, collectibles);
+    Engine::ColliderManager::addRelation(spaceship, asteroid);
+    Engine::ColliderManager::addRelation(bullet, asteroid);
+}
 
-    Engine::ColliderManager::addRelation(Engine::ColliderManager::getTag("Space Ship"), 
-    Engine::ColliderManager::getTag("Collectibles"));
-    Engine::ColliderManager::addRelation(Engine::ColliderManager::getTag("Space Ship"),
-    Engine::ColliderManager::getTag("Asteroid"));
-    Engine::ColliderManager::addRelation(Engine::ColliderManager::getTag("Bullet"),
-    Engine::ColliderManager::getTag("Asteroid"));
+void readyCamera()
+{
+    Engine::Camera* camera = Engine::Camera::getRenderCamera();
+    camera->orthographicSize = 15.5f;
+}
 
+void loadActors()
+{
     Engine::Actor* spaceShip = Engine::Actor::createActor("Space Ship");
     spaceShip->addComponent<Cosmic::ShipHandler>();
     spaceShip->getComponent<Engine::Transform>()->setScale(true, glm::vec3(2.0f, 2.0f, 1.0f));
@@ -35,9 +40,17 @@ int main()
     Engine::Actor* asteroidManager = Engine::Actor::createActor("Asteroid Manager");
     asteroidManager->addComponent<Cosmic::AsteroidManager>();
 
-    Engine::Camera* camera = Engine::Camera::getRenderCamera();
-    camera->orthographicSize = 15.5f;
-    camera->getActor()->addComponent<Cosmic::Follower>();
+    Engine::Camera::getRenderCamera()->getActor()->addComponent<Cosmic::Follower>();
+}
+
+int main()
+{
+    Engine::GameLoop::initialize("game");
+
+    Cosmic::SpriteManager::loadSprites();
+    initTag();
+    readyCamera();
+    loadActors();
 
     Engine::GameLoop::begin();
 

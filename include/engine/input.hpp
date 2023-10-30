@@ -2,9 +2,10 @@
 #define ENGINE_INPUT_HPP
 #define GLFW_INCLUDE_NONE
 
-#define KEY_RELEASE GLFW_RELEASE
+#define KEY_NONE    GLFW_RELEASE
 #define KEY_PRESS   GLFW_PRESS
 #define KEY_HOLD    2
+#define KEY_RELEASE 3
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>

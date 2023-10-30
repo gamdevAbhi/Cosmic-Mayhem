@@ -6,12 +6,9 @@ void Cosmic::SpaceShip::start()
     shootOrigin = Engine::Actor::createActor("Shoot")->getComponent<Engine::Transform>();
 
     shootOrigin->setParent(transform);
-    shootOrigin->setPosition(false, glm::vec3(0.0f, 0.6f, 0.0f));
+    shootOrigin->setPosition(false, glm::vec3(0.0f, .8f, 0.0f));
 
-    renderer = getActor()->getComponent<Engine::SpriteRenderer>();
-    shipSprite = new Engine::Sprite("\\resources\\sprites\\Spaceship.png");
-    bulletSprite = new Engine::Sprite("\\resources\\sprites\\Bullets.png");
-    renderer->setSprite(shipSprite);
+    getActor()->getComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::spaceship);
 }
 
 void Cosmic::SpaceShip::moveForward()
@@ -54,17 +51,8 @@ void Cosmic::SpaceShip::shoot()
     bulletT->setPosition(true, shootOrigin->getPosition(true));
     bulletT->setRotation(true, transform->getRotation(true));
     
-    bullet->addComponent<Engine::SpriteRenderer>()->setSprite(bulletSprite);
+    bullet->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::bullet);
     Cosmic::Bullet* script = bullet->addComponent<Cosmic::Bullet>();
     script->direction = transform->getUp(false);
     script->target = transform;
-}
-
-void Cosmic::SpaceShip::onDestroy()
-{
-    shipSprite->destroy();
-    bulletSprite->destroy();
-    shipSprite = nullptr;
-    bulletSprite = nullptr;
-    renderer->setSprite(nullptr);
 }

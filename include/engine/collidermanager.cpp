@@ -1,20 +1,28 @@
 #include <engine/collidermanager.hpp>
 
-void Engine::ColliderManager::addTag(std::string tag, bool selfRelation)
+// add tag to the collision relation
+int Engine::ColliderManager::addTag(std::string tag, bool selfRelation)
 {
-    if(tags.find(tag) != tags.end()) return;
+    if(tags.find(tag) != tags.end()) return -1;
+
     tags[tag] = tags.size();
+
     if(selfRelation) relations[tags[tag]].push_back(tags[tag]);
+
     relations[tags[tag]].push_back(tags["default"]);
     relations[tags["default"]].push_back(tags[tag]);
+
+    return tags[tag];
 }
 
+// get the tag value
 int Engine::ColliderManager::getTag(std::string tag)
 {
     if(tags.find(tag) != tags.end()) return tags[tag];
     else return -1;
 }
 
+// add relation between two tag
 void Engine::ColliderManager::addRelation(int tag1, int tag2)
 {
     if(tag1 == -1 || tag2 == -1) return;
@@ -79,7 +87,7 @@ void Engine::ColliderManager::narrowPhase(Node* node)
     }
 }
 
-// collision detected
+// calls when collision detected between two colliders
 void Engine::ColliderManager::collisionDetected(BoxCollider* collider1, BoxCollider* collider2)
 {
     double length1 = glm::length(collider1->transform->getPosition(true)); 
@@ -92,7 +100,6 @@ void Engine::ColliderManager::collisionDetected(BoxCollider* collider1, BoxColli
     offset *= currentOverlap;
 
     glm::vec3 distance = close->transform->getPosition(true) - distant->transform->getPosition(true);
-    // glm::vec3 direction = glm::normalize(distance);
 
     float closeDot = glm::dot(distance, offset);
     float distantDot = glm::dot(-distance, offset);

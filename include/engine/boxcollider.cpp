@@ -265,6 +265,7 @@ bool Engine::BoxCollider::isOverLap(glm::vec2 project1, glm::vec2 project2)
     return !(project1.y < project2.x || project2.y < project1.x);
 }
 
+// get the overlap between to projection
 double Engine::BoxCollider::getOverLap(glm::vec2 project1, glm::vec2 project2)
 {
     if(project1.y > project2.x) return project1.y - project2.x;

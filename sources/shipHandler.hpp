@@ -2,7 +2,10 @@
 #define COSMIC_SHIP_HANDLER_HPP
 
 #include <engine/gameloop.hpp>
+
 #include "spaceship.hpp"
+#include "health.hpp"
+#include "spritemanager.hpp"
 
 namespace Cosmic
 {
@@ -14,6 +17,7 @@ namespace Cosmic
         Engine::Input* input;
         Engine::Transform* transform;
         SpaceShip* shipComponent;
+        Health* health;
         Engine::Actor* backBoost;
         Engine::Actor* frontBoost;
         Engine::Actor* leftBoost;

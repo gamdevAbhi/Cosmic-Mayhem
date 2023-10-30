@@ -4,6 +4,7 @@
 #include <engine/gameloop.hpp>
 
 #include "collectibles.hpp"
+#include "spritemanager.hpp"
 
 namespace Cosmic
 {
@@ -14,7 +15,6 @@ namespace Cosmic
         float expand = 40.f;
         Engine::Transform* target;
         ShipHandler* shiphandler;
-        Engine::Sprite* collectibleSprite;
         void start();
         void update();
     };

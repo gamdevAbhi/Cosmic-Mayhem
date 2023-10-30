@@ -153,7 +153,7 @@ glm::vec3 Engine::Transform::calculateRotation(glm::mat4 matrix)
         else
         {
             pitch = -glm::pi<float>() / 2.0f;
-            roll = -1.0f * yaw + glm::atan2(-1.0f * rotationMatrix[1][0], -1.0f * rotationMatrix[2][0]);
+            roll = -yaw + glm::atan2(-1.0f * rotationMatrix[1][0], -1.0f * rotationMatrix[2][0]);
         }
     }
 
@@ -186,9 +186,9 @@ glm::vec3 Engine::Transform::fixRotation(glm::vec3 rotation)
     fixRotation.y = (rotation.y - (int)rotation.y) + (int)rotation.y % 360;
     fixRotation.z = (rotation.z - (int)rotation.z) + (int)rotation.z % 360;
 
-    if(fixRotation.x < 0) fixRotation.x = 360.f + fixRotation.x;
-    if(fixRotation.y < 0) fixRotation.y = 360.f + fixRotation.y;
-    if(fixRotation.z < 0) fixRotation.z = 360.f + fixRotation.z;
+    if(fixRotation.x < -360.f) fixRotation.x = std::abs(fixRotation.x) - 360.f;
+    if(fixRotation.y < -360.f) fixRotation.y = std::abs(fixRotation.y) - 360.f;
+    if(fixRotation.z < -360.f) fixRotation.z = std::abs(fixRotation.z) - 360.f;
 
     return fixRotation;
 }

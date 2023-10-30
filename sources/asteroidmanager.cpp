@@ -3,7 +3,6 @@
 void Cosmic::AsteroidManager::start()
 {
     target = Engine::Actor::getActor("Space Ship")->getComponent<Engine::Transform>();
-    asteroidSprite = new Engine::Sprite("\\resources\\sprites\\Asteroid.png");
     resetTime();
     for(int i = 0; i < 5; i++) createAsteroid();
 }
@@ -66,11 +65,13 @@ void Cosmic::AsteroidManager::createAsteroid()
 
     Engine::Actor* asteroid = Engine::Actor::createActor("Asteroid");
     
-    asteroid->addComponent<Engine::SpriteRenderer>()->setSprite(asteroidSprite);
+    asteroid->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::asteroid);
+    asteroid->addComponent<Health>()->setHealth(10 * ((scale.x * 10.f) - 4.f) + 20);
     asteroid->getComponent<Engine::Transform>()->setPosition(true, origin);
     asteroid->getComponent<Engine::Transform>()->setScale(true, scale);
 
     Asteroid* script = asteroid->addComponent<Asteroid>();
     script->target = target;
     script->direction = glm::normalize(distance - origin);
+    script->calculateDamage();
 }

@@ -5,7 +5,6 @@ void Cosmic::CollectibleManager::start()
     Engine::Actor* ship = Engine::Actor::getActor("Space Ship");
     target = ship->getComponent<Engine::Transform>();
     shiphandler = ship->getComponent<ShipHandler>();
-    collectibleSprite = new Engine::Sprite("\\resources\\sprites\\Collectible.png");
 }
 
 void Cosmic::CollectibleManager::update()
@@ -25,6 +24,6 @@ void Cosmic::CollectibleManager::update()
         collectible->addComponent<Collectibles>()->target = target;
         collectible->getComponent<Collectibles>()->maxLength = std::sqrt((std::pow(expand, 2) + std::pow(expand, 2)));
         collectible->getComponent<Collectibles>()->shiphandler = shiphandler;
-        collectible->addComponent<Engine::SpriteRenderer>()->setSprite(collectibleSprite);
+        collectible->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::collectible);
     }
 }

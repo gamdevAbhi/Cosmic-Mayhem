@@ -10,7 +10,7 @@ namespace Engine
     class ColliderManager
     {
     public:
-        static void addTag(std::string tag, bool selfRelation);
+        static int addTag(std::string tag, bool selfRelation);
         static int getTag(std::string tag);
         static void addRelation(int tag1, int tag2);
     protected:

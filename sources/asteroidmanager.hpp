@@ -4,6 +4,7 @@
 #include <engine/gameloop.hpp>
 
 #include "asteroid.hpp"
+#include "spritemanager.hpp"
 
 namespace Cosmic
 {
@@ -17,7 +18,6 @@ namespace Cosmic
         float newTime;
         float box = 10.f;
         float offset = 30.f;
-        Engine::Sprite* asteroidSprite;
         Engine::Transform* target;
         void start();
         void update();

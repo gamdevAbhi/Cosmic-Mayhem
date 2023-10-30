@@ -3,6 +3,8 @@
 
 #include <engine/gameloop.hpp>
 
+#include "health.hpp"
+
 namespace Cosmic
 {
     class Asteroid : public Engine::Component
@@ -11,11 +13,14 @@ namespace Cosmic
         glm::vec3 direction;
         Engine::Transform* target;
         static int getCount();
+        void calculateDamage();
     protected:
         float speed;
+        float damage;
         float minSpeed = 6.f;
         float maxSpeed = 20.f;
         float maxDistance = 120.f;
+        float baseDamage = 8.f;
         int asteroidTag;
         int spaceshipTag;
         Engine::Transform* transform;
