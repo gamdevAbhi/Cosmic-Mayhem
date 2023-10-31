@@ -21,8 +21,8 @@ void Cosmic::Asteroid::start()
     spaceshipTag = Engine::ColliderManager::getTag("Space Ship");
     transform = getActor()->getComponent<Engine::Transform>();
     // adding box collider
-    Engine::BoxCollider* collider = getActor()->addComponent<Engine::BoxCollider>();
-    collider->setBoundary(0.8f, 0.8f, 0.8f, 0.8f);
+    Engine::CircleCollider* collider = getActor()->addComponent<Engine::CircleCollider>();
+    collider->setRadius(0.7f);
     collider->setTag(asteroidTag);
     
     count++;
@@ -44,7 +44,7 @@ void Cosmic::Asteroid::update()
     }
 }
 
-void Cosmic::Asteroid::onCollisionEnter(Engine::BoxCollider* collider)
+void Cosmic::Asteroid::onCollisionEnter(Engine::Collider* collider)
 {
     // if collided with asteroid then change the direction
     // else if collided with spaceship then destroying itself

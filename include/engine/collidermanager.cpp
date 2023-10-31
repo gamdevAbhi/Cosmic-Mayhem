@@ -43,7 +43,7 @@ void Engine::ColliderManager::initialize()
     relations[0].push_back(0);
     
     root = new QuadTree(AABB(0, 0, 100));
-    BoxCollider::rootP = &root;
+    Collider::rootP = &root;
 }
 
 // start detecting collision
@@ -60,7 +60,9 @@ void Engine::ColliderManager::startDetection()
 
     for(int i = 0; i < nodes.size(); i++)
     {
-        dynamic_cast<BoxCollider*>(nodes[i]->object)->stackUpdate();
+        Collider* collider = dynamic_cast<Collider*>(nodes[i]->object);
+        collider->stackUpdate();
+        collider->nodeUpdate();
     }
 }
 
@@ -70,13 +72,13 @@ void Engine::ColliderManager::narrowPhase(Node* node)
     std::vector<Node*> potentialCollisions;
     node->parent->find(node->boundary, potentialCollisions);
 
-    BoxCollider* collider = dynamic_cast<BoxCollider*>(node->object);
+    Collider* collider = dynamic_cast<Collider*>(node->object);
 
     for(int i = 0; i < potentialCollisions.size(); i++)
     {
         if(node == potentialCollisions[i]) continue;
 
-        BoxCollider* collider1 = dynamic_cast<BoxCollider*>(potentialCollisions[i]->object);
+        Collider* collider1 = dynamic_cast<Collider*>(potentialCollisions[i]->object);
         
         if(!hasRelation(collider->tag, collider1->tag)) continue;
 
@@ -88,51 +90,48 @@ void Engine::ColliderManager::narrowPhase(Node* node)
 }
 
 // calls when collision detected between two colliders
-void Engine::ColliderManager::collisionDetected(BoxCollider* collider1, BoxCollider* collider2)
+void Engine::ColliderManager::collisionDetected(Collider* collider1, Collider* collider2)
 {
-    double length1 = glm::length(collider1->transform->getPosition(true)); 
-    double length2 = glm::length(collider2->transform->getPosition(true));
-
-    BoxCollider* close = (length1 < length2)? collider1 : collider2;
-    BoxCollider* distant = (close == collider1)? collider2 : collider1;
-
     glm::vec3 offset = currentAxis;
+    glm::vec3 pos1 = collider1->transform->getPosition(true);
+    glm::vec3 pos2 = collider2->transform->getPosition(true);
     offset *= currentOverlap;
 
-    glm::vec3 distance = close->transform->getPosition(true) - distant->transform->getPosition(true);
+    float dot1 = glm::dot(currentAxis, pos2 - pos1);
+    float dot2 = glm::dot(currentAxis, pos1 - pos2);
 
-    float closeDot = glm::dot(distance, offset);
-    float distantDot = glm::dot(-distance, offset);
-
-    if(closeDot > distantDot)
+    if(dot1 < dot2)
     {
-        close->call(distant, offset);
-        distant->call(close, -offset);
+        collider1->call(collider2, offset);
+        collider2->call(collider1, -offset);
     }
     else
     {
-        close->call(distant, -offset);
-        distant->call(close, offset);
+        collider1->call(collider2, -offset);
+        collider2->call(collider1, offset);
     }
+
+    collider1->nodeUpdate();
+    collider2->nodeUpdate();
 }
 
 // checking collision between two box collider
-bool Engine::ColliderManager::checkCollision(BoxCollider* collider1, BoxCollider* collider2)
+bool Engine::ColliderManager::checkCollision(Collider* collider1, Collider* collider2)
 {
     glm::vec3 axis;
     double overlap = DBL_MAX;
 
-    std::vector<glm::vec3> axises1 = collider1->getAxis();
-    std::vector<glm::vec3> axises2 = collider2->getAxis();
+    std::vector<glm::vec3> axises1 = collider1->getAxis(collider2);
+    std::vector<glm::vec3> axises2 = collider2->getAxis(collider1);
 
     for(int i = 0; i < axises1.size(); i++)
     {
         glm::vec2 projection1 = collider1->getProjection(axises1[i]);
         glm::vec2 projection2 = collider2->getProjection(axises1[i]);
 
-        if(BoxCollider::isOverLap(projection1, projection2) == false) return false;
+        if(Collider::isOverLap(projection1, projection2) == false) return false;
 
-        double current = BoxCollider::getOverLap(projection1, projection2);
+        double current = Collider::getOverLap(projection1, projection2);
         
         if(current < overlap)
         {
@@ -146,9 +145,9 @@ bool Engine::ColliderManager::checkCollision(BoxCollider* collider1, BoxCollider
         glm::vec2 projection1 = collider1->getProjection(axises2[i]);
         glm::vec2 projection2 = collider2->getProjection(axises2[i]);
 
-        if(BoxCollider::isOverLap(projection1, projection2) == false) return false;
+        if(Collider::isOverLap(projection1, projection2) == false) return false;
 
-        double current = BoxCollider::getOverLap(projection1, projection2);
+        double current = Collider::getOverLap(projection1, projection2);
         
         if(current < overlap)
         {

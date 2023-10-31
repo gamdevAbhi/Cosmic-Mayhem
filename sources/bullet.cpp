@@ -4,9 +4,9 @@ void Cosmic::Bullet::start()
 {
     transform = getActor()->getComponent<Engine::Transform>();
     desiredTag = Engine::ColliderManager::getTag("Asteroid");
-    Engine::BoxCollider* collider = getActor()->addComponent<Engine::BoxCollider>();
+    Engine::CircleCollider* collider = getActor()->addComponent<Engine::CircleCollider>();
     collider->setTag(Engine::ColliderManager::getTag("Bullet"));
-    collider->setBoundary(0.3f, 0.3f, 0.8f, 0.8f);
+    collider->setRadius(0.7f);
 }
 
 void Cosmic::Bullet::update()
@@ -25,7 +25,7 @@ void Cosmic::Bullet::update()
     }
 }
 
-void Cosmic::Bullet::onCollisionEnter(Engine::BoxCollider* collider)
+void Cosmic::Bullet::onCollisionEnter(Engine::Collider* collider)
 {
     if(collider->getTag() != desiredTag) return;
 

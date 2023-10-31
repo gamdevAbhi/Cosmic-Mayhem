@@ -41,6 +41,7 @@ void loadActors()
     asteroidManager->addComponent<Cosmic::AsteroidManager>();
 
     Engine::Camera::getRenderCamera()->getActor()->addComponent<Cosmic::Follower>();
+    
 }
 
 int main()

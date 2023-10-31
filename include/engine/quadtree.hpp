@@ -36,7 +36,9 @@ namespace Engine
         void destroy();
     friend class QuadTree;
     friend class SpriteRenderer;
+    friend class Collider;
     friend class BoxCollider;
+    friend class CircleCollider;
     friend class ColliderManager;
     };
 
@@ -60,7 +62,9 @@ namespace Engine
         void find(AABB boundary, std::vector<Node*>& query);
     friend class Node;
     friend class SpriteRenderer;
+    friend class Collider;
     friend class BoxCollider;
+    friend class CircleCollider;
     friend class ColliderManager;
     };
 }

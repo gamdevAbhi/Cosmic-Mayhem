@@ -21,7 +21,7 @@ namespace Cosmic
         inline static int counts = 0;
         void start();
         void update();
-        void onTriggerEnter(Engine::BoxCollider* collider);
+        void onTriggerEnter(Engine::Collider* collider);
         void onDestroy();
     };
 }

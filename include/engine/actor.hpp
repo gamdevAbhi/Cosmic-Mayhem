@@ -33,7 +33,7 @@ namespace Engine
         inline static std::vector<Actor*> actors;
         ~Actor();
         friend class GameLoop;
-        friend class BoxCollider;
+        friend class Collider;
     };
 }
 

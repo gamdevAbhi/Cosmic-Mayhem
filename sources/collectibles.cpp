@@ -8,8 +8,8 @@ int Cosmic::Collectibles::getCount()
 void Cosmic::Collectibles::start()
 {
     transform = getActor()->getComponent<Engine::Transform>();
-    Engine::BoxCollider* collider  = getActor()->addComponent<Engine::BoxCollider>();
-    collider->setBoundary(0.8f, 0.8f, 0.8f, 0.8f);
+    Engine::CircleCollider* collider  = getActor()->addComponent<Engine::CircleCollider>();
+    collider->setRadius(0.7f);
     collider->setTag(Engine::ColliderManager::getTag("Collectibles"));
     collider->setTrigger(true);
     desiredTag = Engine::ColliderManager::getTag("Space Ship");
@@ -25,7 +25,7 @@ void Cosmic::Collectibles::update()
     if(glm::length(targetPos - pos) >= maxLength) getActor()->setDestroy();
 }
 
-void Cosmic::Collectibles::onTriggerEnter(Engine::BoxCollider* collider)
+void Cosmic::Collectibles::onTriggerEnter(Engine::Collider* collider)
 {
     if(collider->getTag() != desiredTag) return;
 

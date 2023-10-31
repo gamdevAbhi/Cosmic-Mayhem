@@ -12,6 +12,7 @@ void Engine::BoxCollider::start()
     fixed_y = false;
     transform = getActor()->getComponent<Transform>();
 
+    glm::vec3 pos = transform->getPosition(true);
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
@@ -19,7 +20,7 @@ void Engine::BoxCollider::start()
     float max_y = height.x + height.y;
     float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
 
-    node = new Node(this, AABB(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f));
+    node = new Node(this, AABB(pos.x, pos.y, diagonal / 2.0f));
 
     while(true)
     {
@@ -38,6 +39,7 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
     this->up = up;
     this->down = down;
 
+    glm::vec3 pos = transform->getPosition(true);
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
@@ -45,7 +47,7 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
     float max_y = height.x + height.y;
     float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
     
-    AABB boundary(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f);
+    AABB boundary(pos.x, pos.y, diagonal / 2.0f);
 
     while(true)
     {
@@ -54,37 +56,6 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
     }
 
     node->update(boundary, *rootP);
-}
-
-// set fixed position
-void Engine::BoxCollider::setFixed(bool x, bool y)
-{
-    fixed_x = x;
-    fixed_y = y;
-}
-
-// set tag
-void Engine::BoxCollider::setTag(int tag)
-{
-    this->tag = tag;
-}
-
-// get tag
-int Engine::BoxCollider::getTag()
-{
-    return tag;
-}
-
-// get fixed position
-std::tuple<bool, bool> Engine::BoxCollider::getFixed()
-{
-    return std::tuple<bool, bool>(fixed_x, fixed_y);
-}
-
-// on transform changed
-void Engine::BoxCollider::onTransformChanged()
-{
-    isMoved = true;
 }
 
 // get width of the collider (left, right)
@@ -101,103 +72,28 @@ glm::vec2 Engine::BoxCollider::getHeight()
     return glm::vec2(up * scale_y, down * scale_y);
 }
 
-// set the trigger
-void Engine::BoxCollider::setTrigger(bool isTrigger)
+// updating node
+void Engine::BoxCollider::nodeUpdate()
 {
-    this->isTrigger = isTrigger;
-}
+    if(!isMoved) return;
 
-// call when component is removed
-void Engine::BoxCollider::onDestroy()
-{
-    node->destroy();
-}
+    glm::vec3 pos = transform->getPosition(true);
+    glm::vec2 width = getWidth();
+    glm::vec2 height = getHeight();
 
-// call collider related functions
-void Engine::BoxCollider::call(BoxCollider* collider, glm::vec3 axis)
-{
-    bool exist = false;
+    float max_x = width.x + width.y;
+    float max_y = height.x + height.y;
+    float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
 
-    if(colliders.find(collider) != colliders.end()) 
+    AABB boundary(pos.x, pos.y, diagonal / 2.0f);
+
+    while(true)
     {
-        colliders[collider] = true;
-        exist = true;
-    }
-    else colliders[collider] = true;
-
-    if(collider->isTrigger == false && isTrigger == false)
-    {
-        for(int i = 0; i < getActor()->components.size(); i++)
-        {
-            if(exist == false) getActor()->components[i]->onCollisionEnter(collider);
-            else getActor()->components[i]->onCollisionStay(collider);
-        }
-
-        if(fixed_x == true) axis.x = 0.f;
-        if(fixed_y == true) axis.y = 0.f;
-
-        transform->setPosition(true, transform->getPosition(true) + axis);
-    }
-    else if(isTrigger == true && collider->isTrigger == false)
-    {
-        for(int i = 0; i < getActor()->components.size(); i++)
-        {
-            if(exist == false) getActor()->components[i]->onTriggerEnter(collider);
-            else getActor()->components[i]->onTriggerStay(collider);
-        }
-    }
-}
-
-// updating colliders stack
-void Engine::BoxCollider::stackUpdate()
-{
-    std::vector<BoxCollider*> notFounds;
-
-    for(auto i = colliders.begin(); i != colliders.end(); i++)
-    {
-        if(i->second == false) notFounds.push_back(i->first);
-        i->second = false;
+        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        else break;
     }
 
-    for(int i = 0; i < notFounds.size(); i++)
-    {
-        colliders.erase(notFounds[i]);
-
-        if(notFounds[i]->isTrigger == false && isTrigger == false)
-        {
-            for(int j = 0; j < getActor()->components.size(); j++)
-            {
-                getActor()->components[j]->onCollisionExit(notFounds[i]);
-            }
-        }
-        else if(isTrigger == true && notFounds[i]->isTrigger == false)
-        {
-            for(int j = 0; j < getActor()->components.size(); j++)
-            {
-                getActor()->components[j]->onTriggerExit(notFounds[i]);
-            }
-        }
-    }
-
-    if(isMoved == true)
-    {
-        glm::vec2 width = getWidth();
-        glm::vec2 height = getHeight();
-
-        float max_x = width.x + width.y;
-        float max_y = height.x + height.y;
-        float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
-
-        AABB boundary(transform->getPosition(true).x, transform->getPosition(true).y, diagonal / 2.0f);
-
-        while(true)
-        {
-            if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
-            else break;
-        }
-
-        node->update(boundary, *rootP);
-    }
+    node->update(boundary, *rootP);
 }
 
 // get the vertices
@@ -222,7 +118,7 @@ std::vector<glm::vec3> Engine::BoxCollider::getVertices()
 }
 
 // get edge axis
-std::vector<glm::vec3> Engine::BoxCollider::getAxis()
+std::vector<glm::vec3> Engine::BoxCollider::getAxis(Collider* collider)
 {
     std::vector<glm::vec3> vertices = getVertices();
 
@@ -257,17 +153,4 @@ glm::vec2 Engine::BoxCollider::getProjection(glm::vec3 axis)
     }
 
     return glm::vec2(min, max);
-}
-
-// check if two projection is overlap or not
-bool Engine::BoxCollider::isOverLap(glm::vec2 project1, glm::vec2 project2)
-{
-    return !(project1.y < project2.x || project2.y < project1.x);
-}
-
-// get the overlap between to projection
-double Engine::BoxCollider::getOverLap(glm::vec2 project1, glm::vec2 project2)
-{
-    if(project1.y > project2.x) return project1.y - project2.x;
-    else return project2.y - project1.x;
 }

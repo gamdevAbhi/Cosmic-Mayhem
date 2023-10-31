@@ -4,6 +4,8 @@
 #include <engine/actor.hpp>
 #include <engine/boxcollider.hpp>
 #include <engine/camera.hpp>
+#include <engine/circlecollider.hpp>
+#include <engine/collider.hpp>
 #include <engine/collidermanager.hpp>
 #include <engine/component.hpp>
 #include <engine/ebo.hpp>

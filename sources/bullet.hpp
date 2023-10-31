@@ -17,7 +17,7 @@ namespace Cosmic
         int desiredTag;
         void start();
         void update();
-        void onCollisionEnter(Engine::BoxCollider* collider);
+        void onCollisionEnter(Engine::Collider* collider);
     };
 }
 

@@ -6,7 +6,7 @@
 namespace Engine
 {
     class Actor;
-    class BoxCollider;
+    class Collider;
     
     // base component class
     class Component
@@ -31,17 +31,17 @@ namespace Engine
         // called when transform is changed
         virtual void onTransformChanged();
         // called when collision detected
-        virtual void onCollisionEnter(BoxCollider* boxCollider);
-        virtual void onCollisionStay(BoxCollider* boxCollider);
-        virtual void onCollisionExit(BoxCollider* boxCollider);
-        virtual void onTriggerEnter(BoxCollider* boxCollider);
-        virtual void onTriggerStay(BoxCollider* boxCollider);
-        virtual void onTriggerExit(BoxCollider* boxCollider);
+        virtual void onCollisionEnter(Collider* collider);
+        virtual void onCollisionStay(Collider* collider);
+        virtual void onCollisionExit(Collider* collider);
+        virtual void onTriggerEnter(Collider* collider);
+        virtual void onTriggerStay(Collider* collider);
+        virtual void onTriggerExit(Collider* collider);
         // called when component is destroying
         virtual void onDestroy();
     friend class Actor;
     friend class Transform;
-    friend class BoxCollider;
+    friend class Collider;
     friend class GameLoop;
     };
 }

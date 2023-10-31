@@ -15,7 +15,7 @@ void Cosmic::ShipHandler::start()
 
     Engine::BoxCollider* collider = getActor()->addComponent<Engine::BoxCollider>();
     collider->setTag(Engine::ColliderManager::getTag("Space Ship"));
-    collider->setBoundary(0.4f, 0.4f, 0.5f, 0.5f);
+    collider->setBoundary(0.3f, 0.3f, 0.4f, 0.4f);
 
     shipComponent = getActor()->addComponent<SpaceShip>();
     health = getActor()->addComponent<Health>();

@@ -3,7 +3,7 @@
 
 #include <engine/actor.hpp>
 #include <engine/transform.hpp>
-#include <engine/boxcollider.hpp>
+#include <engine/collider.hpp>
 
 namespace Engine
 {
@@ -22,8 +22,8 @@ namespace Engine
         static void initialize();
         static void startDetection();
         static void narrowPhase(Node* node);
-        static void collisionDetected(BoxCollider* collider1, BoxCollider* collider2);
-        static bool checkCollision(BoxCollider* collider1, BoxCollider* collider2);
+        static void collisionDetected(Collider* collider1, Collider* collider2);
+        static bool checkCollision(Collider* collider1, Collider* collider2);
         static bool hasRelation(int tag1, int tag2);
     friend class GameLoop;
     };

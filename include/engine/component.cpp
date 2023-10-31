@@ -17,11 +17,11 @@ void Engine::Component::update() {}
 void Engine::Component::lateUpdate() {}
 void Engine::Component::fixedUpdate() {}
 void Engine::Component::onTransformChanged() {}
-void Engine::Component::onCollisionEnter(BoxCollider* boxCollider) {}
-void Engine::Component::onCollisionStay(BoxCollider* boxCollider) {}
-void Engine::Component::onCollisionExit(BoxCollider* boxCollder) {}
-void Engine::Component::onTriggerEnter(BoxCollider* boxCollider) {}
-void Engine::Component::onTriggerStay(BoxCollider* boxCollider) {}
-void Engine::Component::onTriggerExit(BoxCollider* boxCollider) {}
+void Engine::Component::onCollisionEnter(Collider* collider) {}
+void Engine::Component::onCollisionStay(Collider* collider) {}
+void Engine::Component::onCollisionExit(Collider* collider) {}
+void Engine::Component::onTriggerEnter(Collider* collider) {}
+void Engine::Component::onTriggerStay(Collider* collider) {}
+void Engine::Component::onTriggerExit(Collider* collider) {}
 void Engine::Component::onDestroy() {}
 Engine::Component::~Component() {}
