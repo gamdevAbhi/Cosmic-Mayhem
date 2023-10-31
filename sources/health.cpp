@@ -10,6 +10,7 @@ void Cosmic::Health::addHealth(int value)
 {
     health += value;
     if(health > maxHealth) health = maxHealth;
+    std::cout << "Health - " << health << std::endl;
 }
 
 void Cosmic::Health::addDamage(int value)

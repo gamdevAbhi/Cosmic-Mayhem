@@ -3,6 +3,8 @@
 
 #include <engine/gameloop.hpp>
 
+#include "spritemanager.hpp"
+
 namespace Cosmic
 {
     class StarManager : public Engine::Component

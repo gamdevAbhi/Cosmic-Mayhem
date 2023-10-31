@@ -161,10 +161,15 @@ void Cosmic::StarManager::createRegion(std::vector<Engine::Actor*>& vec, float x
         origin.y = (y - right) + ((std::rand() % 100) / 100.f) * (right * 2.f);
         
         Engine::Actor* star = Engine::Actor::createActor("star");
+        Engine::SpriteRenderer* renderer = star->addComponent<Engine::SpriteRenderer>();
+        renderer->setOrder(2);
+        
         star->getComponent<Engine::Transform>()->setPosition(true, origin);
         star->getComponent<Engine::Transform>()->setScale(true, glm::vec3(0.15f, 0.15f, 1.f));
-        star->addComponent<Engine::SpriteRenderer>()->setOrder(2);
         
+        if(std::rand() % 100 > 50) renderer->setSprite(SpriteManager::star);
+        else renderer->setSprite(SpriteManager::brightStar);
+
         vec.push_back(star);
     }
 }

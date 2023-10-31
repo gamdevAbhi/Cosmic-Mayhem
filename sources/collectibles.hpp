@@ -11,17 +11,14 @@ namespace Cosmic
     {
     public:
         Engine::Transform* target;
-        ShipHandler* shiphandler;        
+        ShipHandler* shiphandler;
         float maxLength;
         static int getCount();
     protected:
-        int value;
         int desiredTag;
         Engine::Transform* transform;
         inline static int counts = 0;
-        void start();
         void update();
-        void onTriggerEnter(Engine::Collider* collider);
         void onDestroy();
     };
 }

@@ -16,7 +16,11 @@ namespace Cosmic
         inline static Engine::Sprite* rightBoost = nullptr;
         inline static Engine::Sprite* muzzle = nullptr;
         inline static Engine::Sprite* asteroid = nullptr;
-        inline static Engine::Sprite* collectible = nullptr;
+        inline static Engine::Sprite* star = nullptr;
+        inline static Engine::Sprite* brightStar = nullptr;
+        inline static Engine::Sprite* coin = nullptr;
+        inline static Engine::Sprite* health = nullptr;
+        inline static Engine::Sprite* arrow = nullptr;
         static void loadSprites();
     };
 }

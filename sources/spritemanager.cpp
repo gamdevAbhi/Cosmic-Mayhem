@@ -10,5 +10,9 @@ void Cosmic::SpriteManager::loadSprites()
     rightBoost = new Engine::Sprite("\\resources\\sprites\\Right Boost.png");
     muzzle = new Engine::Sprite("\\resources\\sprites\\Muzzle.png");
     asteroid = new Engine::Sprite("\\resources\\sprites\\Asteroid.png");
-    collectible = new Engine::Sprite("\\resources\\sprites\\Collectible.png");
+    star = new Engine::Sprite("\\resources\\sprites\\Star.png");
+    brightStar = new Engine::Sprite("\\resources\\sprites\\Bright Star.png");
+    coin = new Engine::Sprite("\\resources\\sprites\\Coin.png");
+    health = new Engine::Sprite("\\resources\\sprites\\Health.png");
+    arrow = new Engine::Sprite("\\resources\\sprites\\Arrow.png");
 }

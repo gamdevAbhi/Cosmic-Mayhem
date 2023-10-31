@@ -3,7 +3,8 @@
 
 #include <engine/gameloop.hpp>
 
-#include "collectibles.hpp"
+#include "coin.hpp"
+#include "healthbooster.hpp"
 #include "spritemanager.hpp"
 
 namespace Cosmic
@@ -12,6 +13,7 @@ namespace Cosmic
     {
     protected:
         int max = 20;
+        int coinChance = 80;
         float expand = 40.f;
         Engine::Transform* target;
         ShipHandler* shiphandler;

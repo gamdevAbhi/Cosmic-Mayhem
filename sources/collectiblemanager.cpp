@@ -9,7 +9,7 @@ void Cosmic::CollectibleManager::start()
 
 void Cosmic::CollectibleManager::update()
 {
-    while(Cosmic::Collectibles::getCount() < max)
+    while(Cosmic::Coin::getCount() < max)
     {
         Engine::Actor* collectible = Engine::Actor::createActor("collectible");
 
@@ -21,9 +21,23 @@ void Cosmic::CollectibleManager::update()
 
         collectible->getComponent<Engine::Transform>()->setPosition(true, origin);
         collectible->getComponent<Engine::Transform>()->setScale(true, glm::vec3(0.6f, 0.6f, 1.f));
-        collectible->addComponent<Collectibles>()->target = target;
-        collectible->getComponent<Collectibles>()->maxLength = std::sqrt((std::pow(expand, 2) + std::pow(expand, 2)));
-        collectible->getComponent<Collectibles>()->shiphandler = shiphandler;
-        collectible->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::collectible);
+        
+        Engine::SpriteRenderer* renderer = collectible->addComponent<Engine::SpriteRenderer>();
+        Collectibles* script = nullptr;
+
+        if(std::rand() % 100 <= coinChance)
+        {
+            script = collectible->addComponent<Coin>();
+            renderer->setSprite(SpriteManager::coin);
+        }
+        else
+        {
+            script = collectible->addComponent<HealthBooster>();
+            renderer->setSprite(SpriteManager::health);
+        }
+
+        script->target = target;
+        script->maxLength = std::sqrt((std::pow(expand, 2) + std::pow(expand, 2)));
+        script->shiphandler = shiphandler;
     }
 }
