@@ -35,11 +35,13 @@ namespace Engine
         void update(AABB _boundary, QuadTree* root);
         void destroy();
     friend class QuadTree;
+    friend class RendererManager;
     friend class SpriteRenderer;
+    friend class Billboard;
+    friend class ColliderManager;
     friend class Collider;
     friend class BoxCollider;
     friend class CircleCollider;
-    friend class ColliderManager;
     };
 
     // QuadTree class
@@ -61,11 +63,13 @@ namespace Engine
         QuadTree* expand(AABB _boundary);
         void find(AABB boundary, std::vector<Node*>& query);
     friend class Node;
+    friend class RendererManager;
     friend class SpriteRenderer;
+    friend class Billboard;
+    friend class ColliderManager;
     friend class Collider;
     friend class BoxCollider;
     friend class CircleCollider;
-    friend class ColliderManager;
     };
 }
 

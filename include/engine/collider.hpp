@@ -13,12 +13,12 @@ namespace Engine
     class Collider : public Component
     {
     public:
-        void setFixed(bool x, bool y);
-        void setTag(int tag);
+        virtual std::vector<glm::vec3> getVertices() = 0;
         int getTag();
         std::tuple<bool, bool> getFixed();
+        void setTag(int tag);
+        void setFixed(bool x, bool y);
         void setTrigger(bool isTrigger);
-        virtual std::vector<glm::vec3> getVertices() = 0;
     protected:
         inline static QuadTree** rootP = nullptr;
         Node* node;

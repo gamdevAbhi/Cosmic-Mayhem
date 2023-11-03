@@ -1,5 +1,12 @@
 #include <engine/collidermanager.hpp>
 
+// get the tag value
+int Engine::ColliderManager::getTag(std::string tag)
+{
+    if(tags.find(tag) != tags.end()) return tags[tag];
+    else return -1;
+}
+
 // add tag to the collision relation
 int Engine::ColliderManager::addTag(std::string tag, bool selfRelation)
 {
@@ -13,13 +20,6 @@ int Engine::ColliderManager::addTag(std::string tag, bool selfRelation)
     relations[tags["default"]].push_back(tags[tag]);
 
     return tags[tag];
-}
-
-// get the tag value
-int Engine::ColliderManager::getTag(std::string tag)
-{
-    if(tags.find(tag) != tags.end()) return tags[tag];
-    else return -1;
 }
 
 // add relation between two tag
@@ -93,8 +93,8 @@ void Engine::ColliderManager::narrowPhase(Node* node)
 void Engine::ColliderManager::collisionDetected(Collider* collider1, Collider* collider2)
 {
     glm::vec3 offset = currentAxis;
-    glm::vec3 pos1 = collider1->transform->getPosition(true);
-    glm::vec3 pos2 = collider2->transform->getPosition(true);
+    glm::vec3 pos1 = collider1->transform->getWorldPosition();
+    glm::vec3 pos2 = collider2->transform->getWorldPosition();
     offset *= currentOverlap;
 
     float dot1 = glm::dot(currentAxis, pos2 - pos1);

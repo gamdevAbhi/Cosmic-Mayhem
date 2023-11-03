@@ -15,7 +15,7 @@ namespace Engine
     // shader class for render actor
     class Shader final
     {
-    public:
+    protected:
         Shader(std::string vertex_relative_path, std::string fragment_relative_path);
         void use();
         GLint getLocation(const char* uniformName);
@@ -27,6 +27,8 @@ namespace Engine
         bool attach(const char* source_code, GLenum shader_type);
         bool checkShaderStatus(GLuint shader);
         bool checkLinkStatus();
+    friend class SpriteRenderer;
+    friend class Billboard;
     };
 }
 

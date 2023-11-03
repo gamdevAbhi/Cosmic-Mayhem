@@ -12,6 +12,8 @@ void Engine::Component::setDestroy()
     shouldDestroy = true;
 }
 
+Engine::Component::~Component() {}
+
 void Engine::Component::start() {}
 void Engine::Component::update() {}
 void Engine::Component::lateUpdate() {}
@@ -24,4 +26,3 @@ void Engine::Component::onTriggerEnter(Collider* collider) {}
 void Engine::Component::onTriggerStay(Collider* collider) {}
 void Engine::Component::onTriggerExit(Collider* collider) {}
 void Engine::Component::onDestroy() {}
-Engine::Component::~Component() {}

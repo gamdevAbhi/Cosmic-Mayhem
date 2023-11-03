@@ -7,8 +7,8 @@ int Cosmic::Collectibles::getCount()
 
 void Cosmic::Collectibles::update()
 {
-    glm::vec2 targetPos = target->getPosition(true);
-    glm::vec2 pos = transform->getPosition(true);
+    glm::vec2 targetPos = target->getWorldPosition();
+    glm::vec2 pos = transform->getWorldPosition();
 
     if(glm::length(targetPos - pos) >= maxLength) getActor()->setDestroy();
 }

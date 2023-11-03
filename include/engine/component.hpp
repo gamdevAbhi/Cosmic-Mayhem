@@ -41,6 +41,7 @@ namespace Engine
         virtual void onDestroy();
     friend class Actor;
     friend class Transform;
+    friend class RectTransform;
     friend class Collider;
     friend class GameLoop;
     };

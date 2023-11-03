@@ -2,13 +2,9 @@
 #define ENGINE_INPUT_HPP
 #define GLFW_INCLUDE_NONE
 
-#define KEY_NONE    GLFW_RELEASE
-#define KEY_PRESS   GLFW_PRESS
-#define KEY_HOLD    2
-#define KEY_RELEASE 3
-
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 #include <engine/window.hpp>
 #include <unordered_map>
 
@@ -18,13 +14,14 @@ namespace Engine
     class Input final
     {
     public:
-        int getKeyStatus(int key);
-        int getMouseButtonStatus(int mouseButton);
-        std::tuple<double, double> getMousePos();
+        enum KeyStatus {KEY_NONE, KEY_PRESS, KEY_HOLD, KEY_RELEASE};
+        static int getKeyStatus(int key);
+        static int getMouseButtonStatus(int mouseButton);
+        static glm::vec2 getMousePos();
     private:
-        explicit Input(Window& window);
-        std::unordered_map<int, int> keyboardInputs, mouseInputs;
-        Window* window;
+        static void initialize();
+        inline static std::unordered_map<int, KeyStatus> keyboardInputs, mouseInputs;
+        inline static Window* window;
     friend class GameLoop;
     };
 }

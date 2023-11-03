@@ -11,8 +11,8 @@ void Cosmic::Bullet::start()
 
 void Cosmic::Bullet::update()
 {
-    glm::vec3 targetPos = target->getPosition(true);
-    glm::vec3 pos = transform->getPosition(true);
+    glm::vec3 targetPos = target->getWorldPosition();
+    glm::vec3 pos = transform->getWorldPosition();
 
     if(glm::length(targetPos - pos) >= maxLength) getActor()->setDestroy();
     else
@@ -21,7 +21,7 @@ void Cosmic::Bullet::update()
         offset *= Engine::Time::getDeltaTime() * speed;
         pos += offset;
 
-        transform->setPosition(true, pos);
+        transform->setWorldPosition(pos);
     }
 }
 

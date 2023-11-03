@@ -19,6 +19,7 @@ namespace Engine
         void bind();
         void unbind();
     friend class SpriteRenderer;
+    friend class Billboard;
     };
 }
 

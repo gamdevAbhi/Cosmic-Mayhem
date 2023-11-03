@@ -1,37 +1,6 @@
 #include <engine/boxcollider.hpp>
 
-// call when added in actor
-void Engine::BoxCollider::start()
-{
-    tag = 0;
-    left = 1.f;
-    right = 1.f;
-    up = 1.f;
-    down = 1.f;
-    fixed_x = false;
-    fixed_y = false;
-    transform = getActor()->getComponent<Transform>();
-
-    glm::vec3 pos = transform->getPosition(true);
-    glm::vec2 width = getWidth();
-    glm::vec2 height = getHeight();
-
-    float max_x = width.x + width.y;
-    float max_y = height.x + height.y;
-    float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
-
-    node = new Node(this, AABB(pos.x, pos.y, diagonal / 2.0f));
-
-    while(true)
-    {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
-        else break;
-    }
-    
-    (*rootP)->insert(node);
-}
-
-// set boundary of collider (all float should be positive)
+// set boundary of collider
 void Engine::BoxCollider::setBoundary(float left, float right, float up, float down)
 {
     this->left = left;
@@ -39,7 +8,7 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
     this->up = up;
     this->down = down;
 
-    glm::vec3 pos = transform->getPosition(true);
+    glm::vec3 pos = transform->getWorldPosition();
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
@@ -61,15 +30,46 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
 // get width of the collider (left, right)
 glm::vec2 Engine::BoxCollider::getWidth()
 {
-    float scale_x = transform->getScale(true).x;
+    float scale_x = transform->getWorldScale().x;
     return glm::vec2(left * scale_x, right * scale_x);
 }
 
 // get height of the collider (up, down)
 glm::vec2 Engine::BoxCollider::getHeight()
 {
-    float scale_y = transform->getScale(true).y;
+    float scale_y = transform->getWorldScale().y;
     return glm::vec2(up * scale_y, down * scale_y);
+}
+
+// call when added in actor
+void Engine::BoxCollider::start()
+{
+    tag = 0;
+    left = 1.f;
+    right = 1.f;
+    up = 1.f;
+    down = 1.f;
+    fixed_x = false;
+    fixed_y = false;
+    transform = getActor()->getComponent<Transform>();
+
+    glm::vec3 pos = transform->getWorldPosition();
+    glm::vec2 width = getWidth();
+    glm::vec2 height = getHeight();
+
+    float max_x = width.x + width.y;
+    float max_y = height.x + height.y;
+    float diagonal = std::sqrt(std::pow(max_x, 2) + std::pow(max_y, 2));
+
+    node = new Node(this, AABB(pos.x, pos.y, diagonal / 2.0f));
+
+    while(true)
+    {
+        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        else break;
+    }
+    
+    (*rootP)->insert(node);
 }
 
 // updating node
@@ -77,7 +77,7 @@ void Engine::BoxCollider::nodeUpdate()
 {
     if(!isMoved) return;
 
-    glm::vec3 pos = transform->getPosition(true);
+    glm::vec3 pos = transform->getWorldPosition();
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 

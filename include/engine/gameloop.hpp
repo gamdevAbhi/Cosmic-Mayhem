@@ -2,6 +2,7 @@
 #define ENGINE_GAMELOOP_HPP
 
 #include <engine/actor.hpp>
+#include <engine/billboard.hpp>
 #include <engine/boxcollider.hpp>
 #include <engine/camera.hpp>
 #include <engine/circlecollider.hpp>
@@ -17,8 +18,12 @@
 #include <engine/spriterenderer.hpp>
 #include <engine/time.hpp>
 #include <engine/transform.hpp>
+#include <engine/renderer.hpp>
+#include <engine/renderermanager.hpp>
+#include <engine/recttransform.hpp>
 #include <engine/vao.hpp>
 #include <engine/vbo.hpp>
+#include <engine/ui.hpp>
 #include <engine/window.hpp>
 
 namespace Engine
@@ -29,13 +34,11 @@ namespace Engine
         static void initialize(std::string title = "", int width = Window::screen_width / 2, 
         int height = Window::screen_height / 2);
         static void begin();
-        static Input* getInput();
         static void clearScene();
     private:
         inline static std::string title = "";
         inline static int width = 0;
         inline static int height = 0;
-        inline static Input* input = nullptr;
         inline static Window* window = nullptr;
         static void getAllComponents(std::vector<Component*>& components);
         static void callDestroy();

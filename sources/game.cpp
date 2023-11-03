@@ -22,14 +22,14 @@ void initTag()
 void readyCamera()
 {
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
-    camera->orthographicSize = 15.5f;
+    camera->setOrthographicSize(15.5f);
 }
 
 void loadActors()
 {
     Engine::Actor* spaceShip = Engine::Actor::createActor("Space Ship");
     spaceShip->addComponent<Cosmic::ShipHandler>();
-    spaceShip->getComponent<Engine::Transform>()->setScale(true, glm::vec3(2.0f, 2.0f, 1.0f));
+    spaceShip->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(2.0f, 2.0f, 1.0f));
 
     Engine::Actor* starManager = Engine::Actor::createActor("Star Manager");
     starManager->addComponent<Cosmic::StarManager>();

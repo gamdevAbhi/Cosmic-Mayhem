@@ -1,7 +1,6 @@
 #ifndef ENGINE_CAMERA_HPP
 #define ENGINE_CAMERA_HPP
 
-#include <engine/actor.hpp>
 #include <engine/window.hpp>
 #include <engine/handler.hpp>
 #include <engine/component.hpp>
@@ -13,22 +12,28 @@ namespace Engine
     class Camera : public Component
     {
     public:
-        float nearClip = 0.1f;
-        float farClip = 100.0f;
-        float orthographicSize = 10.0f;
         glm::mat4 getOrtho();
         glm::vec2 getBoundary();
         glm::vec2 getWorldToScreenPos(glm::vec3 worldPosition);
         glm::vec3 getScreenToWorldPos(glm::vec2 screenPos);
+        float getOrthographicSize();
         float getDiagonal();
+        void setOrthographicSize(float orthographicSize);
         static Camera* getRenderCamera();
     protected:
+        float nearClip = 0.1f;
+        float farClip = 100.0f;
+        float orthographicSize = 10.0f;
+        Transform* transform;
+        void start();
+        void onTransformChanged();
         void setDestroy();
+        void updateOrtho();
     private:
         inline static Camera* renderCamera = nullptr;
         inline static Window* gameWindow = nullptr;
         glm::mat4 ortho;
-        void updateOrtho();
+    friend class Actor;
     friend class GameLoop;
     };
 }

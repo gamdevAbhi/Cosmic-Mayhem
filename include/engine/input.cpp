@@ -1,9 +1,7 @@
 #include <engine/input.hpp>
 
-Engine::Input::Input(Window& window)
+void Engine::Input::initialize()
 {
-    this->window = &window;
-
     // adding key value pair for keyboard input and mouse input
     keyboardInputs[GLFW_KEY_SPACE] = KEY_NONE;
 
@@ -32,11 +30,11 @@ Engine::Input::Input(Window& window)
 // give key status eg. press, hold or release
 int Engine::Input::getKeyStatus(int key)
 {
-    int action = keyboardInputs[key];
-    int newAction = glfwGetKey(window->getWindow(), key);
+    KeyStatus action = keyboardInputs[key];
+    int newAction = glfwGetKey(window->glfwWindow, key);
 
-    if(action == KEY_PRESS && newAction == KEY_PRESS
-    || action == KEY_HOLD && newAction == KEY_PRESS) keyboardInputs[key] = KEY_HOLD;
+    if(action == KEY_PRESS && newAction == GLFW_PRESS
+    || action == KEY_HOLD && newAction == GLFW_PRESS) keyboardInputs[key] = KEY_HOLD;
     else if(newAction == GLFW_PRESS) keyboardInputs[key] = KEY_PRESS;
     else if(action != KEY_RELEASE && newAction == GLFW_RELEASE) keyboardInputs[key] = KEY_RELEASE;
     else keyboardInputs[key] = KEY_NONE; 
@@ -47,11 +45,11 @@ int Engine::Input::getKeyStatus(int key)
 // get mouse button status eg. click, hold or release
 int Engine::Input::getMouseButtonStatus(int mouseButton)
 {
-    int action = mouseInputs[mouseButton];
-    int newAction = glfwGetMouseButton(window->getWindow(), mouseButton);
+    KeyStatus action = mouseInputs[mouseButton];
+    int newAction = glfwGetMouseButton(window->glfwWindow, mouseButton);
 
-    if(action == KEY_PRESS && newAction == KEY_PRESS
-    || action == KEY_HOLD && newAction == KEY_PRESS) mouseInputs[mouseButton] = KEY_HOLD;
+    if(action == KEY_PRESS && newAction == GLFW_PRESS
+    || action == KEY_HOLD && newAction == GLFW_PRESS) mouseInputs[mouseButton] = KEY_HOLD;
     else if(newAction == GLFW_PRESS) mouseInputs[mouseButton] = KEY_PRESS;
     else if(action != KEY_RELEASE && newAction == GLFW_RELEASE) mouseInputs[mouseButton] = KEY_RELEASE;
     else mouseInputs[mouseButton] = KEY_NONE; 
@@ -60,9 +58,11 @@ int Engine::Input::getMouseButtonStatus(int mouseButton)
 }
 
 // give mouse position
-std::tuple<double, double> Engine::Input::getMousePos()
+glm::vec2 Engine::Input::getMousePos()
 {
-    std::tuple<double, double> mousePos = std::make_tuple(0.0, 0.0);
-    glfwGetCursorPos(window->getWindow(), &std::get<0>(mousePos), &std::get<1>(mousePos));
-    return mousePos;
+    double x, y;
+
+    glfwGetCursorPos(window->glfwWindow, &x, &y);
+    
+    return glm::vec2(x, y);
 }

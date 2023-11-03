@@ -1,5 +1,20 @@
 #include <engine/window.hpp>
 
+// get the window width and height
+std::tuple<int, int> Engine::Window::getSize()
+{
+    std::tuple<int, int> size = std::make_tuple(0, 0);
+    glfwGetWindowSize(glfwWindow, &std::get<0>(size), &std::get<1>(size));
+    return size;
+}
+
+// forcing window to close
+void Engine::Window::makeWindowClose()
+{
+    glfwSetWindowShouldClose(glfwWindow, true);
+}
+
+// constructor
 Engine::Window::Window(const char* title, int width, int height)
 {
     // giving hint to glfw
@@ -67,14 +82,6 @@ void Engine::Window::close()
     glfwTerminate();
 }
 
-// get the window width and height
-std::tuple<int, int> Engine::Window::getSize()
-{
-    std::tuple<int, int> size = std::make_tuple(0, 0);
-    glfwGetWindowSize(glfwWindow, &std::get<0>(size), &std::get<1>(size));
-    return size;
-}
-
 // check if window should close or not
 bool Engine::Window::shouldClose()
 {
@@ -84,16 +91,4 @@ bool Engine::Window::shouldClose()
     }
 
     return glfwWindowShouldClose(glfwWindow);
-}
-
-// forcing window to close
-void Engine::Window::makeWindowClose()
-{
-    glfwSetWindowShouldClose(glfwWindow, true);
-}
-
-// get glfw window
-GLFWwindow* Engine::Window::getWindow()
-{
-    return glfwWindow;
 }

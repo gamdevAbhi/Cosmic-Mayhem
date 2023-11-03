@@ -30,7 +30,7 @@ void Cosmic::AsteroidManager::createAsteroid()
 {
     glm::vec3 distance(0.f);
     glm::vec3 origin(0.f);
-    glm::vec3 targetPos = target->getPosition(true);
+    glm::vec3 targetPos = target->getWorldPosition();
 
     distance.x = (targetPos.x - box) + ((std::rand() % 100) / 100.f) * (box * 2.f);
     distance.y = (targetPos.y - box) + ((std::rand() % 100) / 100.f) * (box * 2.f);
@@ -67,8 +67,8 @@ void Cosmic::AsteroidManager::createAsteroid()
     
     asteroid->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::asteroid);
     asteroid->addComponent<Health>()->setHealth(10 * ((scale.x * 10.f) - 4.f) + 20);
-    asteroid->getComponent<Engine::Transform>()->setPosition(true, origin);
-    asteroid->getComponent<Engine::Transform>()->setScale(true, scale);
+    asteroid->getComponent<Engine::Transform>()->setWorldPosition(origin);
+    asteroid->getComponent<Engine::Transform>()->setWorldScale(scale);
 
     Asteroid* script = asteroid->addComponent<Asteroid>();
     script->target = target;

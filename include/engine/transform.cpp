@@ -1,5 +1,207 @@
 #include <engine/transform.hpp>
 
+// get the local up direction
+glm::vec3 Engine::Transform::getLocalUp()
+{
+    glm::mat4 world_matrix = getMatrix();
+    glm::vec3 local_up;
+
+    local_up.x = world_matrix[1][0];
+    local_up.y = world_matrix[1][1];
+    local_up.z = world_matrix[1][2];
+
+    return local_up;
+}
+
+// get the local right direction
+glm::vec3 Engine::Transform::getLocalRight()
+{
+
+    glm::mat4 world_matrix = getMatrix();
+    glm::vec3 local_right;
+
+    local_right.x = world_matrix[0][0];
+    local_right.y = world_matrix[0][1];
+    local_right.z = world_matrix[0][2];
+
+    return local_right;
+}
+
+// get the local forward direction
+glm::vec3 Engine::Transform::getLocalForward()
+{
+    glm::mat4 world_matrix = getMatrix();
+    glm::vec3 local_forward;
+
+    local_forward.x = world_matrix[2][0];
+    local_forward.y = world_matrix[2][1];
+    local_forward.z = world_matrix[2][2];
+
+    return local_forward;
+}
+
+// get the world up direction
+glm::vec3 Engine::Transform::getWorldUp()
+{
+    return glm::vec3(0.0f, 1.0f, 0.0f);
+}
+
+// get the world right direction
+glm::vec3 Engine::Transform::getWorldRight()
+{
+    return glm::vec3(1.0f, 0.0f, 0.0f);
+}
+
+// get the world forward direction
+glm::vec3 Engine::Transform::getWorldForward()
+{
+    return glm::vec3(0.0f, 0.0f, -1.0f);
+}
+
+// get the world position respective to the local transform
+glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
+{
+    glm::mat4 translate(1.0f);
+    glm::mat4 rotation(1.0f);
+    glm::mat4 scale(1.0f);
+
+    translate = glm::translate(translate, localPosition + localOffset);
+    rotation = glm::mat4_cast(glm::quat(localRotation));
+    scale = glm::scale(scale, localScale);
+
+    glm::mat4 local_matrix = translate * rotation * scale;
+    glm::mat4 world_matrix = (parent != nullptr)? parent->getMatrix() * local_matrix : local_matrix;
+
+    return glm::vec3(world_matrix[3][0], world_matrix[3][1], world_matrix[3][2]);
+}
+
+// get the local position
+glm::vec3 Engine::Transform::getLocalPosition()
+{
+    return localPosition;
+}
+
+// get the local rotation
+glm::vec3 Engine::Transform::getLocalRotation()
+{
+    return localRotation;
+}
+
+// get the local scale
+glm::vec3 Engine::Transform::getLocalScale()
+{
+    return localScale;
+}
+
+// get the world position
+glm::vec3 Engine::Transform::getWorldPosition()
+{
+    return worldPosition;
+}
+
+// get the world rotation
+glm::vec3 Engine::Transform::getWorldRotation()
+{
+    return worldRotation;
+}
+
+// get the world scale
+glm::vec3 Engine::Transform::getWorldScale()
+{
+    return worldScale;
+}
+
+// get the world matrix
+glm::mat4 Engine::Transform::getMatrix()
+{
+    return worldMatrix;
+}
+
+// get childs size
+int Engine::Transform::getChildsSize()
+{
+    return childs.size();
+}
+
+// get the child
+Engine::Transform* Engine::Transform::getChild(int index)
+{
+    if(childs.size() <= index) Handler::debug("child index is out of bound", "");
+    return childs[index];
+}
+
+// get the parent
+Engine::Transform* Engine::Transform::getParent()
+{
+    return parent;
+}
+
+// set the local position
+void Engine::Transform::setLocalPosition(glm::vec3 position)
+{
+    localPosition = position;
+    updateWorldMatrix();
+}
+
+// set the local rotation
+void Engine::Transform::setLocalRotation(glm::vec3 rotation)
+{
+    localRotation = fixRotation(rotation);
+    updateWorldMatrix();
+}
+
+// set the local scale
+void Engine::Transform::setLocalScale(glm::vec3 scale)
+{
+    localScale = scale;
+    updateWorldMatrix();
+}
+
+// set the world position
+void Engine::Transform::setWorldPosition(glm::vec3 position)
+{
+    worldPosition = position;
+    updateLocalMatrix();
+}
+
+// set the world rotation
+void Engine::Transform::setWorldRotation(glm::vec3 rotation)
+{
+    worldRotation = fixRotation(rotation);
+    updateLocalMatrix();
+}
+
+// set the world scale
+void Engine::Transform::setWorldScale(glm::vec3 scale)
+{
+    worldScale = scale;
+    updateLocalMatrix();
+}
+
+// set the parent
+void Engine::Transform::setParent(Transform* transform)
+{
+    if(transform == this) 
+    {
+        Handler::debug("can't make parent of own transform", "transform");
+        return;
+    }
+
+    for(int i = 0; i < childs.size(); i++)
+    {
+        if(childs[i] != transform) continue;
+        Handler::debug("can't make parent of his own child", "transform");
+        return;
+    }
+
+    if(parent != nullptr) parent->removeChild(this);
+    if(transform != nullptr) transform->addChild(this);
+    
+    parent = transform;
+
+    updateLocalMatrix();
+}
+
 // start function
 void Engine::Transform::start()
 {
@@ -10,103 +212,73 @@ void Engine::Transform::start()
     updateWorldMatrix();
 }
 
-// get the local or world right direction
-glm::vec3 Engine::Transform::getRight(bool isWorld)
+// set destroy
+void Engine::Transform::setDestroy()
 {
-    if(isWorld) return glm::vec3(1.0f, 0.0f, 0.0f);
-    else
-    {
-        glm::mat4 world_matrix = getMatrix();
-        glm::vec3 local_right;
-
-        local_right.x = world_matrix[0][0];
-        local_right.y = world_matrix[0][1];
-        local_right.z = world_matrix[0][2];
-
-        return local_right;
-    }
+    Handler::error("can't destroy transform", "transform");
 }
 
-// get the local or world up direction
-glm::vec3 Engine::Transform::getUp(bool isWorld)
-{
-    if(isWorld) return glm::vec3(0.0f, 1.0f, 0.0f);
-    else
-    {
-        glm::mat4 world_matrix = getMatrix();
-        glm::vec3 local_up;
-
-        local_up.x = world_matrix[1][0];
-        local_up.y = world_matrix[1][1];
-        local_up.z = world_matrix[1][2];
-
-        return local_up;
-    }
-}
-
-// get the local or world forward direction
-glm::vec3 Engine::Transform::getForward(bool isWorld)
-{
-    if(isWorld) return glm::vec3(0.0f, 0.0f, -1.0f);
-    else
-    {
-        glm::mat4 world_matrix = getMatrix();
-        glm::vec3 local_forward;
-
-        local_forward.x = world_matrix[2][0];
-        local_forward.y = world_matrix[2][1];
-        local_forward.z = world_matrix[2][2];
-
-        return local_forward;
-    }
-}
-
-// get oriented vector from the current orientation
-glm::vec3 Engine::Transform::getOrientedVector(glm::vec3 vector)
-{
-    glm::vec3 orientedVector(0.0f);
-    orientedVector += vector.x * getRight(false);
-    orientedVector += vector.y * getUp(false);
-    orientedVector += vector.z * getForward(true);
-    return orientedVector;
-}
-
-// get the world position respective to the local transform
-glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
+// update the world matrix
+void Engine::Transform::updateWorldMatrix()
 {
     glm::mat4 translate(1.0f);
     glm::mat4 rotation(1.0f);
     glm::mat4 scale(1.0f);
 
-    translate = glm::translate(translate, localPosition + getOrientedVector(localOffset));
+    translate = glm::translate(translate, localPosition);
     rotation = glm::mat4_cast(glm::quat(localRotation));
     scale = glm::scale(scale, localScale);
 
-    glm::mat4 matrix = translate * rotation * scale;
-    glm::mat4 worldMatrix = (parent != nullptr)? parent->getMatrix() * matrix : matrix;
+    localMatrix = translate * rotation * scale;
+    worldMatrix = (parent != nullptr)? parent->getMatrix() * localMatrix : localMatrix;
 
-    return glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
+    worldPosition = calculatePosition(worldMatrix);
+    worldRotation = calculateRotation(worldMatrix);
+    worldScale = calculateScale(worldMatrix);
+
+    for(int i = 0; i < childs.size(); i++) childs[i]->updateWorldMatrix();
+
+    for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
 }
 
-// get the local or world position of the transform
-glm::vec3 Engine::Transform::getPosition(bool isWorld)
+// update the local matrix
+void Engine::Transform::updateLocalMatrix()
 {
-    if(isWorld == false) return localPosition;
-    else return worldPosition;
+    glm::mat4 translate(1.0f);
+    glm::mat4 rotation(1.0f);
+    glm::mat4 scale(1.0f);
+
+    translate = glm::translate(translate, worldPosition);
+    rotation = glm::mat4_cast(glm::quat(worldRotation));
+    scale = glm::scale(scale, worldScale);
+
+    worldMatrix = translate * rotation * scale;
+    localMatrix = (parent != nullptr)? glm::inverse(parent->getMatrix()) * worldMatrix : worldMatrix;
+
+    localPosition = calculatePosition(localMatrix);
+    localRotation = calculateRotation(localMatrix);
+    localScale = calculateScale(localMatrix);
+
+    for(int i = 0; i < childs.size(); i++) childs[i]->updateWorldMatrix();
+
+    for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
 }
 
-// get the local or world rotation of the transform
-glm::vec3 Engine::Transform::getRotation(bool isWorld)
+// add child
+void Engine::Transform::addChild(Transform* transform)
 {
-    if(isWorld == false) return localRotation;
-    else return worldRotation;
+    childs.push_back(transform);
 }
 
-// get the local or world scale of the transform
-glm::vec3 Engine::Transform::getScale(bool isWorld)
+// remove child
+void Engine::Transform::removeChild(Transform* transform)
 {
-    if(isWorld == false) return localScale;
-    else return worldScale;
+    for(int i = 0; i < childs.size(); i++)
+    {
+        if(childs[i] != transform) continue;
+        childs.erase(childs.begin() + i);
+        break;
+    }
 }
 
 // calculate the position from the matrix
@@ -121,7 +293,7 @@ glm::vec3 Engine::Transform::calculatePosition(glm::mat4 matrix)
     return position;
 }
 
-// calculating the rotation from the matrix
+// calculate the rotation from the matrix
 glm::vec3 Engine::Transform::calculateRotation(glm::mat4 matrix)
 {
     glm::mat3 rotationMatrix;
@@ -163,7 +335,7 @@ glm::vec3 Engine::Transform::calculateRotation(glm::mat4 matrix)
     return rotation;
 }
 
-// for calculating the scale from the matrix
+// calculate the scale from the matrix
 glm::vec3 Engine::Transform::calculateScale(glm::mat4 matrix)
 {
     glm::vec3 scale;
@@ -178,6 +350,7 @@ glm::vec3 Engine::Transform::calculateScale(glm::mat4 matrix)
     return scale;
 }
 
+// fix the rotation to -360 to 360
 glm::vec3 Engine::Transform::fixRotation(glm::vec3 rotation)
 {
     glm::vec3 fixRotation;
@@ -191,167 +364,4 @@ glm::vec3 Engine::Transform::fixRotation(glm::vec3 rotation)
     if(fixRotation.z < -360.f) fixRotation.z = std::abs(fixRotation.z) - 360.f;
 
     return fixRotation;
-}
-
-// update the world matrix of the transform
-void Engine::Transform::updateWorldMatrix()
-{
-    glm::mat4 translate(1.0f);
-    glm::mat4 rotation(1.0f);
-    glm::mat4 scale(1.0f);
-
-    translate = glm::translate(translate, localPosition);
-    rotation = glm::mat4_cast(glm::quat(localRotation));
-    scale = glm::scale(scale, localScale);
-
-    localMatrix = translate * rotation * scale;
-    worldMatrix = (parent != nullptr)? parent->getMatrix() * localMatrix : localMatrix;
-
-    worldPosition = calculatePosition(worldMatrix);
-    worldRotation = calculateRotation(worldMatrix);
-    worldScale = calculateScale(worldMatrix);
-
-    for(int i = 0; i < childs.size(); i++) childs[i]->updateWorldMatrix();
-
-    for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
-}
-
-// update the local matrix of the transform
-void Engine::Transform::updateLocalMatrix()
-{
-    glm::mat4 translate(1.0f);
-    glm::mat4 rotation(1.0f);
-    glm::mat4 scale(1.0f);
-
-    translate = glm::translate(translate, worldPosition);
-    rotation = glm::mat4_cast(glm::quat(worldRotation));
-    scale = glm::scale(scale, worldScale);
-
-    worldMatrix = translate * rotation * scale;
-    localMatrix = (parent != nullptr)? glm::inverse(parent->getMatrix()) * worldMatrix : worldMatrix;
-
-    localPosition = calculatePosition(localMatrix);
-    localRotation = calculateRotation(localMatrix);
-    localScale = calculateScale(localMatrix);
-
-    for(int i = 0; i < childs.size(); i++) childs[i]->updateWorldMatrix();
-
-    for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
-}
-
-// get the world matrix of the transform
-glm::mat4 Engine::Transform::getMatrix()
-{
-    return worldMatrix;
-}
-
-// set the local or world position of the transform
-void Engine::Transform::setPosition(bool isWorld, glm::vec3 position)
-{
-    if(isWorld == false) 
-    {
-        localPosition = position;
-        updateWorldMatrix();
-    }
-    else
-    {
-        worldPosition = position;
-        updateLocalMatrix();
-    }
-}
-
-// set the local or world rotation of the transform
-void Engine::Transform::setRotation(bool isWorld, glm::vec3 rotation)
-{
-    if(isWorld == false)
-    {
-        localRotation = fixRotation(rotation);
-        updateWorldMatrix();
-    }
-    else
-    {
-        worldRotation = fixRotation(rotation);
-        updateLocalMatrix();
-    }
-}
-
-// set the local or world scale of the transform
-void Engine::Transform::setScale(bool isWorld, glm::vec3 scale)
-{
-    if(isWorld == false)
-    {
-        localScale = scale;
-        updateWorldMatrix();
-    } 
-    else
-    {
-        worldScale = scale;
-        updateLocalMatrix();
-    }
-}
-
-// set the parent transform
-void Engine::Transform::setParent(Engine::Transform* transform)
-{
-    if(transform == this) 
-    {
-        Handler::debug("can't make parent of own transform", "transform");
-        return;
-    }
-
-    for(int i = 0; i < childs.size(); i++)
-    {
-        if(childs[i] != transform) continue;
-        Handler::debug("can't make parent of his own child", "transform");
-        return;
-    }
-
-    if(parent != nullptr) parent->removeChild(this);
-    if(transform != nullptr) transform->addChild(this);
-    
-    parent = transform;
-
-    updateLocalMatrix();
-}
-
-// get the parent transform
-Engine::Transform* Engine::Transform::getParent()
-{
-    return parent;
-}
-
-// get the child
-Engine::Transform* Engine::Transform::getChild(int index)
-{
-    if(childs.size() <= index) Handler::error("child index is out of bound", "");
-    return childs[index];
-}
-
-// get total childs size
-int Engine::Transform::getChildsSize()
-{
-    return childs.size();
-}
-
-// set destroy
-void Engine::Transform::setDestroy()
-{
-    Handler::error("can't destroy transform", "transform");
-}
-
-// add the child
-void Engine::Transform::addChild(Transform* transform)
-{
-    childs.push_back(transform);
-}
-
-// remove the child from the transform
-void Engine::Transform::removeChild(Transform* transform)
-{
-    for(int i = 0; i < childs.size(); i++)
-    {
-        if(childs[i] != transform) continue;
-        childs.erase(childs.begin() + i);
-        break;
-    }
 }

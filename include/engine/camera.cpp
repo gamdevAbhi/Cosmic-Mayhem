@@ -18,46 +18,6 @@ glm::vec2 Engine::Camera::getBoundary()
     return boundary;
 }
 
-// set destroy
-void Engine::Camera::setDestroy()
-{
-    Handler::debug("can't destroy camera Component", "Camera");
-}
-
-// update the ortho of the camera
-void Engine::Camera::updateOrtho()
-{
-    glm::mat4 projection(1.0f);
-    glm::mat4 view(1.0f);
-
-    Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
-
-    std::tuple<int, int> size = gameWindow->getSize();
-
-    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
-    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
-
-    projection = glm::ortho(-x, x, -y, y, nearClip, farClip);
-    
-    glm::vec3 camPos = transform->getPosition(true);
-
-    view = transform->getMatrix();
-    view = glm::inverse(view);
-
-    ortho = projection * view;
-}
-
-// get diagonal of camera window
-float Engine::Camera::getDiagonal()
-{
-    std::tuple<int, int> size = gameWindow->getSize();
-
-    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
-    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
-
-    return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
-}
-
 // get the screen pos from the world pos
 glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
 {
@@ -75,7 +35,6 @@ glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
 // get the world pos from the screen pos
 glm::vec3 Engine::Camera::getScreenToWorldPos(glm::vec2 screenPos)
 {
-    Engine::Transform* transform = getActor()->getComponent<Engine::Transform>();
     std::tuple<int, int> size = gameWindow->getSize();
 
     float x = (std::get<0>(size) / orthographicSize) / 2.0f;
@@ -88,13 +47,77 @@ glm::vec3 Engine::Camera::getScreenToWorldPos(glm::vec2 screenPos)
     localPos.y = (screenPos.y / std::get<1>(size)) * y;
     localPos.z = 0.0f;
 
-    worldPos = transform->getPosition(true) + transform->getOrientedVector(localPos);
+    worldPos = transform->getWorldPosAt(localPos);
 
     return worldPos;
+}
+
+// get the orthographic size
+float Engine::Camera::getOrthographicSize()
+{
+    return orthographicSize;
+}
+
+// get diagonal of camera window
+float Engine::Camera::getDiagonal()
+{
+    std::tuple<int, int> size = gameWindow->getSize();
+
+    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
+    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
+
+    return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
+}
+
+// set the orthographic size
+void Engine::Camera::setOrthographicSize(float orthographicSize)
+{
+    this->orthographicSize = orthographicSize;
+    updateOrtho();
 }
 
 // get the rendering camera
 Engine::Camera* Engine::Camera::getRenderCamera()
 {
     return renderCamera;
+}
+
+// start function
+void Engine::Camera::start()
+{
+    renderCamera = this;
+    updateOrtho();
+}
+
+// on transform changed function
+void Engine::Camera::onTransformChanged()
+{
+    updateOrtho();
+}
+
+// set destroy
+void Engine::Camera::setDestroy()
+{
+    Handler::debug("can't destroy camera Component", "Camera");
+}
+
+// update the ortho of the camera
+void Engine::Camera::updateOrtho()
+{
+    glm::mat4 projection(1.0f);
+    glm::mat4 view(1.0f);
+
+    std::tuple<int, int> size = gameWindow->getSize();
+
+    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
+    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
+
+    projection = glm::ortho(-x, x, -y, y, nearClip, farClip);
+    
+    glm::vec3 camPos = transform->getWorldPosition();
+
+    view = transform->getMatrix();
+    view = glm::inverse(view);
+
+    ortho = projection * view;
 }

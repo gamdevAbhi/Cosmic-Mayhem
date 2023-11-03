@@ -9,16 +9,17 @@ namespace Engine
     class Time final
     {
     public:
-        inline static float timeScale = 1.0f;
+        static float getTimeScale();
         static double getDeltaTime();
         static double getFixedDeltaTime();
-        static double getRunTime();
         static int getLastFPS();
+        static void setTimeScale(float timeScale);
     private:
         static void frameStart();
         static void frameEnd();
+        inline static float timeScale = 1.0f;
         inline static int currentFPS = 0, lastFPS = 0;
-        inline static double deltaTime = 0.0f, runTime = 0.0f, diffTime = 0.0f;
+        inline static double deltaTime = 0.0f, diffTime = 0.0f;
         inline static std::chrono::time_point start = std::chrono::high_resolution_clock::now();
     friend class GameLoop;
     };

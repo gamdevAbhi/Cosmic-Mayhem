@@ -31,7 +31,7 @@ void Cosmic::StarManager::start()
 
 void Cosmic::StarManager::update()
 {
-    glm::vec3 pos = target->getPosition(true);
+    glm::vec3 pos = target->getWorldPosition();
     glm::vec2 boundary = camera->getBoundary();
     glm::vec2 difference(2.f * boundary.x, 2.f * boundary.y);
 
@@ -164,8 +164,8 @@ void Cosmic::StarManager::createRegion(std::vector<Engine::Actor*>& vec, float x
         Engine::SpriteRenderer* renderer = star->addComponent<Engine::SpriteRenderer>();
         renderer->setOrder(2);
         
-        star->getComponent<Engine::Transform>()->setPosition(true, origin);
-        star->getComponent<Engine::Transform>()->setScale(true, glm::vec3(0.15f, 0.15f, 1.f));
+        star->getComponent<Engine::Transform>()->setWorldPosition(origin);
+        star->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.15f, 0.15f, 1.f));
         
         if(std::rand() % 100 > 50) renderer->setSprite(SpriteManager::star);
         else renderer->setSprite(SpriteManager::brightStar);

@@ -3,6 +3,8 @@
 
 #include <engine/component.hpp>
 #include <engine/transform.hpp>
+#include <engine/camera.hpp>
+#include <engine/recttransform.hpp>
 #include <engine/handler.hpp>
 #include <iostream>
 #include <vector>
@@ -21,33 +23,44 @@ namespace Engine
         template <class T> T* getComponent();
         template <class T> std::vector<T*> getComponents(); 
         static Actor* createActor(std::string name);
+        static Actor* createUIActor(std::string name);
         static Actor* getActor(std::string name);
+        static std::vector<Actor*> getActors(std::string name);
         static int getActorCount();
     protected:
         bool active;
         bool shouldDestroy;
+        static void createMainCamera();
         static void destroy(Actor* actor);
         static void destroy(Component* component);
     private:
         std::vector<Component*> components;
         inline static std::vector<Actor*> actors;
         ~Actor();
-        friend class GameLoop;
-        friend class Collider;
+    friend class GameLoop;
+    friend class Collider;
     };
 }
 
 // add components to the actor
 template <class T> T* Engine::Actor::addComponent()
 {
+    if(std::is_base_of<Component, T>::value == false)
+    {
+        Handler::error("class must be derived from Component Class", name);
+    }
+
     if(std::is_same<T, Transform>::value) 
     {
         Handler::error("adding transform is not allowed", name);
     }
-
-    if(std::is_base_of<Component, T>::value == false)
+    else if(std::is_same<T, RectTransform>::value) 
     {
-        Handler::error("class must be derived from Component Class", name);
+        Handler::error("adding rect transform is not allowed", name);
+    }
+    else if(std::is_same<T, Camera>::value) 
+    {
+        Handler::error("adding camera is not allowed", name);
     }
 
     Component* component = new T();

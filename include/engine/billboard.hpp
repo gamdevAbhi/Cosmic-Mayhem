@@ -1,22 +1,24 @@
-#ifndef ENGINE_SPRITE_RENDERER_HPP
-#define ENGINE_SPRITE_RENDERER_HPP
+#ifndef ENGINE_BILLBOARD_HPP
+#define ENGINE_BILLBOARD_HPP
 
+#include <engine/ui.hpp>
 #include <engine/renderer.hpp>
-#include <engine/camera.hpp>
+#include <engine/actor.hpp>
+#include <engine/recttransform.hpp>
 #include <engine/shader.hpp>
 #include <engine/sprite.hpp>
 #include <engine/quadtree.hpp>
 
 namespace Engine
-{    
-    // sprite renderer for rendering 2d plane
-    class SpriteRenderer : public Renderer
+{
+    class Billboard : public Renderer
     {
     public:
-        glm::vec4 getColor();
-        Sprite* getSprite();
         void setColor(glm::vec4 color);
         void setSprite(Sprite* sprite);
+        glm::vec4 getColor();
+        Sprite* getSprite();
+        glm::vec2 size;
     protected:
         inline static Shader* shader = nullptr;
         inline static Sprite* defaultSprite = nullptr;
@@ -33,6 +35,5 @@ namespace Engine
     friend class RendererManager;
     };
 }
-
 
 #endif

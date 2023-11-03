@@ -26,6 +26,29 @@ Engine::Shader::Shader(std::string vertex_relative_path, std::string fragment_re
     }
 }
 
+// use the shader program
+void Engine::Shader::use()
+{
+    glUseProgram(program);
+}
+
+GLint Engine::Shader::getLocation(const char* uniformName)
+{
+    return glGetUniformLocation(program, uniformName);
+}
+
+// return the shader status
+std::string Engine::Shader::getStatus()
+{
+    return status;
+}
+
+// delete the program
+void Engine::Shader::destroy()
+{
+    glDeleteProgram(program);
+}
+
 // return the status of create and compile shader and attach to program
 bool Engine::Shader::attach(const char* source_code, GLenum shader_type)
 {
@@ -52,27 +75,4 @@ bool Engine::Shader::checkLinkStatus()
     GLint status;
     glGetProgramiv(program, GL_LINK_STATUS, &status);
     return status == GL_TRUE;
-}
-
-// use the shader program
-void Engine::Shader::use()
-{
-    glUseProgram(program);
-}
-
-GLint Engine::Shader::getLocation(const char* uniformName)
-{
-    return glGetUniformLocation(program, uniformName);
-}
-
-// return the shader status
-std::string Engine::Shader::getStatus()
-{
-    return status;
-}
-
-// delete the program
-void Engine::Shader::destroy()
-{
-    glDeleteProgram(program);
 }

@@ -14,13 +14,13 @@ void Cosmic::CollectibleManager::update()
         Engine::Actor* collectible = Engine::Actor::createActor("collectible");
 
         glm::vec3 origin(0.f);
-        glm::vec2 targetPos = target->getPosition(true);
+        glm::vec2 targetPos = target->getWorldPosition();
 
         origin.x = (targetPos.x - expand) + ((std::rand() % 100) / 100.f) * (expand * 2.f);
         origin.y = (targetPos.y - expand) + ((std::rand() % 100) / 100.f) * (expand * 2.f);
 
-        collectible->getComponent<Engine::Transform>()->setPosition(true, origin);
-        collectible->getComponent<Engine::Transform>()->setScale(true, glm::vec3(0.6f, 0.6f, 1.f));
+        collectible->getComponent<Engine::Transform>()->setWorldPosition(origin);
+        collectible->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.6f, 0.6f, 1.f));
         
         Engine::SpriteRenderer* renderer = collectible->addComponent<Engine::SpriteRenderer>();
         Collectibles* script = nullptr;

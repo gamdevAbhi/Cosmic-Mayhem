@@ -10,8 +10,8 @@ namespace Engine
     class ColliderManager
     {
     public:
-        static int addTag(std::string tag, bool selfRelation);
         static int getTag(std::string tag);
+        static int addTag(std::string tag, bool selfRelation);
         static void addRelation(int tag1, int tag2);
     protected:
         inline static glm::vec3 currentAxis;

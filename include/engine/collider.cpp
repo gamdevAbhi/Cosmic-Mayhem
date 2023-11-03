@@ -1,18 +1,5 @@
 #include <engine/collider.hpp>
 
-// set fixed position
-void Engine::Collider::setFixed(bool x, bool y)
-{
-    fixed_x = x;
-    fixed_y = y;
-}
-
-// set tag
-void Engine::Collider::setTag(int tag)
-{
-    this->tag = tag;
-}
-
 // get tag
 int Engine::Collider::getTag()
 {
@@ -23,6 +10,19 @@ int Engine::Collider::getTag()
 std::tuple<bool, bool> Engine::Collider::getFixed()
 {
     return std::tuple<bool, bool>(fixed_x, fixed_y);
+}
+
+// set tag
+void Engine::Collider::setTag(int tag)
+{
+    this->tag = tag;
+}
+
+// set fixed position
+void Engine::Collider::setFixed(bool x, bool y)
+{
+    fixed_x = x;
+    fixed_y = y;
 }
 
 // set the trigger
@@ -66,7 +66,7 @@ void Engine::Collider::call(Collider* collider, glm::vec3 axis)
         if(fixed_x == true) axis.x = 0.f;
         if(fixed_y == true) axis.y = 0.f;
 
-        transform->setPosition(true, transform->getPosition(true) + axis);
+        transform->setWorldPosition(transform->getWorldPosition() + axis);
     }
     else if(isTrigger == true && collider->isTrigger == false)
     {

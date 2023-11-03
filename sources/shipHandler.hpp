@@ -14,7 +14,6 @@ namespace Cosmic
     public:
         void addScore(int value);
     protected:
-        Engine::Input* input;
         Engine::Transform* transform;
         SpaceShip* shipComponent;
         Health* health;

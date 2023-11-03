@@ -9,7 +9,7 @@ int Cosmic::Asteroid::getCount()
 // calculating the damage
 void Cosmic::Asteroid::calculateDamage()
 {
-    float factor = 10.f * (transform->getScale(true).x - 0.4f);
+    float factor = 10.f * (transform->getWorldScale().x - 0.4f);
     damage = baseDamage * factor;
 }
 
@@ -31,8 +31,8 @@ void Cosmic::Asteroid::start()
 void Cosmic::Asteroid::update()
 {
     // checking if asteroid is out of scope else moving the asteroid
-    glm::vec3 targetPos = target->getPosition(true);
-    glm::vec3 pos = transform->getPosition(true);
+    glm::vec3 targetPos = target->getWorldPosition();
+    glm::vec3 pos = transform->getWorldPosition();
 
     if(glm::length(targetPos - pos) >= maxDistance) getActor()->setDestroy();
     else
@@ -40,7 +40,7 @@ void Cosmic::Asteroid::update()
         glm::vec3 offset = direction;
         offset *= Engine::Time::getDeltaTime() * speed;
         
-        transform->setPosition(true, transform->getPosition(true) + offset);
+        transform->setWorldPosition(transform->getWorldPosition() + offset);
     }
 }
 

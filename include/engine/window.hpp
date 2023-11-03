@@ -23,7 +23,6 @@ namespace Engine
         void updateWindow();
         void close();
         bool shouldClose();
-        GLFWwindow* getWindow();
         GLFWwindow* glfwWindow;
     friend class Input;
     friend class GameLoop;

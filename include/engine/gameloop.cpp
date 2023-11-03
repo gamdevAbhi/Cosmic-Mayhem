@@ -9,17 +9,19 @@ int height)
     GameLoop::height = height;
 
     window = new Window(title.c_str(), width, height);
-    input = new Input(*window);
+    
+    Input::window = window;
+    Input::initialize();
 
-    SpriteRenderer::initialize();
+    UI::setResolution(width, height);
+
+    RendererManager::initialize();
     ColliderManager::initialize();
 
     Camera::gameWindow = window;
     Handler::gameWindow = window;
-    
-    Actor* camActor = Actor::createActor("Main Camera");
-    Camera::renderCamera = camActor->addComponent<Camera>();
-    Camera::renderCamera->updateOrtho();
+
+    Actor::createMainCamera();
 }
 
 // called after game is ready to execute game loop
@@ -55,6 +57,34 @@ void Engine::GameLoop::begin()
     window->close();
 }
 
+// destroy all the actors (only non manualDestroy)
+void Engine::GameLoop::clearScene()
+{
+    int i = 0;
+
+    while(i < Actor::actors.size())
+    {
+        if(Actor::actors[i]->manualDestroy) i++;
+        else Actor::actors[i]->setDestroy();
+    }
+}
+
+// get all the components of all actors
+void Engine::GameLoop::getAllComponents(std::vector<Component*>& components)
+{
+    for(int i = 0; i < Actor::actors.size(); i++)
+    {
+        Actor* actor = Actor::actors[i];
+        
+        if(actor->active == false) continue;
+
+        for(int j = 0; j < actor->components.size(); j++)
+        {
+            components.push_back(actor->components[j]);
+        }
+    }
+}
+
 // destroy all components & actors which set as should destroy
 void Engine::GameLoop::callDestroy()
 {
@@ -88,22 +118,6 @@ void Engine::GameLoop::callDestroy()
     }
 }
 
-// get all the components of all actors
-void Engine::GameLoop::getAllComponents(std::vector<Component*>& components)
-{
-    for(int i = 0; i < Actor::actors.size(); i++)
-    {
-        Actor* actor = Actor::actors[i];
-        
-        if(actor->active == false) continue;
-
-        for(int j = 0; j < actor->components.size(); j++)
-        {
-            components.push_back(actor->components[j]);
-        }
-    }
-}
-
 // call the fixed update each components
 void Engine::GameLoop::callFixedUpdate()
 {
@@ -124,7 +138,6 @@ void Engine::GameLoop::callUpdate()
     std::vector<Component*> components;
 
     getAllComponents(components);
-    Camera::renderCamera->updateOrtho();
 
     while(components.size() > 0)
     {
@@ -156,25 +169,9 @@ void Engine::GameLoop::callCollision()
 // call the draw for renderers
 void Engine::GameLoop::callDraw()
 {
-    SpriteRenderer::draw();
-}
-
-// get the input class
-Engine::Input* Engine::GameLoop::getInput()
-{
-    return input;
-}
-
-// destroy all the actors (only non manualDestroy)
-void Engine::GameLoop::clearScene()
-{
-    int i = 0;
-
-    while(i < Actor::actors.size())
-    {
-        if(Actor::actors[i]->manualDestroy) i++;
-        else Actor::actors[i]->setDestroy();
-    }
+    RendererManager::findRenderers();
+    RendererManager::drawWorld();
+    RendererManager::drawScreen();
 }
 
 // destroy all the actors (also manualDestroy)
