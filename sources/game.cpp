@@ -6,6 +6,7 @@
 #include "collectiblemanager.hpp"
 #include "asteroidmanager.hpp"
 #include "spritemanager.hpp"
+#include "buttonclicker.hpp"
 
 void initTag()
 {
@@ -52,6 +53,38 @@ int main()
     initTag();
     readyCamera();
     loadActors();
+
+    // test
+    Engine::Actor* parent = Engine::Actor::createUIActor("Parent");
+    Engine::Actor* leftChild = Engine::Actor::createUIActor("Left Child");
+    Engine::Actor* centerChild = Engine::Actor::createUIActor("Center Child");
+    Engine::Actor* rightChild = Engine::Actor::createUIActor("Right Child");
+    glm::vec2 parentRect = Engine::UI::getResolution();
+    parentRect /= 2.f;
+    parentRect *= 0.6f;
+
+    parent->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::CENTER);
+    parent->getComponent<Engine::RectTransform>()->setRectSize(parentRect);
+    parent->addComponent<Engine::Billboard>()->setOrder(1);
+
+    leftChild->getComponent<Engine::RectTransform>()->setParent(parent->getComponent<Engine::RectTransform>());
+    centerChild->getComponent<Engine::RectTransform>()->setParent(parent->getComponent<Engine::RectTransform>());
+    rightChild->getComponent<Engine::RectTransform>()->setParent(parent->getComponent<Engine::RectTransform>());
+
+    leftChild->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::LEFT);
+    centerChild->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::CENTER);
+    rightChild->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::RIGHT);
+
+    leftChild->getComponent<Engine::RectTransform>()->setRectSize(glm::vec2(40.f, 80.f));
+    centerChild->getComponent<Engine::RectTransform>()->setRectSize(glm::vec2(40.f, 80.f));
+    rightChild->getComponent<Engine::RectTransform>()->setRectSize(glm::vec2(40.f, 80.f));
+
+    // leftChild->getComponent<Engine::RectTransform>()->setAnchorPosition(glm::vec3(-40.f, 0.f, 0.f));
+    // rightChild->getComponent<Engine::RectTransform>()->setAnchorPosition(glm::vec3(-40.f, 0.f, 0.f));
+
+    leftChild->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
+    centerChild->addComponent<Cosmic::ButtonClicker>()->shouldRotate = false;
+    rightChild->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
 
     Engine::GameLoop::begin();
 

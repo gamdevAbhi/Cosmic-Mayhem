@@ -17,6 +17,7 @@ int height)
 
     RendererManager::initialize();
     ColliderManager::initialize();
+    ButtonManager::initialize();
 
     Camera::gameWindow = window;
     Handler::gameWindow = window;
@@ -32,6 +33,7 @@ void Engine::GameLoop::begin()
     while(window->shouldClose() == false)
     {
         window->clearWindow();
+        Input::updateInputs();
         Time::frameStart();
 
         fixedTime += Time::getDeltaTime();
@@ -46,6 +48,7 @@ void Engine::GameLoop::begin()
         callUpdate();
         callLateUpdate();
         callCollision();
+        ButtonManager::checkInteraction();
         callDraw();
 
         window->updateWindow();

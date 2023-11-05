@@ -16,6 +16,14 @@ bool Engine::AABB::contains(AABB box)
     else return false;
 }
 
+// check if the point is contained by the aabb
+bool Engine::AABB::contains(glm::vec2 point)
+{
+    if((x - expand <= point.x || x + expand >= point.x)
+    && (y - expand <= point.y || y + expand >= point.y)) return true;
+    else return false;
+}
+
 // check if the two box intersects each other
 bool Engine::AABB::intersects(AABB box)
 {
@@ -201,4 +209,22 @@ void Engine::QuadTree::find(AABB _boundary, std::vector<Engine::Node*>& query)
     northWest->find(_boundary, query);
     southEast->find(_boundary, query);
     southWest->find(_boundary, query);
+}
+
+// find the nodes in quadtree that contains the point
+void Engine::QuadTree::find(glm::vec2 point, std::vector<Engine::Node*>& query)
+{
+    if(boundary.contains(point) == false) return;
+    
+    for(int i = 0; i < nodes.size(); i++)
+    {
+        if(nodes[i]->boundary.contains(point)) query.push_back(nodes[i]);
+    }
+
+    if(devided == false) return;
+    
+    northEast->find(point, query);
+    northWest->find(point, query);
+    southEast->find(point, query);
+    southWest->find(point, query);
 }

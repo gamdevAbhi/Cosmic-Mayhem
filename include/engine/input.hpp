@@ -15,12 +15,14 @@ namespace Engine
     {
     public:
         enum KeyStatus {KEY_NONE, KEY_PRESS, KEY_HOLD, KEY_RELEASE};
-        static int getKeyStatus(int key);
-        static int getMouseButtonStatus(int mouseButton);
+        static KeyStatus getKeyStatus(int key);
+        static KeyStatus getMouseButtonStatus(int mouseButton);
         static glm::vec2 getMousePos();
     private:
         static void initialize();
+        static void updateInputs();
         inline static std::unordered_map<int, KeyStatus> keyboardInputs, mouseInputs;
+        inline static glm::vec2 mousePos;
         inline static Window* window;
     friend class GameLoop;
     };

@@ -10,7 +10,7 @@ glm::vec3 Engine::Transform::getLocalUp()
     local_up.y = world_matrix[1][1];
     local_up.z = world_matrix[1][2];
 
-    return local_up;
+    return glm::normalize(local_up);
 }
 
 // get the local right direction
@@ -24,7 +24,7 @@ glm::vec3 Engine::Transform::getLocalRight()
     local_right.y = world_matrix[0][1];
     local_right.z = world_matrix[0][2];
 
-    return local_right;
+    return glm::normalize(local_right);
 }
 
 // get the local forward direction
@@ -37,7 +37,7 @@ glm::vec3 Engine::Transform::getLocalForward()
     local_forward.y = world_matrix[2][1];
     local_forward.z = world_matrix[2][2];
 
-    return local_forward;
+    return glm::normalize(local_forward);
 }
 
 // get the world up direction

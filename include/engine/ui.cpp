@@ -12,6 +12,12 @@ glm::mat4 Engine::UI::getOrtho()
     return orthoMatrix;
 }
 
+// get position respective to the anchor
+glm::vec3 Engine::UI::getPosition(Engine::UI::Anchor anchor)
+{
+    return uIPos[anchor];
+}
+
 // get matrix respective to the anchor
 glm::mat4 Engine::UI::getMatrix(Engine::UI::Anchor anchor)
 {
@@ -25,6 +31,7 @@ void Engine::UI::setResolution(int width, int height)
     UI::height = height;
 
     updateOrthoMatrix();
+    updateUIPos();
     updateUIMatrix();
 }
 
@@ -47,37 +54,34 @@ void Engine::UI::updateOrthoMatrix()
     orthoMatrix = ortho * glm::inverse(view);
 }
 
-// updating the ui matrix
+// updating the UI position
+void Engine::UI::updateUIPos()
+{
+    // positions respective to the UI
+    uIPos[TOP_LEFT] = glm::vec3(0.f, height, 0.f);
+    uIPos[TOP_CENTER] = glm::vec3((float)width / 2.f, height, 0.f);
+    uIPos[TOP_RIGHT] = glm::vec3(width, height, 0.f);
+    uIPos[LEFT] = glm::vec3(0.f, (float)height / 2.f, 0.f);
+    uIPos[CENTER] = glm::vec3((float)width / 2.f, (float)height / 2.f, 0.f);
+    uIPos[RIGHT] = glm::vec3(width, (float)height / 2.f, 0.f);
+    uIPos[BOTTOM_LEFT] = glm::vec3(0.f);
+    uIPos[BOTTOM_CENTER] = glm::vec3((float)width / 2.f, 0.f, 0.f);
+    uIPos[BOTTOM_RIGHT] = glm::vec3(width, 0.f, 0.f);
+}
+
+// update UI Matrix
 void Engine::UI::updateUIMatrix()
 {
-    // positions respective to the ui
-    glm::vec3 tl_position = glm::vec3(0.f, height, 0.f);
-    glm::vec3 tc_position = glm::vec3((float)width / 2.f, height, 0.f);
-    glm::vec3 tr_position = glm::vec3(width, height, 0.f);
-    glm::vec3 l_position = glm::vec3(0.f, (float)height / 2.f, 0.f);
-    glm::vec3 c_position = glm::vec3((float)width / 2.f, (float)height / 2.f, 0.f);
-    glm::vec3 r_position = glm::vec3(width, (float)height / 2.f, 0.f);
-    glm::vec3 bl_position = glm::vec3(0.f);
-    glm::vec3 bc_position = glm::vec3((float)width / 2.f, 0.f, 0.f);
-    glm::vec3 br_position = glm::vec3(width, 0.f, 0.f);
+    for(int i = 0; i < 9; i++)
+    {
+        glm::mat4 translate(1.f);
+        glm::mat4 rotation(1.f);
+        glm::mat4 scale(1.f);
 
-    // assigning the matrix respective to their location
-    uIMatrix[TOP_LEFT] = glm::translate(glm::mat4(1.f), tl_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[TOP_CENTER] = glm::translate(glm::mat4(1.f), tc_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[TOP_RIGHT] = glm::translate(glm::mat4(1.f), tr_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[LEFT] = glm::translate(glm::mat4(1.f), l_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[CENTER] = glm::translate(glm::mat4(1.f), c_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[RIGHT] = glm::translate(glm::mat4(1.f), r_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[BOTTOM_LEFT] = glm::translate(glm::mat4(1.f), bl_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[BOTTOM_CENTER] = glm::translate(glm::mat4(1.f), bc_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-    uIMatrix[BOTTOM_RIGHT] = glm::translate(glm::mat4(1.f), br_position) * 
-    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
+        translate = glm::translate(translate, uIPos[i]);
+        rotation = glm::mat4_cast(glm::quat(glm::vec3(0.f)));
+        scale = glm::scale(scale, glm::vec3(1.f));
+
+        uIMatrix[i] = translate * rotation * scale;
+    }
 }

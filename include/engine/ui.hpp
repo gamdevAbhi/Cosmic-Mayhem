@@ -20,14 +20,17 @@ namespace Engine
         };
         static glm::vec2 getResolution();
         static glm::mat4 getOrtho();
+        static glm::vec3 getPosition(Anchor anchor);
         static glm::mat4 getMatrix(Anchor anchor);
         static void setResolution(int width, int height);
     protected:
         inline static int width;
         inline static int height;
         inline static glm::mat4 orthoMatrix;
+        inline static glm::vec3 uIPos[9];
         inline static glm::mat4 uIMatrix[9];
         static void updateOrthoMatrix();
+        static void updateUIPos();
         static void updateUIMatrix();
     };
 }

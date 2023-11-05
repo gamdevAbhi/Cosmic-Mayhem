@@ -21,6 +21,7 @@ namespace Engine
         float expand;
         AABB(float _x, float _y, float _expand);
         bool contains(AABB box);
+        bool contains(glm::vec2 point);
         bool intersects(AABB box);
     };
 
@@ -42,6 +43,8 @@ namespace Engine
     friend class Collider;
     friend class BoxCollider;
     friend class CircleCollider;
+    friend class Button;
+    friend class ButtonManager;
     };
 
     // QuadTree class
@@ -62,6 +65,7 @@ namespace Engine
         void subdevide();
         QuadTree* expand(AABB _boundary);
         void find(AABB boundary, std::vector<Node*>& query);
+        void find(glm::vec2 point, std::vector<Node*>& query);
     friend class Node;
     friend class RendererManager;
     friend class SpriteRenderer;
@@ -70,6 +74,8 @@ namespace Engine
     friend class Collider;
     friend class BoxCollider;
     friend class CircleCollider;
+    friend class Button;
+    friend class ButtonManager;
     };
 }
 

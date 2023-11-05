@@ -27,21 +27,21 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
     node->update(boundary, *rootP);
 }
 
-// get width of the collider (left, right)
+// get width of the collider
 glm::vec2 Engine::BoxCollider::getWidth()
 {
     float scale_x = transform->getWorldScale().x;
     return glm::vec2(left * scale_x, right * scale_x);
 }
 
-// get height of the collider (up, down)
+// get height of the collider
 glm::vec2 Engine::BoxCollider::getHeight()
 {
     float scale_y = transform->getWorldScale().y;
     return glm::vec2(up * scale_y, down * scale_y);
 }
 
-// call when added in actor
+// start function
 void Engine::BoxCollider::start()
 {
     tag = 0;
