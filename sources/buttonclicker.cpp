@@ -5,7 +5,7 @@ void Cosmic::ButtonClicker::start()
     rect = getActor()->getComponent<Engine::RectTransform>();
     billboard = getActor()->addComponent<Engine::Billboard>();
     button = getActor()->addComponent<Engine::Button>();
-
+    anchorSize = rect->getAnchorSize();
     billboard->setColor(glm::vec4(1.f, 0.f, 0.f, 0.8f));
 }
 
@@ -13,7 +13,7 @@ void Cosmic::ButtonClicker::update()
 {
     if(button->getHoverStatus() == Engine::Button::HOVER_ENTER && shouldScale == true)
     {
-        rect->setAnchorScale(glm::vec3(2.f, 2.f, 1.f));
+        rect->setAnchorSize(anchorSize * 2.f);
     }
     else if(button->getHoverStatus() == Engine::Button::HOVER_STAY && shouldRotate == true)
     {
@@ -23,7 +23,7 @@ void Cosmic::ButtonClicker::update()
     }
     else if(button->getHoverStatus() == Engine::Button::HOVER_EXIT && shouldScale == true)
     {
-        rect->setAnchorScale(glm::vec3(1.f));
+        rect->setAnchorSize(anchorSize);
     }
 
     if(button->getClickStatus() == Engine::Button::BUTTON_CLICK)

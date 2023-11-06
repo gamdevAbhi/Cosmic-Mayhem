@@ -8,6 +8,7 @@ namespace Cosmic
     class ButtonClicker : public Engine::Component
     {
     public:
+        glm::vec2 anchorSize;
         bool shouldRotate = false;
         bool shouldScale = false;
     protected:

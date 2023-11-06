@@ -18,7 +18,6 @@ namespace Engine
         void setSprite(Sprite* sprite);
         glm::vec4 getColor();
         Sprite* getSprite();
-        glm::vec2 size;
     protected:
         inline static Shader* shader = nullptr;
         inline static Sprite* defaultSprite = nullptr;
