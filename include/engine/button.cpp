@@ -30,14 +30,14 @@ void Engine::Button::setSize(float left, float right, float up, float down)
 // get width of the button
 glm::vec2 Engine::Button::getWidth()
 {
-    float scale_x = rect->getRectFinalScale().x;
+    float scale_x = rect->getRectScale().x;
     return glm::vec2(left * scale_x, right * scale_x);
 }
 
 // get height of the button
 glm::vec2 Engine::Button::getHeight()
 {
-    float scale_y = rect->getRectFinalScale().y;
+    float scale_y = rect->getRectScale().y;
     return glm::vec2(up * scale_y, down * scale_y);
 }
 

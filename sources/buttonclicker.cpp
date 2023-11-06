@@ -17,9 +17,9 @@ void Cosmic::ButtonClicker::update()
     }
     else if(button->getHoverStatus() == Engine::Button::HOVER_STAY && shouldRotate == true)
     {
-        glm::vec3 rotation = rect->getRectRotation();
-        rotation.z += Engine::Time::getFixedDeltaTime() * 8.f;
-        rect->setRectRotation(rotation);
+        glm::vec3 rotation = rect->getAnchorRotation();
+        rotation.z += Engine::Time::getFixedDeltaTime() * 2.f;
+        rect->setAnchorRotation(rotation);
     }
     else if(button->getHoverStatus() == Engine::Button::HOVER_EXIT && shouldScale == true)
     {

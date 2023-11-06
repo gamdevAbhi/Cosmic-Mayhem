@@ -3,12 +3,11 @@
 // get the anchor up direction
 glm::vec3 Engine::RectTransform::getAnchorUp()
 {
-    glm::mat4 screen_matrix = getScreenMatrix();
     glm::vec3 anchor_up;
 
-    anchor_up.x = screen_matrix[1][0];
-    anchor_up.y = screen_matrix[1][1];
-    anchor_up.z = screen_matrix[1][2];
+    anchor_up.x = rectMatrix[1][0];
+    anchor_up.y = rectMatrix[1][1];
+    anchor_up.z = rectMatrix[1][2];
 
     return glm::normalize(anchor_up);
 }
@@ -16,12 +15,11 @@ glm::vec3 Engine::RectTransform::getAnchorUp()
 // get the anchor right direction
 glm::vec3 Engine::RectTransform::getAnchorRight()
 {
-    glm::mat4 screen_matrix = getScreenMatrix();
     glm::vec3 anchor_right;
 
-    anchor_right.x = screen_matrix[0][0];
-    anchor_right.y = screen_matrix[0][1];
-    anchor_right.z = screen_matrix[0][2];
+    anchor_right.x = rectMatrix[0][0];
+    anchor_right.y = rectMatrix[0][1];
+    anchor_right.z = rectMatrix[0][2];
 
     return glm::normalize(anchor_right);
 }
@@ -29,12 +27,11 @@ glm::vec3 Engine::RectTransform::getAnchorRight()
 // get the anchor forward direction
 glm::vec3 Engine::RectTransform::getAnchorForward()
 {
-    glm::mat4 screen_matrix = getScreenMatrix();
     glm::vec3 anchor_forward;
 
-    anchor_forward.x = screen_matrix[2][0];
-    anchor_forward.y = screen_matrix[2][1];
-    anchor_forward.z = screen_matrix[2][2];
+    anchor_forward.x = rectMatrix[2][0];
+    anchor_forward.y = rectMatrix[2][1];
+    anchor_forward.z = rectMatrix[2][2];
 
     return glm::normalize(anchor_forward);
 }
@@ -104,16 +101,10 @@ glm::vec3 Engine::RectTransform::getRectScale()
     return rectScale;
 }
 
-// get the rect sizze
+// get the rect size
 glm::vec2 Engine::RectTransform::getRectSize()
 {
     return rectSize;
-}
-
-// get the rect final scale
-glm::vec3 Engine::RectTransform::getRectFinalScale()
-{
-    return glm::vec3(rectSize, 1.f) * rectScale;
 }
 
 // get the anchor
@@ -141,87 +132,50 @@ Engine::RectTransform* Engine::RectTransform::getParent()
     return parent;
 }
 
-// get the get pivot matrix
-glm::mat4 Engine::RectTransform::getPivotMatrix(UI::Anchor anchor, glm::mat4 anchorMatrix)
-{
-    anchorMatrix[3][0] += pivotPosition[anchor].x;
-    anchorMatrix[3][1] += pivotPosition[anchor].y;
-    anchorMatrix[3][2] += pivotPosition[anchor].z;
-
-    return rectMatrix * anchorMatrix;
-}
-
-// get the anchor matrix
-glm::mat4 Engine::RectTransform::getAnchorMatrix(UI::Anchor anchor, glm::mat4 rectMatrix)
-{
-    glm::mat4 anchorMatrix = glm::inverse(this->rectMatrix) * rectMatrix;
-
-    anchorMatrix[3][0] -= pivotPosition[anchor].x;
-    anchorMatrix[3][1] -= pivotPosition[anchor].y;
-    anchorMatrix[3][2] -= pivotPosition[anchor].z;
-
-    return anchorMatrix;
-}
-
 // get the rect matrix
 glm::mat4 Engine::RectTransform::getRectMatrix()
 {
     return rectMatrix;
 }
 
-// get the screen matrix
-glm::mat4 Engine::RectTransform::getScreenMatrix()
+// get the anchor matrix
+glm::mat4 Engine::RectTransform::getLocalMatrix(UI::Anchor anchor, glm::mat4 anchorMatrix)
 {
-    return screenMatrix;
+
+    anchorMatrix[3][0] += pivotPosition[anchor].x;
+    anchorMatrix[3][1] += pivotPosition[anchor].y;
+    anchorMatrix[3][2] += pivotPosition[anchor].z;
+
+    glm::mat4 localMatrix = glm::inverse(nR_RectMatrix) * anchorMatrix;
+
+    return localMatrix;
 }
 
-// set the local anchor position
+// set the anchor position
 void Engine::RectTransform::setAnchorPosition(glm::vec3 position)
 {
     anchorPosition = position;
     updateRectProperties();
 }
 
-// set the local anchor rotation
+// set the anchor rotation
 void Engine::RectTransform::setAnchorRotation(glm::vec3 rotation)
 {
     anchorRotation = fixRotation(rotation);
     updateRectProperties();
 }
 
-// set the local anchor scale
+// set the anchor scale
 void Engine::RectTransform::setAnchorScale(glm::vec3 scale)
 {
     anchorScale = scale;
     updateRectProperties();
 }
 
-// set the rect position
-void Engine::RectTransform::setRectPosition(glm::vec3 position)
-{
-    rectPosition = position;
-    updateAnchorProperties();
-}
-
-// set the rect rotation
-void Engine::RectTransform::setRectRotation(glm::vec3 rotation)
-{
-    rectRotation = fixRotation(rotation);
-    updateAnchorProperties();
-}
-
-// set the rect scale
-void Engine::RectTransform::setRectScale(glm::vec3 scale)
-{
-    rectScale = scale;
-    updateAnchorProperties();
-}
-
 // set the rect size
 void Engine::RectTransform::setRectSize(glm::vec2 rectSize)
 {
     this->rectSize = rectSize;
-
     updateRectProperties();
 }
 
@@ -246,7 +200,7 @@ void Engine::RectTransform::setParent(RectTransform* transform)
     
     parent = transform;
 
-    updateAnchorProperties();
+    updateRectProperties();
 }
 
 // set the anchor of the rect transform
@@ -254,7 +208,7 @@ void Engine::RectTransform::setAnchor(UI::Anchor anchor)
 {
     this->anchor = anchor;
 
-    updateAnchorProperties();
+    updateRectProperties();
 }
 
 // start function
@@ -278,62 +232,16 @@ void Engine::RectTransform::setDestroy()
 void Engine::RectTransform::updatePivotPositionArray()
 {
     std::vector<glm::vec3> pivotPositions;
-    glm::vec3 totalScale = glm::vec3(rectSize, 1.f) * rectScale;
 
-    pivotPosition[UI::TOP_LEFT] = glm::vec3(-totalScale.x, totalScale.y, 0); // top left
-    pivotPosition[UI::TOP_CENTER] = glm::vec3(0.f, totalScale.y, 0.f); // top center
-    pivotPosition[UI::TOP_RIGHT] = glm::vec3(totalScale.x, totalScale.y, 0.f); // top right
-    pivotPosition[UI::LEFT] = glm::vec3(-totalScale.x, 0.f, 0.f); // left
-    pivotPosition[UI::CENTER] = glm::vec3(0.f, 0.f, 0.f); // center
-    pivotPosition[UI::RIGHT] = glm::vec3(totalScale.x,0.f, 0.f); // right
-    pivotPosition[UI::BOTTOM_LEFT] = glm::vec3(-totalScale.x, -totalScale.y, 0.f); // bottom left
-    pivotPosition[UI::BOTTOM_CENTER] = glm::vec3(0.f, -totalScale.y, 0.f); // bottom center
-    pivotPosition[UI::BOTTOM_RIGHT] = glm::vec3(totalScale.x, -totalScale.y, 0.f); // bottom right
-}
-
-// update the screen matrix
-void Engine::RectTransform::updateScreenMatrix()
-{
-    glm::mat4 translate(1.f);
-    glm::mat4 rotation(1.f);
-    glm::mat4 scale(1.f);
-
-    translate = glm::translate(translate, rectPosition);
-    rotation = glm::mat4_cast(glm::quat(rectRotation));
-    scale = glm::scale(scale, rectScale * glm::vec3(rectSize, 1.f));
-
-    screenMatrix = translate * rotation * scale;
-
-    glm::vec3 screenPosition = calculatePosition(screenMatrix);
-    glm::vec3 screenRotation = calculateRotation(screenMatrix);
-    glm::vec3 screenScale = calculateScale(screenMatrix);
-}
-
-// update the anchor properties
-void Engine::RectTransform::updateAnchorProperties()
-{
-    glm::mat4 translate(1.f);
-    glm::mat4 rotation(1.f);
-    glm::mat4 scale(1.f);
-
-    translate = glm::translate(translate, rectPosition);
-    rotation = glm::mat4_cast(glm::quat(rectRotation));
-    scale = glm::scale(scale, rectScale);
-
-    rectMatrix = translate * rotation * scale;
-    anchorMatrix = (parent != nullptr)? parent->getAnchorMatrix(anchor, rectMatrix) :
-    glm::inverse(UI::getMatrix(anchor)) * rectMatrix;
-
-    anchorPosition = calculatePosition(anchorMatrix);
-    anchorRotation = calculateRotation(anchorMatrix);
-    anchorScale = calculateScale(anchorMatrix);
-
-    updateScreenMatrix();
-    updatePivotPositionArray();
-
-    for(int i = 0; i < childs.size(); i++) childs[i]->updateRectProperties();
-
-    for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
+    pivotPosition[UI::TOP_LEFT] = getRectPosAt(glm::vec3(-rectScale.x, rectScale.y, 0)); // top left
+    pivotPosition[UI::TOP_CENTER] = getRectPosAt(glm::vec3(0.f, rectScale.y, 0.f)); // top center
+    pivotPosition[UI::TOP_RIGHT] = getRectPosAt(glm::vec3(rectScale.x, rectScale.y, 0.f)); // top right
+    pivotPosition[UI::LEFT] = getRectPosAt(glm::vec3(-rectScale.x, 0.f, 0.f)); // left
+    pivotPosition[UI::CENTER] = getRectPosAt(glm::vec3(0.f, 0.f, 0.f)); // center
+    pivotPosition[UI::RIGHT] = getRectPosAt(glm::vec3(rectScale.x,0.f, 0.f)); // right
+    pivotPosition[UI::BOTTOM_LEFT] = getRectPosAt(glm::vec3(-rectScale.x, -rectScale.y, 0.f)); // bottom left
+    pivotPosition[UI::BOTTOM_CENTER] = getRectPosAt(glm::vec3(0.f, -rectScale.y, 0.f)); // bottom center
+    pivotPosition[UI::BOTTOM_RIGHT] = getRectPosAt(glm::vec3(rectScale.x, -rectScale.y, 0.f)); // bottom right
 }
 
 // update rect properties
@@ -345,21 +253,31 @@ void Engine::RectTransform::updateRectProperties()
 
     translate = glm::translate(translate, anchorPosition);
     rotation = glm::mat4_cast(glm::quat(anchorRotation));
-    scale = glm::scale(scale, anchorScale);
+
+    if(parent == nullptr) scale = glm::scale(scale, anchorScale * glm::vec3(rectSize, 1.f));
+    else scale = glm::scale(scale, parent->nR_RectScale * anchorScale * glm::vec3(rectSize, 1.f));
 
     anchorMatrix = translate * rotation * scale;
-    rectMatrix = (parent != nullptr)? parent->getPivotMatrix(anchor, anchorMatrix) :
-    UI::getMatrix(anchor) * anchorMatrix;
+
+    if(parent != nullptr)
+    {
+        glm::mat4 localMatrix = parent->getLocalMatrix(anchor, anchorMatrix);
+        rectMatrix = parent->getRectMatrix() * localMatrix;
+    }
+    else rectMatrix = UI::getMatrix(anchor) * anchorMatrix;
 
     rectPosition = calculatePosition(rectMatrix);
     rectRotation = calculateRotation(rectMatrix);
     rectScale = calculateScale(rectMatrix);
 
-    updateScreenMatrix();
+    nR_RectScale = rectScale / glm::vec3(rectSize, 1.f);
+    nR_RectMatrix = glm::translate(glm::mat4(1.f), rectPosition) * 
+    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * 
+    glm::scale(glm::mat4(1.f), rectScale);
+
     updatePivotPositionArray();
 
     for(int i = 0; i < childs.size(); i++) childs[i]->updateRectProperties();
-
     for(int i = 0; i < refSiblings->size(); i++) (*refSiblings)[i]->onTransformChanged();
 }
 

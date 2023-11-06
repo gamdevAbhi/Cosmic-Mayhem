@@ -32,7 +32,7 @@ void Engine::Billboard::start()
     order = 0;
     
     glm::vec2 position = getActor()->getComponent<RectTransform>()->getRectPosition();
-    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getRectFinalScale();
+    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getRectScale();
 
     float x = std::abs(scale.x) * 2;
     float y = std::abs(scale.y) * 2;
@@ -52,7 +52,7 @@ void Engine::Billboard::start()
 void Engine::Billboard::onTransformChanged()
 {
     glm::vec2 position = getActor()->getComponent<RectTransform>()->getRectPosition();
-    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getRectFinalScale();
+    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getRectScale();
 
     float x = std::abs(scale.x) * 2;
     float y = std::abs(scale.y) * 2;
@@ -95,7 +95,7 @@ void Engine::Billboard::draw()
     vao->bind();
 
     glm::mat4 ortho = UI::getOrtho();
-    glm::mat4 screen_transform = getActor()->getComponent<RectTransform>()->getScreenMatrix();
+    glm::mat4 screen_transform = getActor()->getComponent<RectTransform>()->getRectMatrix();
 
     glUniform4fv(shader->getLocation("color"), 1, &color[0]);
     glUniformMatrix4fv(shader->getLocation("screen_ortho"), 1, GL_FALSE, &ortho[0][0]);

@@ -55,26 +55,38 @@ int main()
     // loadActors();
 
     // test
-    Engine::Actor* parent = Engine::Actor::createUIActor("Parent");
-    Engine::RectTransform* pRect = parent->getComponent<Engine::RectTransform>();
-    parent->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
-    parent->getComponent<Engine::Billboard>()->setOrder(1);
-    parent->getComponent<Engine::Billboard>()->setColor(glm::vec4(1.f));
+    Engine::Actor* canvas = Engine::Actor::createUIActor("Canvas");
+    Engine::Actor* greenButton = Engine::Actor::createUIActor("Green Button");
+    Engine::Actor* redButton = Engine::Actor::createUIActor("Red Button");
 
-    pRect->setRectSize(glm::vec2(100.f, 100.f));
+    Engine::RectTransform* canvasR = canvas->getComponent<Engine::RectTransform>();
+    Engine::RectTransform* gBR = greenButton->getComponent<Engine::RectTransform>();
+    Engine::RectTransform* rBR = redButton->getComponent<Engine::RectTransform>();
 
-    for(int i = 0; i < 2; i++)
-    {
-        Engine::Actor* child = Engine::Actor::createUIActor("Child");
-        Engine::RectTransform* cRect = child->getComponent<Engine::RectTransform>();
-        child->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
-        child->getComponent<Cosmic::ButtonClicker>()->shouldScale = true;
+    canvas->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
 
-        cRect->setParent(pRect);
-        cRect->setAnchor(Engine::UI::CENTER);
-        cRect->setAnchorPosition(glm::vec3(0.f, (60.f * i) + 20.f, 0.f));
-        cRect->setRectSize(glm::vec2(80.f, 40.f));
-    }
+    gBR->setParent(canvasR);
+    rBR->setParent(canvasR);
+
+    gBR->setAnchor(Engine::UI::TOP_CENTER);
+    rBR->setAnchor(Engine::UI::BOTTOM_CENTER);
+
+    gBR->setAnchorPosition(glm::vec3(0.f, -80.f, 0.f));
+    rBR->setAnchorPosition(glm::vec3(0.f, 80.f, 0.f));
+
+    canvasR->setRectSize(glm::vec2(200.f, 140.f));
+    gBR->setRectSize(glm::vec2(140.f, 60.f));
+    rBR->setRectSize(glm::vec2(140.f, 60.f));
+
+    Engine::Billboard* billboard = canvas->getComponent<Engine::Billboard>();
+    billboard->setOrder(1);
+    billboard->setColor(glm::vec4(1.f, 1.f, 1.f, 0.8f));
+
+    greenButton->addComponent<Cosmic::ButtonClicker>()->shouldScale = true;
+    redButton->addComponent<Cosmic::ButtonClicker>()->shouldScale = true;
+
+    greenButton->getComponent<Engine::Billboard>()->setColor(glm::vec4(0.f, 1.f, 0.f, 1.f));
+    redButton->getComponent<Engine::Billboard>()->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
 
     Engine::GameLoop::begin();
 
