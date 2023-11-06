@@ -9,6 +9,7 @@ namespace Cosmic
     {
     public:
         bool shouldRotate = false;
+        bool shouldScale = false;
     protected:
         Engine::RectTransform* rect;
         Engine::Billboard* billboard;

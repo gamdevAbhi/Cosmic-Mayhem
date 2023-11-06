@@ -31,8 +31,8 @@ void Engine::Billboard::start()
     sprite = defaultSprite;
     order = 0;
     
-    glm::vec2 position = getActor()->getComponent<RectTransform>()->getScreenPosition();
-    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getScreenScale();
+    glm::vec2 position = getActor()->getComponent<RectTransform>()->getRectPosition();
+    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getRectFinalScale();
 
     float x = std::abs(scale.x) * 2;
     float y = std::abs(scale.y) * 2;
@@ -51,8 +51,8 @@ void Engine::Billboard::start()
 
 void Engine::Billboard::onTransformChanged()
 {
-    glm::vec2 position = getActor()->getComponent<RectTransform>()->getScreenPosition();
-    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getScreenScale();
+    glm::vec2 position = getActor()->getComponent<RectTransform>()->getRectPosition();
+    glm::vec2 scale = getActor()->getComponent<RectTransform>()->getRectFinalScale();
 
     float x = std::abs(scale.x) * 2;
     float y = std::abs(scale.y) * 2;

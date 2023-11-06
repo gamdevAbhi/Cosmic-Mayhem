@@ -49,42 +49,32 @@ int main()
 {
     Engine::GameLoop::initialize("game");
 
-    Cosmic::SpriteManager::loadSprites();
-    initTag();
-    readyCamera();
-    loadActors();
+    // Cosmic::SpriteManager::loadSprites();
+    // initTag();
+    // readyCamera();
+    // loadActors();
 
     // test
     Engine::Actor* parent = Engine::Actor::createUIActor("Parent");
-    Engine::Actor* leftChild = Engine::Actor::createUIActor("Left Child");
-    Engine::Actor* centerChild = Engine::Actor::createUIActor("Center Child");
-    Engine::Actor* rightChild = Engine::Actor::createUIActor("Right Child");
-    glm::vec2 parentRect = Engine::UI::getResolution();
-    parentRect /= 2.f;
-    parentRect *= 0.6f;
+    Engine::RectTransform* pRect = parent->getComponent<Engine::RectTransform>();
+    parent->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
+    parent->getComponent<Engine::Billboard>()->setOrder(1);
+    parent->getComponent<Engine::Billboard>()->setColor(glm::vec4(1.f));
 
-    parent->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::CENTER);
-    parent->getComponent<Engine::RectTransform>()->setRectSize(parentRect);
-    parent->addComponent<Engine::Billboard>()->setOrder(1);
+    pRect->setRectSize(glm::vec2(100.f, 100.f));
 
-    leftChild->getComponent<Engine::RectTransform>()->setParent(parent->getComponent<Engine::RectTransform>());
-    centerChild->getComponent<Engine::RectTransform>()->setParent(parent->getComponent<Engine::RectTransform>());
-    rightChild->getComponent<Engine::RectTransform>()->setParent(parent->getComponent<Engine::RectTransform>());
+    for(int i = 0; i < 2; i++)
+    {
+        Engine::Actor* child = Engine::Actor::createUIActor("Child");
+        Engine::RectTransform* cRect = child->getComponent<Engine::RectTransform>();
+        child->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
+        child->getComponent<Cosmic::ButtonClicker>()->shouldScale = true;
 
-    leftChild->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::LEFT);
-    centerChild->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::CENTER);
-    rightChild->getComponent<Engine::RectTransform>()->setAnchor(Engine::UI::RIGHT);
-
-    leftChild->getComponent<Engine::RectTransform>()->setRectSize(glm::vec2(40.f, 80.f));
-    centerChild->getComponent<Engine::RectTransform>()->setRectSize(glm::vec2(40.f, 80.f));
-    rightChild->getComponent<Engine::RectTransform>()->setRectSize(glm::vec2(40.f, 80.f));
-
-    // leftChild->getComponent<Engine::RectTransform>()->setAnchorPosition(glm::vec3(-40.f, 0.f, 0.f));
-    // rightChild->getComponent<Engine::RectTransform>()->setAnchorPosition(glm::vec3(-40.f, 0.f, 0.f));
-
-    leftChild->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
-    centerChild->addComponent<Cosmic::ButtonClicker>()->shouldRotate = false;
-    rightChild->addComponent<Cosmic::ButtonClicker>()->shouldRotate = true;
+        cRect->setParent(pRect);
+        cRect->setAnchor(Engine::UI::CENTER);
+        cRect->setAnchorPosition(glm::vec3(0.f, (60.f * i) + 20.f, 0.f));
+        cRect->setRectSize(glm::vec2(80.f, 40.f));
+    }
 
     Engine::GameLoop::begin();
 

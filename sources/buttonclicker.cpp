@@ -11,17 +11,17 @@ void Cosmic::ButtonClicker::start()
 
 void Cosmic::ButtonClicker::update()
 {
-    if(button->getHoverStatus() == Engine::Button::HOVER_ENTER)
+    if(button->getHoverStatus() == Engine::Button::HOVER_ENTER && shouldScale == true)
     {
         rect->setAnchorScale(glm::vec3(2.f, 2.f, 1.f));
     }
     else if(button->getHoverStatus() == Engine::Button::HOVER_STAY && shouldRotate == true)
     {
-        glm::vec3 rotation = rect->getScreenRotation();
+        glm::vec3 rotation = rect->getRectRotation();
         rotation.z += Engine::Time::getFixedDeltaTime() * 8.f;
-        rect->setScreenRotation(rotation);
+        rect->setRectRotation(rotation);
     }
-    else if(button->getHoverStatus() == Engine::Button::HOVER_EXIT)
+    else if(button->getHoverStatus() == Engine::Button::HOVER_EXIT && shouldScale == true)
     {
         rect->setAnchorScale(glm::vec3(1.f));
     }

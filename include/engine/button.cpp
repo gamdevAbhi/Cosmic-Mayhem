@@ -8,7 +8,7 @@ void Engine::Button::setSize(float left, float right, float up, float down)
     this->up = up;
     this->down = down;
 
-    glm::vec3 pos = rect->getScreenPosition();
+    glm::vec3 pos = rect->getRectPosition();
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
@@ -30,14 +30,14 @@ void Engine::Button::setSize(float left, float right, float up, float down)
 // get width of the button
 glm::vec2 Engine::Button::getWidth()
 {
-    float scale_x = rect->getScreenScale().x;
+    float scale_x = rect->getRectFinalScale().x;
     return glm::vec2(left * scale_x, right * scale_x);
 }
 
 // get height of the button
 glm::vec2 Engine::Button::getHeight()
 {
-    float scale_y = rect->getScreenScale().y;
+    float scale_y = rect->getRectFinalScale().y;
     return glm::vec2(up * scale_y, down * scale_y);
 }
 
@@ -64,7 +64,7 @@ void Engine::Button::start()
     isHover = false;
     rect = getActor()->getComponent<RectTransform>();
 
-    glm::vec3 pos = rect->getScreenPosition();
+    glm::vec3 pos = rect->getRectPosition();
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
@@ -86,7 +86,7 @@ void Engine::Button::start()
 // on transform changed
 void Engine::Button::onTransformChanged()
 {
-    glm::vec3 pos = rect->getScreenPosition();
+    glm::vec3 pos = rect->getRectPosition();
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
@@ -158,10 +158,10 @@ std::vector<glm::vec3> Engine::Button::getVertices()
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
-    glm::vec3 up_left_vertex = rect->getScreenPosAt(glm::vec3(-width.x, height.x, 0.0f));
-    glm::vec3 up_right_vertex = rect->getScreenPosAt(glm::vec3(width.y, height.x, 0.0f));
-    glm::vec3 down_left_vertex = rect->getScreenPosAt(glm::vec3(-width.x, -height.y, 0.0f));
-    glm::vec3 down_right_vertex = rect->getScreenPosAt(glm::vec3(width.y, -height.y, 0.0f));
+    glm::vec3 up_left_vertex = rect->getRectPosAt(glm::vec3(-width.x, height.x, 0.0f));
+    glm::vec3 up_right_vertex = rect->getRectPosAt(glm::vec3(width.y, height.x, 0.0f));
+    glm::vec3 down_left_vertex = rect->getRectPosAt(glm::vec3(-width.x, -height.y, 0.0f));
+    glm::vec3 down_right_vertex = rect->getRectPosAt(glm::vec3(width.y, -height.y, 0.0f));
 
     std::vector<glm::vec3> vertices;
     
