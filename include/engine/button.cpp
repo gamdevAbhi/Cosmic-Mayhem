@@ -27,6 +27,24 @@ void Engine::Button::setSize(float left, float right, float up, float down)
     node->update(boundary, root);
 }
 
+// set order
+void Engine::Button::setOrder(int order)
+{
+    this->order = order;
+}
+
+// set the clickable status
+void Engine::Button::setClickableStatus(bool status)
+{
+    isClickable = status;
+}
+
+// set the transparent status
+void Engine::Button::setTransparentStatus(bool status)
+{
+    isTransparent = status;
+}
+
 // get width of the button
 glm::vec2 Engine::Button::getWidth()
 {
@@ -39,6 +57,24 @@ glm::vec2 Engine::Button::getHeight()
 {
     float scale_y = rect->getRectScale().y;
     return glm::vec2(up * scale_y, down * scale_y);
+}
+
+// get order
+int Engine::Button::getOrder()
+{
+    return order;
+}
+
+// get the clickable status
+bool Engine::Button::getClickableStatus()
+{
+    return isClickable;
+}
+
+// get the transparent status
+bool Engine::Button::getTransparentStatus()
+{
+    return isTransparent;
 }
 
 // get the hover status
@@ -60,6 +96,9 @@ void Engine::Button::start()
     right = 1.f;
     up = 1.f;
     down = 1.f;
+    order = 0;
+    isClickable = true;
+    isTransparent = false;
     isClicked = false;
     isHover = false;
     rect = getActor()->getComponent<RectTransform>();
@@ -126,17 +165,6 @@ void Engine::Button::hovered()
 // update status
 void Engine::Button::updateStatus()
 {
-    if(isClicked)
-    {
-        if(clickStatus == BUTTON_CLICK || clickStatus == BUTTON_HOLD) clickStatus = BUTTON_HOLD;
-        else clickStatus = BUTTON_CLICK;
-    }
-    else
-    {
-        if(clickStatus == BUTTON_RELEASE) clickStatus = BUTTON_NONE;
-        else clickStatus = BUTTON_RELEASE;
-    }
-
     if(isHover)
     {
         if(hoverStatus == HOVER_ENTER || hoverStatus == HOVER_STAY) hoverStatus = HOVER_STAY;
@@ -146,6 +174,17 @@ void Engine::Button::updateStatus()
     {
         if(hoverStatus == HOVER_EXIT) hoverStatus = HOVER_NONE;
         else hoverStatus = HOVER_EXIT;
+    }
+
+    if(isClicked)
+    {
+        if(clickStatus == BUTTON_CLICK || clickStatus == BUTTON_HOLD) clickStatus = BUTTON_HOLD;
+        else clickStatus = BUTTON_CLICK;
+    }
+    else
+    {
+        if(clickStatus == BUTTON_RELEASE || hoverStatus == HOVER_EXIT) clickStatus = BUTTON_NONE;
+        else clickStatus = BUTTON_RELEASE;
     }
 
     isClicked = false;

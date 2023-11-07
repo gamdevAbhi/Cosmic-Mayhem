@@ -17,10 +17,11 @@ namespace Engine
         glm::vec3 getAnchorUp();
         glm::vec3 getAnchorRight();
         glm::vec3 getAnchorForward();
-        glm::vec3 getRectUp();
-        glm::vec3 getRectRight();
-        glm::vec3 getRectForward();
-        glm::vec3 getRectPosAt(glm::vec3 localOffset);
+        static glm::vec3 getRectUp();
+        static glm::vec3 getRectRight();
+        static glm::vec3 getRectForward();
+        glm::vec2 getAnchorAt(glm::vec2 screenPos);
+        glm::vec3 getRectPosAt(glm::vec3 localScreenOffset);
         glm::vec2 getAnchor();
         glm::vec3 getAnchorRotation();
         glm::vec2 getAnchorSize();

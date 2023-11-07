@@ -3,6 +3,7 @@
 
 #include <engine/input.hpp>
 #include <engine/button.hpp>
+#include <algorithm>
 
 namespace Engine
 {
@@ -12,6 +13,7 @@ namespace Engine
         static void initialize();
         static void checkInteraction();
         static bool isHover(Button* button);
+        static bool compare(Node* left, Node* right);
     friend class GameLoop;
     };
 }

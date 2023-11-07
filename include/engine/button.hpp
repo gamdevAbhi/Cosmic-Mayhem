@@ -15,8 +15,14 @@ namespace Engine
         enum HoverStatus {HOVER_NONE, HOVER_ENTER, HOVER_STAY, HOVER_EXIT};
         enum ClickStatus {BUTTON_NONE, BUTTON_CLICK, BUTTON_HOLD, BUTTON_RELEASE};
         void setSize(float left, float right, float up, float down);
+        void setOrder(int order);
+        void setClickableStatus(bool status);
+        void setTransparentStatus(bool status);
         glm::vec2 getWidth();
         glm::vec2 getHeight();
+        int getOrder();
+        bool getClickableStatus();
+        bool getTransparentStatus();
         HoverStatus getHoverStatus();
         ClickStatus getClickStatus();
     protected:
@@ -26,6 +32,9 @@ namespace Engine
         float right;
         float up;
         float down;
+        int order;
+        bool isClickable;
+        bool isTransparent;
         bool isClicked;
         bool isHover;
         HoverStatus hoverStatus = HOVER_NONE;

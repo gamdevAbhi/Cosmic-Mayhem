@@ -17,9 +17,9 @@ namespace Engine
         glm::vec3 getLocalUp();
         glm::vec3 getLocalRight();
         glm::vec3 getLocalForward();
-        glm::vec3 getWorldUp();
-        glm::vec3 getWorldRight();
-        glm::vec3 getWorldForward();
+        static glm::vec3 getWorldUp();
+        static glm::vec3 getWorldRight();
+        static glm::vec3 getWorldForward();
         glm::vec3 getWorldPosAt(glm::vec3 localOffset);
         glm::vec3 getLocalPosition();
         glm::vec3 getLocalRotation();

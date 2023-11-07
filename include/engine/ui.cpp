@@ -13,12 +13,21 @@ glm::mat4 Engine::UI::getOrtho()
 }
 
 // get position respective x and y
-glm::vec3 Engine::UI::getAnchorPosition(glm::vec2 anchor)
+glm::vec3 Engine::UI::getScreenPosition(glm::vec2 anchor)
 {
     float screenX = (width / 2.f) * (1.f + anchor.x);
     float screenY = (height / 2.f) * (1.f + anchor.y);
 
     return glm::vec3(screenX, screenY, 0.f);
+}
+
+// get the anchor respective to the screen position
+glm::vec2 Engine::UI::getAnchor(glm::vec2 screenPos)
+{   
+    float x = ((screenPos.x * 2.f) / width) - 1.f;
+    float y = ((screenPos.y * 2.f) / height) - 1.f;
+
+    return glm::vec2(x, y);
 }
 
 // get size respective x and y

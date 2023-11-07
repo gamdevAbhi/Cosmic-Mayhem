@@ -61,18 +61,12 @@ glm::vec3 Engine::Transform::getWorldForward()
 // get the world position respective to the local transform
 glm::vec3 Engine::Transform::getWorldPosAt(glm::vec3 localOffset)
 {
-    glm::mat4 translate(1.0f);
-    glm::mat4 rotation(1.0f);
-    glm::mat4 scale(1.0f);
+    glm::vec3 position = worldPosition;
+    
+    position += localOffset.x * getLocalRight();
+    position += localOffset.y * getLocalUp();
 
-    translate = glm::translate(translate, localPosition + localOffset);
-    rotation = glm::mat4_cast(glm::quat(localRotation));
-    scale = glm::scale(scale, localScale);
-
-    glm::mat4 local_matrix = translate * rotation * scale;
-    glm::mat4 world_matrix = (parent != nullptr)? parent->getMatrix() * local_matrix : local_matrix;
-
-    return glm::vec3(world_matrix[3][0], world_matrix[3][1], world_matrix[3][2]);
+    return position; 
 }
 
 // get the local position

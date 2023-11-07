@@ -14,6 +14,8 @@ void Engine::ButtonManager::checkInteraction()
     Button::root->find(Input::getMousePos(), nodes);
     Button::root->find(Button::root->boundary, allNodes);
 
+    std::sort(nodes.begin(), nodes.end(), compare);
+
     for(int i = 0; i < nodes.size(); i++)
     {
         Button* button = dynamic_cast<Button*>(nodes[i]->object);
@@ -22,11 +24,16 @@ void Engine::ButtonManager::checkInteraction()
 
         button->hovered();
 
-        Input::KeyStatus mouseStatus = Input::getMouseButtonStatus(GLFW_MOUSE_BUTTON_1);
+        if(button->isClickable)
+        {
+            Input::KeyStatus mouseStatus = Input::getMouseButtonStatus(GLFW_MOUSE_BUTTON_1);
 
-        if(button->clickStatus == Button::BUTTON_NONE && mouseStatus == Input::KEY_HOLD 
-        || button->clickStatus == Button::BUTTON_RELEASE && mouseStatus == Input::KEY_HOLD) continue;
-        else if(mouseStatus == Input::KEY_PRESS || mouseStatus == Input::KEY_HOLD) button->clicked();
+            if(button->clickStatus == Button::BUTTON_NONE && mouseStatus == Input::KEY_HOLD 
+            || button->clickStatus == Button::BUTTON_RELEASE && mouseStatus == Input::KEY_HOLD) continue;
+            else if(mouseStatus == Input::KEY_PRESS || mouseStatus == Input::KEY_HOLD) button->clicked();
+        }
+
+        if(button->isTransparent == false) break;
     }
 
     for(int i = 0; i < allNodes.size(); i++)
@@ -68,4 +75,10 @@ bool Engine::ButtonManager::isHover(Button* button)
     }
 
     return true;
+}
+
+// check if left node order is smaller than right
+bool Engine::ButtonManager::compare(Node* left, Node* right)
+{
+    return dynamic_cast<Button*>(left->object)->order < dynamic_cast<Button*>(right->object)->order;
 }

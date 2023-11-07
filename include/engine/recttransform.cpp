@@ -51,16 +51,28 @@ glm::vec3 Engine::RectTransform::getRectRight()
 // get the Rect forward direction
 glm::vec3 Engine::RectTransform::getRectForward()
 {
-    return glm::vec3(0.f, 0.f, 1.f);
+    return glm::vec3(0.f, 0.f, -1.f);
+}
+
+// get the anchor at screen position
+glm::vec2 Engine::RectTransform::getAnchorAt(glm::vec2 screenPos)
+{
+    glm::mat4 translate = glm::translate(glm::mat4(1.f), glm::vec3(screenPos, 0.f));
+    glm::mat4 rotation = glm::mat4_cast(glm::quat(glm::vec3(0.f)));
+    glm::mat4 scale = glm::scale(glm::mat4(1.f), glm::vec3(1.f));
+    
+    glm::mat4 screenMatrix = translate * rotation * scale;
+
+    return calculatePosition(glm::inverse(rectMatrix) * screenMatrix);
 }
 
 // get the rect position respective to the anchor transform
-glm::vec3 Engine::RectTransform::getRectPosAt(glm::vec3 localOffset)
+glm::vec3 Engine::RectTransform::getRectPosAt(glm::vec3 localScreenOffset)
 {
     glm::vec3 position = rectPosition;
 
-    position += getAnchorRight() * localOffset.x;
-    position += getAnchorUp() * localOffset.y;
+    position += getAnchorRight() * localScreenOffset.x;
+    position += getAnchorUp() * localScreenOffset.y;
 
     return position;
 }
@@ -176,7 +188,7 @@ void Engine::RectTransform::start()
 {
     anchor = glm::vec2(0.0f);
     anchorRotation = glm::vec3(0.0f);
-    anchorSize = glm::vec3(0.5f);
+    anchorSize = glm::vec3(0.25f);
 
     updateRectProperties();
 }
@@ -194,7 +206,7 @@ void Engine::RectTransform::updateRectProperties()
     glm::mat4 rotation(1.f);
     glm::mat4 scale(1.f);
 
-    translate = glm::translate(translate, (parent == nullptr)? UI::getAnchorPosition(anchor) : 
+    translate = glm::translate(translate, (parent == nullptr)? UI::getScreenPosition(anchor) : 
     glm::vec3(anchor, 0.f));
     rotation = glm::mat4_cast(glm::quat(anchorRotation));
     scale = glm::scale(scale, (parent == nullptr)? UI::getAnchorSize(anchorSize) : 
