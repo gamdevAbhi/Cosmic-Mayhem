@@ -15,6 +15,7 @@
                 "${workspaceFolder}\\include\\engine\\*.cpp",
                 "${workspaceFolder}\\sources\\*.cpp",
                 "-lglfw3dll",
+                "-lfreetypedll",
                 "-o",
                 "${workspaceFolder}\\export\\${input:folder}\\game.exe"
             ],
@@ -28,6 +29,12 @@
                 "kind": "build",
                 "isDefault": true
             },
+            "dependsOn" : ["copy freetype dll"]
+        },
+        {
+            "type": "shell",
+            "label": "copy freetype dll",
+            "command": "cp freetype.dll export\\${input:folder}",
             "dependsOn" : ["copy glfw dll"]
         },
         {

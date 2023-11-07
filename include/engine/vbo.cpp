@@ -1,16 +1,23 @@
 #include <engine/vbo.hpp>
 
-Engine::VBO::VBO(GLsizeiptr size, const void* data)
+Engine::VBO::VBO(GLsizeiptr size, const void* data, GLenum usage)
 {
     glGenBuffers(1, &id);
     bind();
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, size, data, usage);
     unbind();
 }
 
 void Engine::VBO::bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, id);
+}
+
+void Engine::VBO::subData(GLsizeiptr size, const void* data)
+{
+    bind();
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+    unbind();
 }
 
 void Engine::VBO::unbind()

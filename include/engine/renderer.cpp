@@ -36,7 +36,7 @@ void Engine::Renderer::initialize()
 
     vao = new VAO();
     vao->bind();
-    vbo = new VBO(vertices.size() * sizeof(vertex), vertices.data());
+    vbo = new VBO(vertices.size() * sizeof(vertex), vertices.data(), GL_STATIC_DRAW);
     vbo->bind();
     ebo = new EBO(indices.size() * sizeof(GLuint), indices.data());
     ebo->bind();

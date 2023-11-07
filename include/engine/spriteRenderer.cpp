@@ -25,7 +25,7 @@ void Engine::SpriteRenderer::setSprite(Sprite* sprite)
     else this->sprite = sprite;
 }
 
-// star function
+// start function
 void Engine::SpriteRenderer::start()
 {
     color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
