@@ -197,10 +197,10 @@ std::vector<glm::vec3> Engine::Button::getVertices()
     glm::vec2 width = getWidth();
     glm::vec2 height = getHeight();
 
-    glm::vec3 up_left_vertex = rect->getRectPosAt(glm::vec3(-width.x, height.x, 0.0f));
-    glm::vec3 up_right_vertex = rect->getRectPosAt(glm::vec3(width.y, height.x, 0.0f));
-    glm::vec3 down_left_vertex = rect->getRectPosAt(glm::vec3(-width.x, -height.y, 0.0f));
-    glm::vec3 down_right_vertex = rect->getRectPosAt(glm::vec3(width.y, -height.y, 0.0f));
+    glm::vec3 up_left_vertex = rect->getScreenPosAt(glm::vec3(-width.x, height.x, 0.0f));
+    glm::vec3 up_right_vertex = rect->getScreenPosAt(glm::vec3(width.y, height.x, 0.0f));
+    glm::vec3 down_left_vertex = rect->getScreenPosAt(glm::vec3(-width.x, -height.y, 0.0f));
+    glm::vec3 down_right_vertex = rect->getScreenPosAt(glm::vec3(width.y, -height.y, 0.0f));
 
     std::vector<glm::vec3> vertices;
     

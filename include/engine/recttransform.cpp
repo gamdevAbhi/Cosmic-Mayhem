@@ -66,8 +66,17 @@ glm::vec2 Engine::RectTransform::getAnchorAt(glm::vec2 screenPos)
     return calculatePosition(glm::inverse(rectMatrix) * screenMatrix);
 }
 
-// get the rect position respective to the anchor transform
-glm::vec3 Engine::RectTransform::getRectPosAt(glm::vec3 localScreenOffset)
+// get the rect position respective to the anchor
+glm::vec3 Engine::RectTransform::getScreenPosAt(glm::vec2 anchor)
+{
+    glm::mat4 newMatrix = glm::translate(glm::mat4(1.f), glm::vec3(anchor, 0.f)) * 
+    glm::mat4_cast(glm::quat(glm::vec3(0.f))) * glm::scale(glm::mat4(1.f), glm::vec3(1.f));
+
+    return calculatePosition(rectMatrix * newMatrix);
+}
+
+// get the rect position respective to the screen offset
+glm::vec3 Engine::RectTransform::getScreenPosAt(glm::vec3 localScreenOffset)
 {
     glm::vec3 position = rectPosition;
 

@@ -33,8 +33,8 @@ glm::vec2 Engine::UI::getAnchor(glm::vec2 screenPos)
 // get size respective x and y
 glm::vec3 Engine::UI::getAnchorSize(glm::vec2 size)
 {
-    float sizeX = width * size.x;
-    float sizeY = height * size.y;
+    float sizeX = (width / 2.f) * size.x;
+    float sizeY = (height / 2.f) * size.y;
 
     return glm::vec3(sizeX, sizeY, 0.f);
 }
