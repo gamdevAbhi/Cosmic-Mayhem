@@ -2,7 +2,7 @@
 
 Engine::Font::Font(std::string relative_font_path)
 {
-    if(Resources::is_file_exist(Resources::get_current_dir() + relative_font_path))
+    if(Resources::is_file_exist(Resources::get_current_dir() + relative_font_path) == false)
     {
         Handler::debug("font path not exist", "Font");
         return;
@@ -11,11 +11,25 @@ Engine::Font::Font(std::string relative_font_path)
     font_path = Resources::get_current_dir() + relative_font_path;
 }
 
+// destroy font
+void Engine::Font::destroy()
+{
+    for(auto map : character_map)
+    {
+        for(auto character : map.second)
+        {
+            character.second.sprite->destroy();
+        }
+    }
+
+    character_map.clear();
+}
+
 // get font character
 std::map<char, Engine::Character> Engine::Font::getCharacter(int fontSize)
 {
     if(character_map.find(fontSize) == character_map.end()
-    && addCharacter(fontSize)) return std::map<char, Engine::Character>();
+    && addCharacter(fontSize) == false) return std::map<char, Engine::Character>();
     else return character_map[fontSize];
 }
 
@@ -41,36 +55,25 @@ bool Engine::Font::addCharacter(int fontSize)
     FT_Set_Pixel_Sizes(face, 0, fontSize);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    for(unsigned char c = 0; c < 128; c++)
+    FT_UInt index;
+    char c = FT_Get_First_Char(face, &index);
+
+    while(index)
     {
-        if(FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
-            Handler::debug("font can't load a character", "Font");
-            continue;
-        }
-
-        unsigned int texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width,
-        face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        FT_Load_Char(face, c, FT_LOAD_RENDER);
 
         Character character = 
         {
-            texture, glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            new Sprite(face), glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             face->glyph->advance.x
         };
 
         newCharacters.insert(std::pair<char, Character>(c, character));
+
+        c = FT_Get_Next_Char(face, c, &index);
     }
 
-    glBindTexture(GL_TEXTURE_2D, 0);
     FT_Done_Face(face);
     FT_Done_FreeType(fLibrary);
 

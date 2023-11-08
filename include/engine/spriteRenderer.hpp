@@ -18,13 +18,6 @@ namespace Engine
         void setColor(glm::vec4 color);
         void setSprite(Sprite* sprite);
     protected:
-        inline static std::vector<vertex> vertices;
-        inline static std::vector<GLuint> indices;
-        inline static VAO* vao = nullptr;
-        inline static VBO* vbo = nullptr;
-        inline static EBO* ebo = nullptr;
-        inline static Shader* shader = nullptr;
-        inline static Sprite* defaultSprite = nullptr;
         inline static QuadTree* root = nullptr;
         Sprite* sprite;
         Node* node;

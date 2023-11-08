@@ -19,6 +19,7 @@
 #include <engine/sprite.hpp>
 #include <engine/spriterenderer.hpp>
 #include <engine/time.hpp>
+#include <engine/text.hpp>
 #include <engine/transform.hpp>
 #include <engine/renderer.hpp>
 #include <engine/renderermanager.hpp>

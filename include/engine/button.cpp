@@ -20,7 +20,7 @@ void Engine::Button::setSize(float left, float right, float up, float down)
 
     while(true)
     {
-        if(!root->boundary.contains(node->boundary)) root = root->expand(node->boundary);
+        if(!root->getBoundary().contains(node->getBoundary())) root = root->expand(node->getBoundary());
         else break;
     }
 
@@ -115,7 +115,7 @@ void Engine::Button::start()
 
     while(true)
     {
-        if(!root->boundary.contains(node->boundary)) root = root->expand(node->boundary);
+        if(!root->getBoundary().contains(node->getBoundary())) root = root->expand(node->getBoundary());
         else break;
     }
     
@@ -137,7 +137,7 @@ void Engine::Button::onTransformChanged()
 
     while(true)
     {
-        if(!root->boundary.contains(node->boundary)) root = root->expand(node->boundary);
+        if(!root->getBoundary().contains(node->getBoundary())) root = root->expand(node->getBoundary());
         else break;
     }
 

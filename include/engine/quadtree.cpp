@@ -39,6 +39,25 @@ boundary(_boundary)
     parent = nullptr;
 }
 
+// get object
+Engine::Component* Engine::Node::getObject()
+{
+    return object;
+}
+
+// get parent
+Engine::QuadTree* Engine::Node::getParent()
+{
+    return parent;
+}
+
+
+// get boundary
+Engine::AABB Engine::Node::getBoundary()
+{
+    return boundary;
+}
+
 // updating the node
 void Engine::Node::update(Engine::AABB _boundary, Engine::QuadTree* root)
 {
@@ -69,9 +88,9 @@ boundary(_boundary)
 // insert the node to the quad tree
 bool Engine::QuadTree::insert(Node* node)
 {
-    if(node == nullptr || node->object == nullptr) return false;
+    if(node == nullptr || node->getObject() == nullptr) return false;
 
-    if(!boundary.contains(node->boundary)) return false;
+    if(!boundary.contains(node->getBoundary())) return false;
 
     if(nodes.size() < capacity && devided == false) 
     {
@@ -116,37 +135,10 @@ bool Engine::QuadTree::remove(Node* node)
     else return false;
 }
 
-// subdevide the region into 4
-void Engine::QuadTree::subdevide()
+// get boundary
+Engine::AABB Engine::QuadTree::getBoundary()
 {
-    devided = true;
-
-    AABB ne(boundary.x + boundary.expand / 2.0, boundary.y + boundary.expand / 2.0, 
-    boundary.expand / 2.0);
-    AABB nw(boundary.x - boundary.expand / 2.0, boundary.y + boundary.expand / 2.0, 
-    boundary.expand / 2.0);
-    AABB se(boundary.x + boundary.expand / 2.0, boundary.y - boundary.expand / 2.0, 
-    boundary.expand / 2.0);
-    AABB sw(boundary.x - boundary.expand / 2.0, boundary.y - boundary.expand / 2.0, 
-    boundary.expand / 2.0);
-    
-    northEast = new QuadTree(ne);
-    northWest = new QuadTree(nw);
-    southEast = new QuadTree(se);
-    southWest = new QuadTree(sw);
-
-    std::vector<Node*> notIncluded;
-
-    for(int i = 0; i < nodes.size(); i++)
-    {
-        if(northEast->insert(nodes[i])) continue;
-        else if(northWest->insert(nodes[i])) continue;
-        else if(southEast->insert(nodes[i])) continue;
-        else if(southWest->insert(nodes[i])) continue;
-        notIncluded.push_back(nodes[i]);
-    }
-
-    nodes = notIncluded;
+    return boundary;
 }
 
 // expand the quad tree
@@ -227,4 +219,37 @@ void Engine::QuadTree::find(glm::vec2 point, std::vector<Engine::Node*>& query)
     northWest->find(point, query);
     southEast->find(point, query);
     southWest->find(point, query);
+}
+
+// subdevide the region into 4
+void Engine::QuadTree::subdevide()
+{
+    devided = true;
+
+    AABB ne(boundary.x + boundary.expand / 2.0, boundary.y + boundary.expand / 2.0, 
+    boundary.expand / 2.0);
+    AABB nw(boundary.x - boundary.expand / 2.0, boundary.y + boundary.expand / 2.0, 
+    boundary.expand / 2.0);
+    AABB se(boundary.x + boundary.expand / 2.0, boundary.y - boundary.expand / 2.0, 
+    boundary.expand / 2.0);
+    AABB sw(boundary.x - boundary.expand / 2.0, boundary.y - boundary.expand / 2.0, 
+    boundary.expand / 2.0);
+    
+    northEast = new QuadTree(ne);
+    northWest = new QuadTree(nw);
+    southEast = new QuadTree(se);
+    southWest = new QuadTree(sw);
+
+    std::vector<Node*> notIncluded;
+
+    for(int i = 0; i < nodes.size(); i++)
+    {
+        if(northEast->insert(nodes[i])) continue;
+        else if(northWest->insert(nodes[i])) continue;
+        else if(southEast->insert(nodes[i])) continue;
+        else if(southWest->insert(nodes[i])) continue;
+        notIncluded.push_back(nodes[i]);
+    }
+
+    nodes = notIncluded;
 }

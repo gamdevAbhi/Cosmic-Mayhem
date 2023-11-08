@@ -12,7 +12,7 @@ void Engine::CircleCollider::setRadius(float radius)
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        if(!(*rootP)->getBoundary().contains(node->getBoundary())) *rootP = (*rootP)->expand(node->getBoundary());
         else break;
     }
 
@@ -42,7 +42,7 @@ void Engine::CircleCollider::start()
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        if(!(*rootP)->getBoundary().contains(node->getBoundary())) *rootP = (*rootP)->expand(node->getBoundary());
         else break;
     }
 
@@ -61,7 +61,7 @@ void Engine::CircleCollider::nodeUpdate()
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        if(!(*rootP)->getBoundary().contains(node->getBoundary())) *rootP = (*rootP)->expand(node->getBoundary());
         else break;
     }
 

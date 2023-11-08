@@ -16,40 +16,45 @@ namespace Engine
     class AABB
     {
     public:
-        float x;
-        float y;
-        float expand;
         AABB(float _x, float _y, float _expand);
         bool contains(AABB box);
         bool contains(glm::vec2 point);
         bool intersects(AABB box);
+    protected:
+        float x;
+        float y;
+        float expand;
+    friend class QuadTree;
     };
 
     // node class for QuadTree
     class Node
     {
-    protected:
-        Component* object;
-        AABB boundary;
-        QuadTree* parent;
+    public:
         Node(Component* _object, AABB _boundary);
+        Component* getObject();
+        QuadTree* getParent();
+        AABB getBoundary();
         void update(AABB _boundary, QuadTree* root);
         void destroy();
+    protected:
+        AABB boundary;
+        QuadTree* parent;
+        Component* object;
     friend class QuadTree;
-    friend class RendererManager;
-    friend class SpriteRenderer;
-    friend class Billboard;
-    friend class ColliderManager;
-    friend class Collider;
-    friend class BoxCollider;
-    friend class CircleCollider;
-    friend class Button;
-    friend class ButtonManager;
     };
 
     // QuadTree class
     class QuadTree
     {
+    public:
+        QuadTree(AABB _boundary);
+        bool insert(Node* node);
+        bool remove(Node* node);
+        AABB getBoundary();
+        QuadTree* expand(AABB _boundary);
+        void find(AABB boundary, std::vector<Node*>& query);
+        void find(glm::vec2 point, std::vector<Node*>& query);
     protected:
         inline static int capacity = 4;
         bool devided;
@@ -59,23 +64,7 @@ namespace Engine
         QuadTree* northWest;
         QuadTree* southEast;
         QuadTree* southWest;
-        QuadTree(AABB _boundary);
-        bool insert(Node* node);
-        bool remove(Node* node);
         void subdevide();
-        QuadTree* expand(AABB _boundary);
-        void find(AABB boundary, std::vector<Node*>& query);
-        void find(glm::vec2 point, std::vector<Node*>& query);
-    friend class Node;
-    friend class RendererManager;
-    friend class SpriteRenderer;
-    friend class Billboard;
-    friend class ColliderManager;
-    friend class Collider;
-    friend class BoxCollider;
-    friend class CircleCollider;
-    friend class Button;
-    friend class ButtonManager;
     };
 }
 

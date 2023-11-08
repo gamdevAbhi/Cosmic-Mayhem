@@ -5,11 +5,11 @@ layout (location = 1) in vec2 aUV;
 
 out vec2 coord;
 
-uniform mat4 screen_ortho;
-uniform mat4 screen_transform;
+uniform mat4 viewProjMat;
+uniform mat4 transformMat;
 
 void main()
 {
-    gl_Position = screen_ortho * screen_transform * vec4(aPos, 1.0f);
+    gl_Position = viewProjMat * transformMat * vec4(aPos, 1.0f);
     coord = aUV;
 }

@@ -3,11 +3,11 @@
 in vec2 coord;
 
 uniform vec4 color;
-uniform sampler2D sprite;
+uniform sampler2D tex;
 
 out vec4 fragColor;
 
 void main()
 {
-    fragColor = texture(sprite, coord) * color;
+    fragColor = texture(tex, coord) * color;
 }

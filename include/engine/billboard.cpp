@@ -22,7 +22,8 @@ glm::vec4 Engine::Billboard::getColor()
 // get sprite
 Engine::Sprite* Engine::Billboard::getSprite()
 {
-    return sprite;
+    if(sprite != defaultSprite) return sprite;
+    else return nullptr;
 }
 
 void Engine::Billboard::start()
@@ -42,7 +43,7 @@ void Engine::Billboard::start()
 
     while(true)
     {
-        if(!root->boundary.contains(node->boundary)) root = root->expand(node->boundary);
+        if(!root->getBoundary().contains(node->getBoundary())) root = root->expand(node->getBoundary());
         else break;
     }
 
@@ -62,7 +63,7 @@ void Engine::Billboard::onTransformChanged()
     
     while(true)
     {
-        if(!root->boundary.contains(boundary)) root = root->expand(boundary);
+        if(!root->getBoundary().contains(boundary)) root = root->expand(boundary);
         else break;
     }
 
@@ -77,62 +78,31 @@ void Engine::Billboard::onDestroy()
 // initialize the members of billboard
 void Engine::Billboard::initialize()
 {
-    vertices = std::vector<vertex>
-    {
-        vertex{glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-        vertex{glm::vec3(1.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        vertex{glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        vertex{glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)}
-    };
-    indices = std::vector<GLuint>
-    {
-        0, 1, 3,
-        0, 2, 3
-    };
-
-    vao = new VAO();
-    vao->bind();
-    vbo = new VBO(vertices.size() * sizeof(vertex), vertices.data(), GL_STATIC_DRAW);
-    vbo->bind();
-    ebo = new EBO(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-    ebo->bind();
-
-    vao->link(*vbo, 0, 3, sizeof(vertex), (void*)0);
-    vao->link(*vbo, 1, 2, sizeof(vertex), (void*)(3 * sizeof(float)));
-
-    vbo->unbind();
-    vao->unbind();
-    ebo->unbind();
-
-    shader = new Shader("\\resources\\shaders\\billboard_shader.vert", 
-    "\\resources\\shaders\\billboard_shader.frag");
- 
-    if(shader->getStatus() != SHADER_NO_ERROR) Handler::error("can't make the default shader", 
-    "billboard renderer");
-
-    defaultSprite = new Sprite("\\resources\\sprites\\default_sprite.png");
-
     root = new QuadTree(AABB(0, 0, 100));
 }
 
 // draw billboards
 void Engine::Billboard::draw()
 {
-    shader->use();
-    vao->bind();
+    renderShader->use();
+    renderVao->bind();
+    renderVbo->bind();
+    renderEbo->bind();
 
     glm::mat4 ortho = UI::getOrtho();
     glm::mat4 screen_transform = getActor()->getComponent<RectTransform>()->getRectMatrix();
 
-    glUniform4fv(shader->getLocation("color"), 1, &color[0]);
-    glUniformMatrix4fv(shader->getLocation("screen_ortho"), 1, GL_FALSE, &ortho[0][0]);
-    glUniformMatrix4fv(shader->getLocation("screen_transform"), 1, GL_FALSE, &screen_transform[0][0]);
-    glUniform1i(shader->getLocation("sprite"), 0);
+    glUniform4fv(renderShader->getLocation("color"), 1, &color[0]);
+    glUniformMatrix4fv(renderShader->getLocation("viewProjMat"), 1, GL_FALSE, &ortho[0][0]);
+    glUniformMatrix4fv(renderShader->getLocation("transformMat"), 1, GL_FALSE, &screen_transform[0][0]);
+    glUniform1i(renderShader->getLocation("tex"), 0);
     
     sprite->bind();
     
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, quadIndices.size(), GL_UNSIGNED_INT, 0);
     
     sprite->unbind();
-    vao->unbind();
+    renderVbo->unbind();
+    renderVao->unbind();
+    renderEbo->unbind();
 }

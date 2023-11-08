@@ -54,6 +54,9 @@ int main()
     readyCamera();
     loadActors();
 
+    Engine::Actor* font = Engine::Actor::createUIActor("Font");
+    font->addComponent<Engine::Text>();
+    
     Engine::GameLoop::begin();
 
     std::cout << std::endl << "Succesfully Close ..." << std::endl;

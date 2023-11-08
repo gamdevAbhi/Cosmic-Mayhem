@@ -9,7 +9,8 @@ glm::vec4 Engine::SpriteRenderer::getColor()
 // get sprite
 Engine::Sprite* Engine::SpriteRenderer::getSprite()
 {
-    return sprite;
+    if(sprite != defaultSprite) return sprite;
+    else return nullptr;
 }
 
 // set the color
@@ -43,7 +44,7 @@ void Engine::SpriteRenderer::start()
 
     while(true)
     {
-        if(!root->boundary.contains(node->boundary)) root = root->expand(node->boundary);
+        if(!root->getBoundary().contains(node->getBoundary())) root = root->expand(node->getBoundary());
         else break;
     }
 
@@ -64,7 +65,7 @@ void Engine::SpriteRenderer::onTransformChanged()
     
     while(true)
     {
-        if(!root->boundary.contains(boundary)) root = root->expand(boundary);
+        if(!root->getBoundary().contains(boundary)) root = root->expand(boundary);
         else break;
     }
 
@@ -80,49 +81,16 @@ void Engine::SpriteRenderer::onDestroy()
 // initialize the members of sprite renderer
 void Engine::SpriteRenderer::initialize()
 {
-    vertices = std::vector<vertex>
-    {
-        vertex{glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-        vertex{glm::vec3(1.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        vertex{glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        vertex{glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)}
-    };
-    indices = std::vector<GLuint>
-    {
-        0, 1, 3,
-        0, 2, 3
-    };
-
-    vao = new VAO();
-    vao->bind();
-    vbo = new VBO(vertices.size() * sizeof(vertex), vertices.data(), GL_STATIC_DRAW);
-    vbo->bind();
-    ebo = new EBO(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-    ebo->bind();
-
-    vao->link(*vbo, 0, 3, sizeof(vertex), (void*)0);
-    vao->link(*vbo, 1, 2, sizeof(vertex), (void*)(3 * sizeof(float)));
-
-    vbo->unbind();
-    vao->unbind();
-    ebo->unbind();
-
-    shader = new Shader("\\resources\\shaders\\sprite_shader.vert", 
-    "\\resources\\shaders\\sprite_shader.frag");
- 
-    if(shader->getStatus() != SHADER_NO_ERROR) Handler::error("can't make the default shader", 
-    "sprite renderer");
-
-    defaultSprite = new Sprite("\\resources\\sprites\\default_sprite.png");
-
     root = new QuadTree(AABB(0, 0, 100));
 }
 
 // renders sprites
 void Engine::SpriteRenderer::draw()
 {
-    shader->use();
-    vao->bind();
+    renderShader->use();
+    renderVao->bind();
+    renderVbo->bind();
+    renderEbo->bind();
 
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
     glm::mat4 camera_matrix = camera->getOrtho();
@@ -130,15 +98,17 @@ void Engine::SpriteRenderer::draw()
     Transform* transform = getActor()->getComponent<Transform>();
     glm::mat4 world_transform = transform->getMatrix();
 
-    glUniform4fv(shader->getLocation("color"), 1, &color[0]);
-    glUniformMatrix4fv(shader->getLocation("camera_transform"), 1, GL_FALSE, &camera_matrix[0][0]);
-    glUniformMatrix4fv(shader->getLocation("world_transform"), 1, GL_FALSE, &world_transform[0][0]);
-    glUniform1i(shader->getLocation("sprite"), 0);
+    glUniform4fv(renderShader->getLocation("color"), 1, &color[0]);
+    glUniformMatrix4fv(renderShader->getLocation("viewProjMat"), 1, GL_FALSE, &camera_matrix[0][0]);
+    glUniformMatrix4fv(renderShader->getLocation("transformMat"), 1, GL_FALSE, &world_transform[0][0]);
+    glUniform1i(renderShader->getLocation("tex"), 0);
     
     sprite->bind();
 
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, quadIndices.size(), GL_UNSIGNED_INT, 0);
     
     sprite->unbind();
-    vao->unbind();
+    renderVbo->unbind();
+    renderVao->unbind();
+    renderEbo->unbind();
 }

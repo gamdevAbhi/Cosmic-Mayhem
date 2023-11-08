@@ -20,7 +20,7 @@ void Engine::BoxCollider::setBoundary(float left, float right, float up, float d
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        if(!(*rootP)->getBoundary().contains(node->getBoundary())) *rootP = (*rootP)->expand(node->getBoundary());
         else break;
     }
 
@@ -65,7 +65,7 @@ void Engine::BoxCollider::start()
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        if(!(*rootP)->getBoundary().contains(node->getBoundary())) *rootP = (*rootP)->expand(node->getBoundary());
         else break;
     }
     
@@ -89,7 +89,7 @@ void Engine::BoxCollider::nodeUpdate()
 
     while(true)
     {
-        if(!(*rootP)->boundary.contains(node->boundary)) *rootP = (*rootP)->expand(node->boundary);
+        if(!(*rootP)->getBoundary().contains(node->getBoundary())) *rootP = (*rootP)->expand(node->getBoundary());
         else break;
     }
 

@@ -12,13 +12,13 @@ void Engine::ButtonManager::checkInteraction()
     std::vector<Node*> nodes;
     std::vector<Node*> allNodes;
     Button::root->find(Input::getMousePos(), nodes);
-    Button::root->find(Button::root->boundary, allNodes);
+    Button::root->find(Button::root->getBoundary(), allNodes);
 
     std::sort(nodes.begin(), nodes.end(), compare);
 
     for(int i = 0; i < nodes.size(); i++)
     {
-        Button* button = dynamic_cast<Button*>(nodes[i]->object);
+        Button* button = dynamic_cast<Button*>(nodes[i]->getObject());
         
         if(!isHover(button)) continue;
 
@@ -38,7 +38,7 @@ void Engine::ButtonManager::checkInteraction()
 
     for(int i = 0; i < allNodes.size(); i++)
     {
-        Button* button = dynamic_cast<Button*>(allNodes[i]->object);
+        Button* button = dynamic_cast<Button*>(allNodes[i]->getObject());
         button->updateStatus();
     }
 }
@@ -80,5 +80,5 @@ bool Engine::ButtonManager::isHover(Button* button)
 // check if left node order is smaller than right
 bool Engine::ButtonManager::compare(Node* left, Node* right)
 {
-    return dynamic_cast<Button*>(left->object)->order < dynamic_cast<Button*>(right->object)->order;
+    return dynamic_cast<Button*>(left->getObject())->order < dynamic_cast<Button*>(right->getObject())->order;
 }

@@ -27,8 +27,10 @@ namespace Engine
         bool attach(const char* source_code, GLenum shader_type);
         bool checkShaderStatus(GLuint shader);
         bool checkLinkStatus();
+    friend class Renderer;
     friend class SpriteRenderer;
     friend class Billboard;
+    friend class Text;
     };
 }
 

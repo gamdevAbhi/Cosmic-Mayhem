@@ -51,7 +51,7 @@ void Engine::ColliderManager::startDetection()
 {
     std::vector<Node*> nodes;
 
-    root->find(root->boundary, nodes);
+    root->find(root->getBoundary(), nodes);
 
     for(int i = 0; i < nodes.size(); i++)
     {
@@ -60,7 +60,7 @@ void Engine::ColliderManager::startDetection()
 
     for(int i = 0; i < nodes.size(); i++)
     {
-        Collider* collider = dynamic_cast<Collider*>(nodes[i]->object);
+        Collider* collider = dynamic_cast<Collider*>(nodes[i]->getObject());
         collider->stackUpdate();
         collider->nodeUpdate();
     }
@@ -70,15 +70,15 @@ void Engine::ColliderManager::startDetection()
 void Engine::ColliderManager::narrowPhase(Node* node)
 {
     std::vector<Node*> potentialCollisions;
-    node->parent->find(node->boundary, potentialCollisions);
+    node->getParent()->find(node->getBoundary(), potentialCollisions);
 
-    Collider* collider = dynamic_cast<Collider*>(node->object);
+    Collider* collider = dynamic_cast<Collider*>(node->getObject());
 
     for(int i = 0; i < potentialCollisions.size(); i++)
     {
         if(node == potentialCollisions[i]) continue;
 
-        Collider* collider1 = dynamic_cast<Collider*>(potentialCollisions[i]->object);
+        Collider* collider1 = dynamic_cast<Collider*>(potentialCollisions[i]->getObject());
         
         if(!hasRelation(collider->tag, collider1->tag)) continue;
 

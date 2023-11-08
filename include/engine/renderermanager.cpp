@@ -9,6 +9,7 @@ int Engine::RendererManager::getLastRenderCount()
 // initialize all the renderers
 void Engine::RendererManager::initialize()
 {
+    Renderer::initRender();
     SpriteRenderer::initialize();
     Billboard::initialize();
     Text::initialize();
@@ -44,8 +45,8 @@ void Engine::RendererManager::findRenderers(std::vector<Renderer*>& renderers)
 
     for(int i = 0; i < nodes.size(); i++) 
     {
-        if(nodes[i]->object->getActor()->getActive() == false) continue;
-        spriteRenderers.push_back(dynamic_cast<Renderer*>(nodes[i]->object));
+        if(nodes[i]->getObject()->getActor()->getActive() == false) continue;
+        spriteRenderers.push_back(dynamic_cast<Renderer*>(nodes[i]->getObject()));
     }
 
     // finding all UI renderers
@@ -62,11 +63,20 @@ void Engine::RendererManager::findRenderers(std::vector<Renderer*>& renderers)
 
     for(int i = 0; i < nodes.size(); i++) 
     {
-        if(nodes[i]->object->getActor()->getActive() == false) continue;
-        uIRenderers.push_back(dynamic_cast<Renderer*>(nodes[i]->object));
+        if(nodes[i]->getObject()->getActor()->getActive() == false) continue;
+        uIRenderers.push_back(dynamic_cast<Renderer*>(nodes[i]->getObject()));
     }
 
     // finding all the text renderers
+    nodes.clear();
+
+    Text::root->find(AABB(resolution.x / 2.f, resolution.y / 2.f, area / 2.f), nodes);
+
+    for(int i = 0; i < nodes.size(); i++) 
+    {
+        if(nodes[i]->getObject()->getActor()->getActive() == false) continue;
+        uIRenderers.push_back(dynamic_cast<Renderer*>(nodes[i]->getObject()));
+    }
 
     // adding all the renderers
     renderers.reserve(spriteRenderers.size() + uIRenderers.size());
