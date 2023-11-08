@@ -36,20 +36,11 @@ namespace Engine
         static void initialize(std::string title = "", int width = Window::screen_width / 2, 
         int height = Window::screen_height / 2);
         static void begin();
-        static void clearScene();
     private:
         inline static std::string title = "";
         inline static int width = 0;
         inline static int height = 0;
         inline static Window* window = nullptr;
-        static void getAllComponents(std::vector<Component*>& components);
-        static void callDestroy();
-        static void callFixedUpdate();
-        static void callUpdate();
-        static void callLateUpdate();
-        static void callCollision();
-        static void callDraw();
-        static void clearActors();
     };
 }
 

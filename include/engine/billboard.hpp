@@ -19,6 +19,11 @@ namespace Engine
         glm::vec4 getColor();
         Sprite* getSprite();
     protected:
+        inline static std::vector<vertex> vertices;
+        inline static std::vector<GLuint> indices;
+        inline static VAO* vao = nullptr;
+        inline static VBO* vbo = nullptr;
+        inline static EBO* ebo = nullptr;
         inline static Shader* shader = nullptr;
         inline static Sprite* defaultSprite = nullptr;
         inline static QuadTree* root = nullptr;
@@ -29,7 +34,7 @@ namespace Engine
         void onTransformChanged();
         virtual void onDestroy();
     private:
-        static void initField();
+        static void initialize();
         void draw();
     friend class RendererManager;
     };

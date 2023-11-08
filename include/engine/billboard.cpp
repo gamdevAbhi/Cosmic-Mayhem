@@ -75,8 +75,35 @@ void Engine::Billboard::onDestroy()
 }
 
 // initialize the members of billboard
-void Engine::Billboard::initField()
+void Engine::Billboard::initialize()
 {
+    vertices = std::vector<vertex>
+    {
+        vertex{glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+        vertex{glm::vec3(1.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+        vertex{glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+        vertex{glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)}
+    };
+    indices = std::vector<GLuint>
+    {
+        0, 1, 3,
+        0, 2, 3
+    };
+
+    vao = new VAO();
+    vao->bind();
+    vbo = new VBO(vertices.size() * sizeof(vertex), vertices.data(), GL_STATIC_DRAW);
+    vbo->bind();
+    ebo = new EBO(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+    ebo->bind();
+
+    vao->link(*vbo, 0, 3, sizeof(vertex), (void*)0);
+    vao->link(*vbo, 1, 2, sizeof(vertex), (void*)(3 * sizeof(float)));
+
+    vbo->unbind();
+    vao->unbind();
+    ebo->unbind();
+
     shader = new Shader("\\resources\\shaders\\billboard_shader.vert", 
     "\\resources\\shaders\\billboard_shader.frag");
  

@@ -3,6 +3,7 @@
 
 #include <engine/spriterenderer.hpp>
 #include <engine/billboard.hpp>
+#include <engine/text.hpp>
 
 namespace Engine
 {
@@ -11,13 +12,10 @@ namespace Engine
     public:
         static int getLastRenderCount();
     protected:
-        inline static std::vector<SpriteRenderer*> sprites;
-        inline static std::vector<Billboard*> billboards;
         inline static int count = 0;
         static void initialize();
-        static void findRenderers();
-        static void drawWorld();
-        static void drawScreen();
+        static void drawFrame();
+        static void findRenderers(std::vector<Renderer*>& renderers);
     friend class GameLoop;
     };
 }

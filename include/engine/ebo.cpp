@@ -1,16 +1,23 @@
 #include <engine/ebo.hpp>
 
-Engine::EBO::EBO(GLsizeiptr size, const void* data)
+Engine::EBO::EBO(GLsizeiptr size, const void* data, GLenum usage)
 {
     glGenBuffers(1, &id);
     bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
     unbind();
 }
 
 void Engine::EBO::bind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+}
+
+void Engine::EBO::subData(GLsizeiptr size, const void* data)
+{
+    bind();
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
+    unbind();
 }
 
 void Engine::EBO::unbind()

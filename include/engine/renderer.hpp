@@ -26,14 +26,8 @@ namespace Engine
         void setOrder(int index);
     protected:
         int order;
-        inline static std::vector<vertex> vertices;
-        inline static std::vector<GLuint> indices;
-        inline static VAO* vao;
-        inline static VBO* vbo;
-        inline static EBO* ebo;
+        virtual void draw() = 0;
         static bool compare(Renderer* left, Renderer* right);
-    private:
-        static void initialize();
     friend class RendererManager;
     };
 }

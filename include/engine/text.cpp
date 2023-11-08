@@ -55,7 +55,7 @@ void Engine::Text::setFontSize(int fontSize)
 // update vertices
 void Engine::Text::updateVertices()
 {
-    textVertices.clear();
+    vertices.clear();
 }
 
 // draw text
@@ -64,8 +64,8 @@ void Engine::Text::draw()
 
 }
 
-// intantiate fields
-void Engine::Text::initField()
+// intialize the member of the text renderer
+void Engine::Text::initialize()
 {
 
 }

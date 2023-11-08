@@ -96,6 +96,18 @@ int Engine::Actor::getActorCount()
     return actors.size();
 }
 
+// clear actors which are set to auto destroy
+void Engine::Actor::clearActors()
+{
+    int i = 0;
+
+    while(i < actors.size())
+    {
+        if(actors[i]->manualDestroy) i++;
+        else actors[i]->setDestroy();
+    }
+}
+
 // create main camera actor
 void Engine::Actor::createMainCamera()
 {
@@ -176,6 +188,87 @@ void Engine::Actor::destroy(Component* component)
 
     component->onDestroy();
     delete component;
+}
+
+// clean all components & actors which set as should destroy
+void Engine::Actor::cleanDestroyables()
+{
+    Camera::renderCamera->actor->shouldDestroy = false;
+    std::vector<Actor*> destroyActors;
+    std::vector<Component*> destroyComponents;
+
+    for(int i = 0; i < actors.size(); i++)
+    {
+        if(actors[i]->shouldDestroy == true) destroyActors.push_back(actors[i]);
+        else
+        {
+            for(Component* component : actors[i]->components)
+            {
+                if(component->shouldDestroy == true) destroyComponents.push_back(component); 
+            }
+        }
+    }
+
+    for(int i = 0; i < destroyComponents.size(); i++)
+    {
+        destroy(destroyComponents[i]);
+    }
+
+    for(int i = 0; i < destroyActors.size(); i++)
+    {
+        destroy(destroyActors[i]);
+    }
+}
+
+// call fixed update function of each component of each actors
+void Engine::Actor::callFixedUpdate()
+{
+    for(int i = 0; i < actors.size(); i++)
+    {
+        if(actors[i]->active == false) continue;
+
+        for(int j = 0; j < actors[i]->components.size(); j++)
+        {
+            actors[i]->components[j]->fixedUpdate();
+        }
+    }
+}
+
+// call update function of each component of each actors
+void Engine::Actor::callUpdate()
+{
+    for(int i = 0; i < actors.size(); i++)
+    {
+        if(actors[i]->active == false) continue;
+
+        for(int j = 0; j < actors[i]->components.size(); j++)
+        {
+            actors[i]->components[j]->update();
+        }
+    }
+}
+
+// call late update function of each component of each actors
+void Engine::Actor::callLateUpdate()
+{
+    for(int i = 0; i < actors.size(); i++)
+    {
+        if(actors[i]->active == false) continue;
+
+        for(int j = 0; j < actors[i]->components.size(); j++)
+        {
+            actors[i]->components[j]->lateUpdate();
+        }
+    }
+}
+
+// destroy all the actors
+void Engine::Actor::eraseAllActors()
+{
+    while(actors.size() > 0)
+    {
+        destroy(actors[0]);
+    }
 }
 
 // destructor

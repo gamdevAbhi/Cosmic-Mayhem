@@ -27,12 +27,18 @@ namespace Engine
         static Actor* getActor(std::string name);
         static std::vector<Actor*> getActors(std::string name);
         static int getActorCount();
+        static void clearActors();
     protected:
         bool active;
         bool shouldDestroy;
         static void createMainCamera();
         static void destroy(Actor* actor);
         static void destroy(Component* component);
+        static void cleanDestroyables();
+        static void callFixedUpdate();
+        static void callUpdate();
+        static void callLateUpdate();
+        static void eraseAllActors();
     private:
         std::vector<Component*> components;
         inline static std::vector<Actor*> actors;
