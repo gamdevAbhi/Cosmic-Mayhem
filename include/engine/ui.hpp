@@ -9,6 +9,8 @@
 
 namespace Engine
 { 
+    class RectTransform;
+
     class UI : public Component
     {
     public:
@@ -22,8 +24,13 @@ namespace Engine
         inline static int width;
         inline static int height;
         inline static glm::mat4 orthoMatrix;
+        inline static std::vector<RectTransform*> roots;
         static void updateOrthoMatrix();
         static void updateUIContents();
+        static bool containRoot(RectTransform* root);
+        static void addRoot(RectTransform* root);
+        static void removeRoot(RectTransform* root);
+    friend class RectTransform;
     };
 }
 

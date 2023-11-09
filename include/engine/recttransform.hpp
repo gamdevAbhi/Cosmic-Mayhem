@@ -51,6 +51,7 @@ namespace Engine
         RectTransform* parent = nullptr;
         void start();
         void setDestroy();
+        void onDestroy();
         void updateRectProperties();
         void addChild(RectTransform* transform);
         void removeChild(RectTransform* transform);
@@ -59,6 +60,7 @@ namespace Engine
         static glm::vec3 calculateRotation(glm::mat4 matrix);
         static glm::vec3 calculateScale(glm::mat4 matrix);
     friend class Actor;
+    friend class UI;
     };
 }
 

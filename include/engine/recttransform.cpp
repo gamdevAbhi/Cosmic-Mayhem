@@ -190,6 +190,8 @@ void Engine::RectTransform::setParent(RectTransform* transform)
     parent = transform;
 
     updateRectProperties();
+
+    if(parent == nullptr && UI::containRoot(this) == false) UI::addRoot(this);
 }
 
 // start function
@@ -206,6 +208,12 @@ void Engine::RectTransform::start()
 void Engine::RectTransform::setDestroy()
 {
     Handler::error("can't destroy rect transform", "rect transform");
+}
+
+// on destroy
+void Engine::RectTransform::onDestroy()
+{
+    if(UI::containRoot(this) == true) UI::removeRoot(this);
 }
 
 // update rect properties

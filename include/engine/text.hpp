@@ -16,17 +16,20 @@ namespace Engine
     class Text : public Renderer
     {
     public:
+        enum Alignment {RIGHT, MIDDLE, LEFT};
         Font* getFont();
         std::string getText();
         glm::vec4 getTextColor();
-        glm::vec2 getScale();
+        float getScale();
         unsigned int getCharPerLine();
         int getFontSize();
+        Alignment getAlignment();
         void setFont(Font* font);
         void setText(std::string text);
         void setTextColor(glm::vec4 color);
-        void setScale(glm::vec2 scale);
+        void setScale(float scale);
         void setCharPerLine(unsigned int chars);
+        void setAlignment(Alignment alignment);
     protected:
         inline static Font* defaultFont = nullptr;
         inline static QuadTree* root = nullptr;
@@ -41,9 +44,10 @@ namespace Engine
         Font* font;
         std::string text;
         glm::vec4 textColor;
-        glm::vec2 scale;
+        float scale;
         unsigned int charPerLine;
         int fontSize;
+        Alignment textAlignment;
         float lengthX;
         float lengthY;
         void start();

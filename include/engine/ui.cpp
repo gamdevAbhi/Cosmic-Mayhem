@@ -1,4 +1,5 @@
 #include <engine/ui.hpp>
+#include <engine/recttransform.hpp>
 
 // get the UI resolution
 glm::vec2 Engine::UI::getResolution()
@@ -71,5 +72,32 @@ void Engine::UI::updateOrthoMatrix()
 // update the UI contents
 void Engine::UI::updateUIContents()
 {
+    for(int i = 0; i < roots.size(); i++)
+    {
+        roots[i]->updateRectProperties();
+    }
+}
 
+// return true if root exist in roots
+bool Engine::UI::containRoot(RectTransform* root)
+{
+    for(int i = 0; i < roots.size(); i++) if(roots[i] == root) return true;
+    return false;
+}
+
+// add root in list
+void Engine::UI::addRoot(RectTransform* root)
+{
+    roots.push_back(root);
+}
+
+// remove root from the list
+void Engine::UI::removeRoot(RectTransform* root)
+{
+    for(int i = 0; i < roots.size(); i++)
+    {
+        if(roots[i] != root) continue;
+        roots.erase(roots.begin() + i);
+        break;
+    }
 }
