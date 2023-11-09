@@ -11,7 +11,6 @@ namespace Engine
     public:
         EBO(GLsizeiptr size, const void* data, GLenum usage);
         void bind();
-        void subData(GLsizeiptr size, const void* data);
         void unbind();
         void destroy();
     private:

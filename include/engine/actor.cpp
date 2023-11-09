@@ -147,6 +147,12 @@ void Engine::Actor::destroy(Actor* actor)
 
         while(transform->getChildsSize() > 0)
         {
+            if(transform->getChild(0)->actor == Camera::getRenderCamera()->actor)
+            {
+                transform->getChild(0)->setParent(nullptr);
+                continue;
+            }
+
             Actor::destroy(transform->getChild(0)->actor);
         }
     }

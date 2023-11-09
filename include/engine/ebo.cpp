@@ -13,13 +13,6 @@ void Engine::EBO::bind()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
 
-void Engine::EBO::subData(GLsizeiptr size, const void* data)
-{
-    bind();
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
-    unbind();
-}
-
 void Engine::EBO::unbind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

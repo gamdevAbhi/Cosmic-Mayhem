@@ -18,6 +18,16 @@ glm::vec2 Engine::Camera::getBoundary()
     return boundary;
 }
 
+// get the per world to screen difference
+glm::vec2 Engine::Camera::getPerWorldToScreen()
+{
+    std::tuple<int, int> size = gameWindow->getSize();
+    glm::vec2 world_boundary = getBoundary();
+    glm::vec2 screen_size = glm::vec2(std::get<0>(size), std::get<1>(size));
+
+    return glm::vec2(screen_size.x / world_boundary.x, screen_size.y / world_boundary.y);
+}
+
 // get the screen pos from the world pos
 glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
 {

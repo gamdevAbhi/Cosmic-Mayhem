@@ -14,6 +14,7 @@ namespace Engine
     public:
         glm::mat4 getOrtho();
         glm::vec2 getBoundary();
+        glm::vec2 getPerWorldToScreen();
         glm::vec2 getWorldToScreenPos(glm::vec3 worldPosition);
         glm::vec3 getScreenToWorldPos(glm::vec2 screenPos);
         float getOrthographicSize();
