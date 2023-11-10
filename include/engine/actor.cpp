@@ -1,9 +1,35 @@
 #include <engine/actor.hpp>
 
-// actor will be destroyed in next update loop
-void Engine::Actor::setDestroy()
+// get actor name
+std::string Engine::Actor::getName()
 {
-    shouldDestroy = true;
+    return name;
+}
+
+// get actor manual destroy status
+bool Engine::Actor::getManualDestroyStatus()
+{
+    return manualDestroy;
+}
+
+// get actor active status
+bool Engine::Actor::getActive()
+{
+    return active;
+}
+
+// set actor name
+void Engine::Actor::setName(std::string name)
+{
+    this->name = name;
+}
+
+// set actor manual destroy status
+void Engine::Actor::setManualDestroyStatus(bool status)
+{
+    if(Camera::getRenderCamera()->getActor() == this) return;
+    
+    manualDestroy = status;
 }
 
 // set the actor's active status
@@ -12,16 +38,18 @@ void Engine::Actor::setActive(bool status)
     Transform* transform = getComponent<Transform>();
     Transform* parent = transform->getParent();
 
-    if(parent != nullptr && parent->actor->getActive() == false && status == true) return;
-    
-    active = status;
+    if(parent == nullptr || parent->actor->getActive() == true) active = status;
+    else return;
+
     for(int i = 0; i < transform->getChildsSize(); i++) transform->getChild(i)->actor->setActive(status);
 }
 
-// get actor active status
-bool Engine::Actor::getActive()
+// actor will be destroyed in next update loop
+void Engine::Actor::setDestroy()
 {
-    return active;
+    if(Camera::getRenderCamera()->getActor() == this) return;
+
+    shouldDestroy = true;
 }
 
 // create an actor
@@ -103,8 +131,8 @@ void Engine::Actor::clearActors()
 
     while(i < actors.size())
     {
-        if(actors[i]->manualDestroy) i++;
-        else actors[i]->setDestroy();
+        if(actors[i]->manualDestroy == false) actors[i]->setDestroy();
+        i++;
     }
 }
 
@@ -114,7 +142,7 @@ void Engine::Actor::createMainCamera()
     // creating actor
     Actor* actor = new Actor();
     actor->name = "Main Camera";
-    actor->manualDestroy = false;
+    actor->manualDestroy = true;
     actor->active = true;
     actor->shouldDestroy = false;
     // creating transform component class

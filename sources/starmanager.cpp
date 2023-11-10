@@ -1,9 +1,9 @@
 #include "starmanager.hpp"
 
-void Cosmic::StarManager::start()
+void Cosmic::StarManager::initialize(Engine::Transform* target)
 {
     origin = glm::vec3(0.f);
-    target = Engine::Actor::getActor("Space Ship")->getComponent<Engine::Transform>();
+    this->target = target;
     camera = Engine::Camera::getRenderCamera();
 
     glm::vec2 boundary = camera->getBoundary();
@@ -165,7 +165,7 @@ void Cosmic::StarManager::createRegion(std::vector<Engine::Actor*>& vec, float x
         renderer->setOrder(2);
         
         star->getComponent<Engine::Transform>()->setWorldPosition(origin);
-        star->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.15f, 0.15f, 1.f));
+        star->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.25f, 0.25f, 1.f));
         
         if(std::rand() % 100 > 50) renderer->setSprite(SpriteManager::star);
         else renderer->setSprite(SpriteManager::brightStar);

@@ -1,63 +1,37 @@
 #include <engine/gameloop.hpp>
 
-#include "shiphandler.hpp"
-#include "follower.hpp"
-#include "starmanager.hpp"
-#include "collectiblemanager.hpp"
-#include "asteroidmanager.hpp"
 #include "spritemanager.hpp"
-#include "buttonclicker.hpp"
+#include "scenemanager.hpp"
 
-void initTag()
-{
+void initializeRelation()
+{   
+    // creating tags for colliders
     int spaceship = Engine::ColliderManager::addTag("Space Ship", false);
     int bullet = Engine::ColliderManager::addTag("Bullet", false);
     int collectibles = Engine::ColliderManager::addTag("Collectibles", false);
     int asteroid = Engine::ColliderManager::addTag("Asteroid", true);
-
+    // adding relations to the tags
     Engine::ColliderManager::addRelation(spaceship, collectibles);
     Engine::ColliderManager::addRelation(spaceship, asteroid);
     Engine::ColliderManager::addRelation(bullet, asteroid);
 }
 
-void readyCamera()
-{
-    Engine::Camera* camera = Engine::Camera::getRenderCamera();
-    camera->setOrthographicSize(15.5f);
-    camera->setBackgroundColor(glm::vec3(1.f, 1.f, 1.f));
-}
-
-void loadActors()
-{
-    Engine::Actor* spaceShip = Engine::Actor::createActor("Space Ship");
-    spaceShip->addComponent<Cosmic::ShipHandler>();
-    spaceShip->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(2.0f, 2.0f, 1.0f));
-
-    Engine::Actor* starManager = Engine::Actor::createActor("Star Manager");
-    starManager->addComponent<Cosmic::StarManager>();
-
-    Engine::Actor* collectibleManager = Engine::Actor::createActor("Collectible Manager");
-    collectibleManager->addComponent<Cosmic::CollectibleManager>();
-
-    Engine::Actor* asteroidManager = Engine::Actor::createActor("Asteroid Manager");
-    asteroidManager->addComponent<Cosmic::AsteroidManager>();
-
-    Engine::Camera::getRenderCamera()->getActor()->addComponent<Cosmic::Follower>();
-    
-}
-
 int main()
 {
+    // initializing the game engine
+    // always call it before using any game engine features
     Engine::GameLoop::initialize("game");
-
+    // initialize colliders relation
+    // will only check collision based on relation
+    // relation can improve performance as it ignore unnecessary collision checks
+    initializeRelation();
+    // loading sprites so we can use it in other places
     Cosmic::SpriteManager::loadSprites();
-    initTag();
-    readyCamera();
-    loadActors();
-
+    // loading tech scene
+    Cosmic::SceneManager::loadTechScene();
+    // begin start the gameloop
     Engine::GameLoop::begin();
-
+    // checking if game terminated succesfully
     std::cout << std::endl << "Succesfully Close ..." << std::endl;
-    
     return 0;
 }

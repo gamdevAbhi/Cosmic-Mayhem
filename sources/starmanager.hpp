@@ -9,6 +9,8 @@ namespace Cosmic
 {
     class StarManager : public Engine::Component
     {
+    public:
+        void initialize(Engine::Transform* target);
     protected:
         int min = 10, max = 20;
         float top, bottom, left, right;
@@ -24,7 +26,6 @@ namespace Cosmic
         std::vector<Engine::Actor*> swStars;
         std::vector<Engine::Actor*> sStars;
         std::vector<Engine::Actor*> seStars;
-        void start();
         void update();
         void createRegion(std::vector<Engine::Actor*>& vec, float x, float y, float top, float right);
         void removeRegion(std::vector<Engine::Actor*>& vec);

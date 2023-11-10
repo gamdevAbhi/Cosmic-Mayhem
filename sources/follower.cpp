@@ -1,10 +1,10 @@
 #include "follower.hpp"
 
 // ataching the references
-void Cosmic::Follower::start()
+void Cosmic::Follower::initialize(Engine::Transform* target)
 {
     transform = getActor()->getComponent<Engine::Transform>();
-    target = Engine::Actor::getActor("Space Ship")->getComponent<Engine::Transform>();
+    this->target = target;
 
     glm::vec3 pos = target->getWorldPosition();
     pos.z = 3.f;
@@ -12,9 +12,21 @@ void Cosmic::Follower::start()
     transform->setWorldPosition(pos);
 }
 
+// remove the target
+void Cosmic::Follower::removeTarget()
+{
+    target = nullptr;
+}
+
 // moving the follower to the target
 void Cosmic::Follower::lateUpdate()
 {
+    if(target == nullptr)
+    {
+        this->setDestroy();
+        return;
+    }
+
     transform->setParent(target);
 
     glm::vec3 position = transform->getLocalPosition();

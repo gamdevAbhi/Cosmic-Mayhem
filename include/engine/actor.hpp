@@ -14,11 +14,13 @@ namespace Engine
     class Actor final
     {
     public:
-        std::string name;
-        bool manualDestroy;
-        void setDestroy();
-        void setActive(bool status);
+        std::string getName();
+        bool getManualDestroyStatus();
         bool getActive();
+        void setName(std::string name);
+        void setManualDestroyStatus(bool status);
+        void setActive(bool status);
+        void setDestroy();
         template <class T> T* addComponent();
         template <class T> T* getComponent();
         template <class T> std::vector<T*> getComponents(); 
@@ -29,6 +31,8 @@ namespace Engine
         static int getActorCount();
         static void clearActors();
     protected:
+        std::string name;
+        bool manualDestroy;
         bool active;
         bool shouldDestroy;
         static void createMainCamera();
