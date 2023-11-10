@@ -20,6 +20,19 @@ void Engine::VBO::subData(GLsizeiptr size, const void* data)
     unbind();
 }
 
+void Engine::VBO::updateData(float* data, int offset, int size)
+{
+    bind();
+
+    float* ptr = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+
+    for(int j = offset; j < size; j++) *(ptr + j) = *(data + j);
+    
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    
+    unbind();
+}
+
 void Engine::VBO::unbind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -1,10 +1,10 @@
 #include <engine/window.hpp>
 
 // get the window width and height
-std::tuple<int, int> Engine::Window::getSize()
+glm::ivec2 Engine::Window::getSize()
 {
-    std::tuple<int, int> size = std::make_tuple(0, 0);
-    glfwGetWindowSize(glfwWindow, &std::get<0>(size), &std::get<1>(size));
+    glm::ivec2 size;
+    glfwGetWindowSize(glfwWindow, &size.x, &size.y);
     return size;
 }
 
@@ -30,6 +30,8 @@ Engine::Window::Window(const char* title, int width, int height)
 
     glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
     
+    glfwSetWindowFocusCallback(glfwWindow, checkFocus);
+
     // handling null cases 
     if(glfwWindow == NULL)
     {
@@ -59,12 +61,15 @@ Engine::Window::Window(const char* title, int width, int height)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, width, height);
+
+    onFocus = true;
+    clearColor = glm::vec3(0.f, 0.f, 0.f);
 }
 
 // call at the start of new frame for clearing the frame
 void Engine::Window::clearWindow()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -85,10 +90,18 @@ void Engine::Window::close()
 // check if window should close or not
 bool Engine::Window::shouldClose()
 {
-    if(glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE))
-    {
-        glfwSetWindowShouldClose(glfwWindow, true);
-    }
-
     return glfwWindowShouldClose(glfwWindow);
+}
+
+// set clear color of the window
+void Engine::Window::setClearColor(glm::vec3 color)
+{
+    clearColor = color;
+}
+
+// check if window is on focus
+void Engine::Window::checkFocus(GLFWwindow* window, int message)
+{
+    if(message) onFocus = true;
+    else onFocus = false;
 }

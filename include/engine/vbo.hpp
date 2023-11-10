@@ -14,6 +14,7 @@ namespace Engine
         VBO(GLsizeiptr size, const void* data, GLenum usage);
         void bind();
         void subData(GLsizeiptr size, const void* data);
+        void updateData(float* data, int offset, int size);
         void unbind();
         void destroy();
     private:

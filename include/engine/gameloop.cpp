@@ -1,12 +1,11 @@
 #include <engine/gameloop.hpp>
 
 // create window and input for the game
-void Engine::GameLoop::initialize(std::string title, int width, 
-int height)
+void Engine::GameLoop::initialize(std::string title)
 {
     GameLoop::title = title;
-    GameLoop::width = width;
-    GameLoop::height = height;
+    GameLoop::width = Window::screen_width;
+    GameLoop::height = Window::screen_height;
 
     window = new Window(title.c_str(), width, height);
     
@@ -31,33 +30,51 @@ void Engine::GameLoop::begin()
     double fixedTime = 0.0f;
 
     while(window->shouldClose() == false)
-    {
+    {   
         window->clearWindow();
         Input::updateInputs();
-        Time::frameStart();
-
-        fixedTime += Time::getDeltaTime();
-
-        Actor::cleanDestroyables();
-
-        if(fixedTime >= 0.2f)
-        {
-            fixedTime = 0.0f;
-            Actor::callFixedUpdate();
-        }
-
-        Actor::callUpdate();
-        Actor::callLateUpdate();
         
-        ColliderManager::startDetection();
-        ButtonManager::checkInteraction();
+        if(Window::onFocus)
+        {
+            Time::frameStart();
+
+            fixedTime += Time::getDeltaTime();
+
+            Actor::cleanDestroyables();
+
+            if(fixedTime >= 0.2f)
+            {
+                fixedTime = 0.0f;
+                Actor::callFixedUpdate();
+            }
+
+            Actor::callUpdate();
+            Actor::callLateUpdate();
+            
+            ColliderManager::startDetection();
+            ButtonManager::checkInteraction();
+        }
+        
         RendererManager::drawFrame();
 
         window->updateWindow();
-        Time::frameEnd();
+        
+        if(Window::onFocus) Time::frameEnd();
     }
 
     Actor::eraseAllActors();
 
     window->close();
+}
+
+// end the game loop
+void Engine::GameLoop::endGameLoop()
+{
+    window->makeWindowClose();
+}
+
+// get the current window size
+glm::ivec2 Engine::GameLoop::getCurrentWindowSize()
+{
+    return window->getSize();
 }

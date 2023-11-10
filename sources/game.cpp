@@ -24,6 +24,7 @@ void readyCamera()
 {
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
     camera->setOrthographicSize(15.5f);
+    camera->setBackgroundColor(glm::vec3(1.f, 1.f, 1.f));
 }
 
 void loadActors()

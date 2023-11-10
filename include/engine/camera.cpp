@@ -10,10 +10,10 @@ glm::mat4 Engine::Camera::getOrtho()
 glm::vec2 Engine::Camera::getBoundary()
 {
     glm::vec2 boundary;
-    std::tuple<int, int> size = gameWindow->getSize();
+    glm::ivec2 size = gameWindow->getSize();
     
-    boundary.x = (std::get<0>(size) / orthographicSize) / 2.0f;
-    boundary.y = (std::get<1>(size) / orthographicSize) / 2.0f;
+    boundary.x = (size.x / orthographicSize) / 2.0f;
+    boundary.y = (size.y / orthographicSize) / 2.0f;
 
     return boundary;
 }
@@ -21,9 +21,9 @@ glm::vec2 Engine::Camera::getBoundary()
 // get the per world to screen difference
 glm::vec2 Engine::Camera::getPerWorldToScreen()
 {
-    std::tuple<int, int> size = gameWindow->getSize();
+    glm::ivec2 size = gameWindow->getSize();
     glm::vec2 world_boundary = getBoundary();
-    glm::vec2 screen_size = glm::vec2(std::get<0>(size), std::get<1>(size));
+    glm::vec2 screen_size = glm::vec2(size.x, size.y);
 
     return glm::vec2(screen_size.x / world_boundary.x, screen_size.y / world_boundary.y);
 }
@@ -33,7 +33,7 @@ glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
 {
     glm::vec4 clipSpace = getOrtho() * glm::vec4(worldPosition, 1.0f);
     glm::vec3 ndcSpace = glm::vec3(clipSpace.x, clipSpace.y, clipSpace.z);
-    glm::vec2 viewSize = glm::vec2(std::get<0>(gameWindow->getSize()), std::get<1>(gameWindow->getSize()));
+    glm::vec2 viewSize = glm::vec2(gameWindow->getSize().x, gameWindow->getSize().y);
 
     if(clipSpace.w != 0.0) ndcSpace = ndcSpace / clipSpace.w;
     
@@ -45,21 +45,27 @@ glm::vec2 Engine::Camera::getWorldToScreenPos(glm::vec3 worldPosition)
 // get the world pos from the screen pos
 glm::vec3 Engine::Camera::getScreenToWorldPos(glm::vec2 screenPos)
 {
-    std::tuple<int, int> size = gameWindow->getSize();
+    glm::ivec2 size = gameWindow->getSize();
 
-    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
-    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
+    float x = (size.x / orthographicSize) / 2.0f;
+    float y = (size.y / orthographicSize) / 2.0f;
 
     glm::vec3 worldPos;
     glm::vec3 localPos;
 
-    localPos.x = (screenPos.x / std::get<0>(size)) * x;
-    localPos.y = (screenPos.y / std::get<1>(size)) * y;
+    localPos.x = (screenPos.x / size.x) * x;
+    localPos.y = (screenPos.y / size.y) * y;
     localPos.z = 0.0f;
 
     worldPos = transform->getWorldPosAt(localPos);
 
     return worldPos;
+}
+
+// get the background color of the window
+glm::vec3 Engine::Camera::getBackgroundColor()
+{
+    return backgroundColor;
 }
 
 // get the orthographic size
@@ -71,12 +77,19 @@ float Engine::Camera::getOrthographicSize()
 // get diagonal of camera window
 float Engine::Camera::getDiagonal()
 {
-    std::tuple<int, int> size = gameWindow->getSize();
+    glm::ivec2 size = gameWindow->getSize();
 
-    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
-    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
+    float x = (size.x / orthographicSize) / 2.0f;
+    float y = (size.y / orthographicSize) / 2.0f;
 
     return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
+}
+
+// set the background color of the camera
+void Engine::Camera::setBackgroundColor(glm::vec3 color)
+{
+    backgroundColor = color;
+    gameWindow->setClearColor(color);
 }
 
 // set the orthographic size
@@ -117,10 +130,10 @@ void Engine::Camera::updateOrtho()
     glm::mat4 projection(1.0f);
     glm::mat4 view(1.0f);
 
-    std::tuple<int, int> size = gameWindow->getSize();
+    glm::ivec2 size = gameWindow->getSize();
 
-    float x = (std::get<0>(size) / orthographicSize) / 2.0f;
-    float y = (std::get<1>(size) / orthographicSize) / 2.0f;
+    float x = (size.x / orthographicSize) / 2.0f;
+    float y = (size.y / orthographicSize) / 2.0f;
 
     projection = glm::ortho(-x, x, -y, y, nearClip, farClip);
     

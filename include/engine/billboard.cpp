@@ -86,8 +86,6 @@ void Engine::Billboard::draw()
 {
     renderShader->use();
     renderVao->bind();
-    renderVbo->bind();
-    renderEbo->bind();
 
     glm::mat4 ortho = UI::getOrtho();
     glm::mat4 screen_transform = getActor()->getComponent<RectTransform>()->getRectMatrix();
@@ -102,7 +100,5 @@ void Engine::Billboard::draw()
     glDrawElements(GL_TRIANGLES, quadIndices.size(), GL_UNSIGNED_INT, 0);
     
     sprite->unbind();
-    renderVbo->unbind();
     renderVao->unbind();
-    renderEbo->unbind();
 }

@@ -143,10 +143,13 @@ void Engine::Text::onTransformChanged()
 void Engine::Text::updateProperties()
 {
     vertices.clear();
+    charMatrices.clear();
     sprites.clear();
-    offsets.clear();
+
     lengthX = 0.1f;
     lengthY = 0.1f;
+
+    std::vector<glm::vec2> offsets;
 
     if(text == "") text = " ";
 
@@ -220,6 +223,8 @@ void Engine::Text::updateProperties()
 
         for(int i = 0; i < offsets.size(); i++) offsets[i].x -= middleLength;
     }
+
+    for(int i = 0; i < offsets.size(); i++) charMatrices.push_back(computeCharMatrix(offsets[i]));
 }
 
 // update the node
@@ -253,6 +258,30 @@ void Engine::Text::onDestroy()
     node->destroy();
 }
 
+// compute character matrix based on offset
+glm::mat4 Engine::Text::computeCharMatrix(glm::vec2 offset)
+{
+    glm::mat4 rect_matrix;
+    glm::mat4 char_matrix;
+
+    if(getActor()->getComponent<Transform>() != nullptr)
+    {
+        rect_matrix = getActor()->getComponent<Transform>()->getMatrix();
+    }
+    else
+    {
+        rect_matrix = getActor()->getComponent<RectTransform>()->getRectMatrix();
+    }
+
+    glm::mat4 translate = glm::translate(glm::mat4(1.f), glm::vec3(offset, 0.f));
+    glm::mat4 rotation = glm::mat4_cast(glm::quat(glm::vec3(0.f)));
+    glm::mat4 scale = glm::scale(glm::mat4(1.f), glm::vec3(0.5, 0.5, 1.f));
+
+    char_matrix = rect_matrix * (translate * rotation * scale);
+
+    return char_matrix;
+}
+
 // intialize the member of the text renderer
 void Engine::Text::initialize()
 {
@@ -260,7 +289,7 @@ void Engine::Text::initialize()
     vao->bind();
     vbo = new VBO(4 * sizeof(vertex), quadVertices.data(), GL_DYNAMIC_DRAW);
     vbo->bind();
-    ebo = new EBO(6 * sizeof(GLuint), quadIndices.data(), GL_DYNAMIC_DRAW);
+    ebo = new EBO(6 * sizeof(GLuint), quadIndices.data(), GL_STATIC_DRAW);
     ebo->bind();
 
     vao->link(*vbo, 0, 3, sizeof(vertex), (void*)0);
@@ -286,32 +315,12 @@ void Engine::Text::draw()
 {
     shader->use();
     vao->bind();
-    vbo->bind();
-    ebo->bind();
 
     glm::mat4 view_projection_matrix;
-    glm::mat4 parent_matrix;
-    glm::mat4 transform_matrix;
 
-    if(getActor()->getComponent<Transform>() != nullptr)
-    {
-        Engine::Camera* camera = Engine::Camera::getRenderCamera();
-        view_projection_matrix = camera->getOrtho();
+    if(getActor()->getComponent<Transform>() != nullptr) view_projection_matrix = Engine::Camera::getRenderCamera()->getOrtho();
+    else view_projection_matrix = UI::getOrtho();
 
-        Transform* transform = getActor()->getComponent<Transform>();
-        parent_matrix = transform->getMatrix();
-    }
-    else
-    {
-        view_projection_matrix = UI::getOrtho();
-
-        RectTransform* transform = getActor()->getComponent<RectTransform>();
-        parent_matrix = transform->getRectMatrix();
-    }
-
-    glm::mat4 translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f));
-    glm::mat4 rotation = glm::mat4_cast(glm::quat(glm::vec3(0.f)));
-    glm::mat4 scale = glm::scale(glm::mat4(1.f), glm::vec3(0.5, 0.5, 1.f));
 
     glUniform4fv(renderShader->getLocation("color"), 1, &textColor[0]);
     glUniformMatrix4fv(renderShader->getLocation("viewProjMat"), 1, GL_FALSE, &view_projection_matrix[0][0]);
@@ -322,19 +331,13 @@ void Engine::Text::draw()
     {
         sprites[i]->bind();
 
-        translate = glm::translate(glm::mat4(1.f), glm::vec3(offsets[i], 0.f));
-        transform_matrix = parent_matrix * (translate * rotation * scale);
-
-        glUniformMatrix4fv(renderShader->getLocation("transformMat"), 1, GL_FALSE, &transform_matrix[0][0]);
-
-        vbo->subData(4 * sizeof(vertex), &vertices[i * 4]);
+        glUniformMatrix4fv(renderShader->getLocation("transformMat"), 1, GL_FALSE, &charMatrices[i][0][0]);
+        vbo->updateData(&vertices[i * 4].position.x, 0, 20);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+        
         sprites[i]->unbind();
     }
 
-    vbo->unbind();
     vao->unbind();
-    ebo->unbind();
 }

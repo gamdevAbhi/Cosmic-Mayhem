@@ -60,8 +60,8 @@ void Engine::Input::updateInputs()
         if(action == KEY_PRESS && newAction == GLFW_PRESS
         || action == KEY_HOLD && newAction == GLFW_PRESS) keyboardInputs[pair.first] = KEY_HOLD;
         else if(newAction == GLFW_PRESS) keyboardInputs[pair.first] = KEY_PRESS;
-        else if(action != KEY_RELEASE && newAction == GLFW_RELEASE) keyboardInputs[pair.first] = KEY_RELEASE;
-        else keyboardInputs[pair.first] = KEY_NONE; 
+        else if(action != KEY_RELEASE && action != KEY_NONE && newAction == GLFW_RELEASE) keyboardInputs[pair.first] = KEY_RELEASE;
+        else keyboardInputs[pair.first] = KEY_NONE;
     }
 
     // update mouse button
@@ -73,13 +73,13 @@ void Engine::Input::updateInputs()
         if(action == KEY_PRESS && newAction == GLFW_PRESS
         || action == KEY_HOLD && newAction == GLFW_PRESS) mouseInputs[pair.first] = KEY_HOLD;
         else if(newAction == GLFW_PRESS) mouseInputs[pair.first] = KEY_PRESS;
-        else if(action != KEY_RELEASE && newAction == GLFW_RELEASE) mouseInputs[pair.first] = KEY_RELEASE;
+        else if(action != KEY_RELEASE && action != KEY_NONE && newAction == GLFW_RELEASE) mouseInputs[pair.first] = KEY_RELEASE;
         else mouseInputs[pair.first] = KEY_NONE; 
     }
 
     // update mouse position
     double x, y;
     glfwGetCursorPos(window->glfwWindow, &x, &y);
-    y = std::get<1>(window->getSize()) - y;
+    y = window->getSize().y - y;
     mousePos = glm::vec2(x, y);
 }

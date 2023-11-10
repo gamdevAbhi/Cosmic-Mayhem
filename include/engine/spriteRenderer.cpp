@@ -89,8 +89,6 @@ void Engine::SpriteRenderer::draw()
 {
     renderShader->use();
     renderVao->bind();
-    renderVbo->bind();
-    renderEbo->bind();
 
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
     glm::mat4 camera_matrix = camera->getOrtho();
@@ -108,7 +106,5 @@ void Engine::SpriteRenderer::draw()
     glDrawElements(GL_TRIANGLES, quadIndices.size(), GL_UNSIGNED_INT, 0);
     
     sprite->unbind();
-    renderVbo->unbind();
     renderVao->unbind();
-    renderEbo->unbind();
 }

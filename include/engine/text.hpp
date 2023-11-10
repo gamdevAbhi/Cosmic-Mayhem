@@ -38,7 +38,7 @@ namespace Engine
         inline static VBO* vbo = nullptr;
         inline static EBO* ebo = nullptr;
         std::vector<vertex> vertices;
-        std::vector<glm::vec2> offsets;
+        std::vector<glm::mat4> charMatrices;
         std::vector<Sprite*> sprites;
         Node* node;
         Font* font;
@@ -56,6 +56,7 @@ namespace Engine
         void nodeUpdate();
         void onDestroy();
         void setFontSize(int fontSize);
+        glm::mat4 computeCharMatrix(glm::vec2 offset);
     private:
         static void initialize();
         void draw();

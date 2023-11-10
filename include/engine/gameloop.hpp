@@ -34,9 +34,10 @@ namespace Engine
     class GameLoop final
     {
     public:
-        static void initialize(std::string title = "", int width = Window::screen_width / 2, 
-        int height = Window::screen_height / 2);
+        static void initialize(std::string title);
         static void begin();
+        static void endGameLoop();
+        static glm::ivec2 getCurrentWindowSize();
     private:
         inline static std::string title = "";
         inline static int width = 0;
