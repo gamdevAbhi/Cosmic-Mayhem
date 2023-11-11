@@ -135,7 +135,7 @@ void Cosmic::SceneManager::loadGameOverScene()
     sText->setAlignment(Engine::Text::MIDDLE);
     sText->setTextColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
     sText->setScale(1.25f);
-    sText->setText("Socre : " + std::to_string(lastGameScore));
+    sText->setText("Score : " + std::to_string(lastGameScore));
     // adding retry button
     Engine::RectTransform* rRect = Engine::Actor::createUIActor("Retry")->getComponent<Engine::RectTransform>();
     rRect->setAnchor(glm::vec2(0.f, -0.3f));
