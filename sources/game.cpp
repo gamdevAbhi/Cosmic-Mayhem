@@ -23,7 +23,7 @@ int main()
     ShowWindow(GetConsoleWindow(), SW_HIDE);
     // initializing the game engine
     // always call it before using any game engine features
-    Engine::GameLoop::initialize("game");
+    Engine::GameLoop::initialize("Cosmic Mayhem");
     // initialize colliders relation
     // will only check collision based on relation
     // relation can improve performance as it ignore unnecessary collision checks
