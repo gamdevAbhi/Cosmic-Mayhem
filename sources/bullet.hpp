@@ -12,7 +12,7 @@ namespace Cosmic
         glm::vec3 direction;
     protected:
         Engine::Transform* transform;
-        float speed = 9.5f;
+        float speed = 40.f;
         float maxLength = 40.f;
         int desiredTag;
         void start();

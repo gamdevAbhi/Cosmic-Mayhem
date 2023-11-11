@@ -36,20 +36,53 @@ void Engine::Actor::setManualDestroyStatus(bool status)
 void Engine::Actor::setActive(bool status)
 {
     Transform* transform = getComponent<Transform>();
-    Transform* parent = transform->getParent();
 
-    if(parent == nullptr || parent->actor->getActive() == true) active = status;
-    else return;
+    if(transform != nullptr)
+    {
+        Transform* parent = transform->getParent();
 
-    for(int i = 0; i < transform->getChildsSize(); i++) transform->getChild(i)->actor->setActive(status);
+        if(parent == nullptr || parent->actor->getActive() == true) active = status;
+        else return;
+
+        for(int i = 0; i < transform->getChildsSize(); i++) transform->getChild(i)->actor->setActive(status);
+    }
+    else
+    {
+        RectTransform* transform = getComponent<RectTransform>();
+        RectTransform* parent = transform->getParent();
+
+        if(parent == nullptr || parent->actor->getActive() == true) active = status;
+        else return;
+
+        for(int i = 0; i < transform->getChildsSize(); i++) transform->getChild(i)->actor->setActive(status);
+    }
 }
 
 // actor will be destroyed in next update loop
-void Engine::Actor::setDestroy()
+void Engine::Actor::setDestroy(bool childIncluded)
 {
     if(Camera::getRenderCamera()->getActor() == this) return;
 
     shouldDestroy = true;
+
+    if(getComponent<Transform>() != nullptr)
+    {
+        Transform* transform = getComponent<Transform>();
+
+        for(int i = 0; i < transform->getChildsSize(); i++)
+        {
+            transform->getChild(i)->getActor()->setDestroy(true);
+        }
+    }
+    else
+    {
+        RectTransform* transform = getComponent<RectTransform>();
+
+        for(int i = 0; i < transform->getChildsSize(); i++)
+        {
+            transform->getChild(i)->getActor()->setDestroy(true);
+        }
+    }
 }
 
 // create an actor
@@ -131,7 +164,7 @@ void Engine::Actor::clearActors()
 
     while(i < actors.size())
     {
-        if(actors[i]->manualDestroy == false) actors[i]->setDestroy();
+        if(actors[i]->manualDestroy == false) actors[i]->setDestroy(false);
         i++;
     }
 }
@@ -173,26 +206,23 @@ void Engine::Actor::destroy(Actor* actor)
         Transform* parent = transform->getParent();
         if(parent != nullptr) parent->removeChild(transform);
 
-        while(transform->getChildsSize() > 0)
+        for(int i = 0; i < transform->getChildsSize(); i++)
         {
-            if(transform->getChild(0)->actor == Camera::getRenderCamera()->actor)
-            {
-                transform->getChild(0)->setParent(nullptr);
-                continue;
-            }
-
-            Actor::destroy(transform->getChild(0)->actor);
+            transform->getChild(i)->setParent(nullptr);
+            continue;
         }
     }
     else
     {
-        RectTransform* rect = actor->getComponent<RectTransform>();
-        RectTransform* parent = rect->getParent();
-        if(parent != nullptr) parent->removeChild(rect);
+        RectTransform* transform = actor->getComponent<RectTransform>();
+        RectTransform* parent = transform->getParent();
 
-        while(rect->getChildsSize() > 0)
+        if(parent != nullptr) parent->removeChild(transform);
+
+        for(int i = 0; i < transform->getChildsSize(); i++)
         {
-            Actor::destroy(rect->getChild(0)->actor);
+            transform->getChild(i)->setParent(nullptr);
+            continue;
         }
     }
 

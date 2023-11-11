@@ -10,12 +10,14 @@
 #include "starmanager.hpp"
 #include "collectiblemanager.hpp"
 #include "asteroidmanager.hpp"
+#include "button.hpp"
 
 namespace Cosmic
 {
     class SceneManager
     {
     public:
+        inline static int lastGameScore = 0;
         static void loadTechScene();
         static void loadMenuScene();
         static void loadGameScene();

@@ -165,7 +165,7 @@ void Cosmic::StarManager::createRegion(std::vector<Engine::Actor*>& vec, float x
         renderer->setOrder(2);
         
         star->getComponent<Engine::Transform>()->setWorldPosition(origin);
-        star->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.25f, 0.25f, 1.f));
+        star->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.35f, 0.35f, 1.f));
         
         if(std::rand() % 100 > 50) renderer->setSprite(SpriteManager::star);
         else renderer->setSprite(SpriteManager::brightStar);
@@ -176,7 +176,7 @@ void Cosmic::StarManager::createRegion(std::vector<Engine::Actor*>& vec, float x
 
 void Cosmic::StarManager::removeRegion(std::vector<Engine::Actor*>& vec)
 {
-    for(int i = 0; i < vec.size(); i++) vec[i]->setDestroy();
+    for(int i = 0; i < vec.size(); i++) vec[i]->setDestroy(true);
 
     vec.clear();
 }

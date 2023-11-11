@@ -14,7 +14,7 @@ void Cosmic::Bullet::update()
     glm::vec3 targetPos = target->getWorldPosition();
     glm::vec3 pos = transform->getWorldPosition();
 
-    if(glm::length(targetPos - pos) >= maxLength) getActor()->setDestroy();
+    if(glm::length(targetPos - pos) >= maxLength) getActor()->setDestroy(true);
     else
     {
         glm::vec3 offset = direction;
@@ -29,6 +29,6 @@ void Cosmic::Bullet::onCollisionEnter(Engine::Collider* collider)
 {
     if(collider->getTag() != desiredTag) return;
 
-    collider->getActor()->setDestroy();
-    getActor()->setDestroy();
+    collider->getActor()->setDestroy(true);
+    getActor()->setDestroy(true);
 }

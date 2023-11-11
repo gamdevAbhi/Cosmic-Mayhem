@@ -10,12 +10,12 @@ void Cosmic::Health::addHealth(int value)
 {
     health += value;
     if(health > maxHealth) health = maxHealth;
-    std::cout << "Health - " << health << std::endl;
 }
 
 void Cosmic::Health::addDamage(int value)
 {
     health -= value;
+    if(health < 0) health = 0;
 }
 
 int Cosmic::Health::getHealth()
@@ -25,5 +25,5 @@ int Cosmic::Health::getHealth()
 
 void Cosmic::Health::update()
 {
-    if(health <= 0 && shouldDestroy) getActor()->setDestroy();
+    if(health <= 0 && shouldDestroy) getActor()->setDestroy(true);
 }

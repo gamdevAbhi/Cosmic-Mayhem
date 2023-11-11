@@ -187,7 +187,7 @@ void Engine::Text::updateProperties()
         if(offsets.size() == 0) 
         {
             if(text.size() > 1 || textAlignment == RIGHT) offsets.push_back(glm::vec2(0.f, 0.f));
-            else if(textAlignment == LEFT) offsets.push_back(glm::vec2(-((c.advance >> 6) / scale.x), 0.f));
+            else if(textAlignment == LEFT) offsets.push_back(glm::vec2(-(((c.advance >> 6) * this->scale) / scale.x), 0.f));
             else offsets.push_back(glm::vec2(-(((c.advance >> 6) * this->scale) / scale.x) / 2.f, 0.f));
         }
         else if(charPerLine > 0 && offsets.size() % charPerLine == 0)
@@ -212,14 +212,13 @@ void Engine::Text::updateProperties()
 
     if(textAlignment == LEFT && text.size() > 1)
     {
-        float maxLength = offsets[offsets.size() - 1].x;
+        float maxLength = lengthX;
 
         for(int i = 0; i < offsets.size(); i++) offsets[i].x -= maxLength;
     }
     else if(textAlignment == MIDDLE && text.size() > 1)
     {
-        float middleLength = (offsets.size() % 2 != 0)? offsets[offsets.size() / 2].x :
-        (offsets[offsets.size() / 2].x + offsets[(offsets.size() / 2) - 1].x) / 2.f;
+        float middleLength = lengthX / 2.f;
 
         for(int i = 0; i < offsets.size(); i++) offsets[i].x -= middleLength;
     }

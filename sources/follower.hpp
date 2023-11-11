@@ -9,7 +9,6 @@ namespace Cosmic
     {
     public:
         void initialize(Engine::Transform* target);
-        void removeTarget();
     protected:
         double followSpeed = 3.5f;
         double maxDistance = 0.8f;

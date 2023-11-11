@@ -4,7 +4,7 @@
 #include "scenemanager.hpp"
 
 void initializeRelation()
-{   
+{
     // creating tags for colliders
     int spaceship = Engine::ColliderManager::addTag("Space Ship", false);
     int bullet = Engine::ColliderManager::addTag("Bullet", false);
@@ -18,6 +18,9 @@ void initializeRelation()
 
 int main()
 {
+    // for hiding the console
+    // console is not hidden by default
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
     // initializing the game engine
     // always call it before using any game engine features
     Engine::GameLoop::initialize("game");

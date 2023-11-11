@@ -10,6 +10,8 @@ namespace Cosmic
 {
     class AsteroidManager : public Engine::Component
     {
+    public:
+        void initialize(Engine::Transform* target);
     protected:
         int max = 20;
         float minTime = 0.5f;
@@ -19,7 +21,6 @@ namespace Cosmic
         float box = 10.f;
         float offset = 30.f;
         Engine::Transform* target;
-        void start();
         void update();
         void resetTime();
         void createAsteroid();

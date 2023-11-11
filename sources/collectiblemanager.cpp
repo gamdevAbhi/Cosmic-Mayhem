@@ -21,6 +21,7 @@ void Cosmic::CollectibleManager::update()
 
         collectible->getComponent<Engine::Transform>()->setWorldPosition(origin);
         collectible->getComponent<Engine::Transform>()->setWorldScale(glm::vec3(0.6f, 0.6f, 1.f));
+        collectible->getComponent<Engine::Transform>()->setWorldRotation(glm::vec3(0.f, 0.f, std::rand() % 360));
         
         Engine::SpriteRenderer* renderer = collectible->addComponent<Engine::SpriteRenderer>();
         Collectibles* script = nullptr;

@@ -13,6 +13,7 @@ namespace Cosmic
     {
     public:
         void addScore(int value);
+        void (*callback)();
     protected:
         Engine::Transform* transform;
         SpaceShip* shipComponent;
@@ -22,7 +23,11 @@ namespace Cosmic
         Engine::Actor* leftBoost;
         Engine::Actor* rightBoost;
         Engine::Actor* muzzle;
+        Engine::Text* healthText;
+        Engine::Text* scoreText;
+        Engine::Text* pauseText;
         int score = 0;
+        bool isPause = false;
         void start();
         void update();
     };

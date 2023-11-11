@@ -17,8 +17,8 @@ namespace Cosmic
     protected:
         float speed;
         float damage;
-        float minSpeed = 6.f;
-        float maxSpeed = 20.f;
+        float minSpeed = 12.f;
+        float maxSpeed = 35.f;
         float maxDistance = 120.f;
         float baseDamage = 8.f;
         int asteroidTag;

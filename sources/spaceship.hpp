@@ -11,8 +11,8 @@ namespace Cosmic
     class SpaceShip : public Engine::Component
     {
     public:
-        double forwardSpeed = 5.f;
-        double backwardSpeed = 4.5f;
+        double forwardSpeed = 15.f;
+        double backwardSpeed = 12.5f;
         double rotateSpeed = 6.f;
         void moveForward();
         void moveBackward();

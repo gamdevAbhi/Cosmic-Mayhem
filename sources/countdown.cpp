@@ -7,12 +7,12 @@ std::string message)
     callback = function;
     this->text = text;
     this->message = message;
-    text->setText(message + std::to_string(callbackTime) + std::string(" s"));
+    text->setText(message + std::to_string((int)callbackTime) + std::string("s"));
 }
 
 void Cosmic::Countdown::update()
 {
-    if(text == nullptr) getActor()->setDestroy();
+    if(text == nullptr) getActor()->setDestroy(true);
 
     callbackTime -= Engine::Time::getDeltaTime();
     
@@ -22,6 +22,6 @@ void Cosmic::Countdown::update()
         return;
     }
 
-    text->setText(message + std::to_string(callbackTime) + std::string(" s"));
+    text->setText(message + std::to_string((int)callbackTime) + std::string("s"));
 
 }

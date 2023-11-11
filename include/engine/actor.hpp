@@ -20,7 +20,7 @@ namespace Engine
         void setName(std::string name);
         void setManualDestroyStatus(bool status);
         void setActive(bool status);
-        void setDestroy();
+        void setDestroy(bool childIncluded);
         template <class T> T* addComponent();
         template <class T> T* getComponent();
         template <class T> std::vector<T*> getComponents(); 

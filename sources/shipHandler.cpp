@@ -1,9 +1,9 @@
 #include "shiphandler.hpp"
+#include "scenemanager.hpp"
 
 void Cosmic::ShipHandler::addScore(int value)
 {
     score += value;
-    std::cout << "Score - " << score << std::endl;
 }
 
 void Cosmic::ShipHandler::start()
@@ -46,6 +46,30 @@ void Cosmic::ShipHandler::start()
     muzzle->getComponent<Engine::Transform>()->setParent(transform);
     muzzle->getComponent<Engine::Transform>()->setLocalPosition(glm::vec3(0.f));
     muzzle->addComponent<Engine::SpriteRenderer>()->setSprite(SpriteManager::muzzle);
+
+    Engine::RectTransform* healthRect = Engine::Actor::createUIActor("Health UI")->getComponent<Engine::RectTransform>();
+    healthRect->getActor()->addComponent<Engine::Billboard>()->setSprite(SpriteManager::health);
+    healthRect->setAnchor(glm::vec2(-0.8f, 0.8f));
+    healthRect->setAnchorSize(glm::vec2(0.08f));
+    Engine::RectTransform* hTextRect = Engine::Actor::createUIActor("Health Text")->getComponent<Engine::RectTransform>();
+    hTextRect->setAnchor(glm::vec2(-0.8f, 0.8f));
+    healthText = hTextRect->getActor()->addComponent<Engine::Text>();
+    healthText->setScale(0.8f);
+    healthText->setAlignment(Engine::Text::MIDDLE);
+    healthText->setText(std::to_string(health->getHealth()));
+
+    Engine::RectTransform* scoreTextRect = Engine::Actor::createUIActor("Score Text")->getComponent<Engine::RectTransform>();
+    scoreTextRect->setAnchor(glm::vec2(-0.96f, -0.9f));
+    scoreText = scoreTextRect->getActor()->addComponent<Engine::Text>();
+    healthText->setScale(0.8f);
+    scoreText->setText(std::string("Score : ") + std::to_string(score));
+
+    Engine::RectTransform* pauseRect = Engine::Actor::createUIActor("Pause Text")->getComponent<Engine::RectTransform>();
+    pauseText = pauseRect->getActor()->addComponent<Engine::Text>();
+    pauseText->setScale(1.25f);
+    pauseText->setText("Pause");
+    pauseText->setAlignment(Engine::Text::MIDDLE);
+    pauseText->getActor()->setActive(false);
 }
 
 void Cosmic::ShipHandler::update()
@@ -56,10 +80,33 @@ void Cosmic::ShipHandler::update()
     leftBoost->setActive(false);
     muzzle->setActive(true);
 
+    healthText->setText(std::to_string(health->getHealth()));
+    scoreText->setText(std::string("Score : ") + std::to_string(score));
+
     if(health->getHealth() <= 0)
     {
-        Engine::Time::setTimeScale(0.f);
+        SceneManager::lastGameScore = score;
+        (*callback)();
+        return;
     }
+
+    if(Engine::Input::getKeyStatus(GLFW_KEY_P) == Engine::Input::KEY_PRESS)
+    {
+        isPause = !isPause;
+
+        if(isPause)
+        {
+            Engine::Time::setTimeScale(0.f);
+            pauseText->getActor()->setActive(true);
+        }
+        else
+        {
+            Engine::Time::setTimeScale(1.f);
+            pauseText->getActor()->setActive(false);
+        }
+    }
+
+    if(isPause) return;
 
     if(Engine::Input::getKeyStatus(GLFW_KEY_A) == Engine::Input::KEY_HOLD)
     {

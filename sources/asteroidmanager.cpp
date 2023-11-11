@@ -1,8 +1,8 @@
 #include "asteroidmanager.hpp"
 
-void Cosmic::AsteroidManager::start()
+void Cosmic::AsteroidManager::initialize(Engine::Transform* target)
 {
-    target = Engine::Actor::getActor("Space Ship")->getComponent<Engine::Transform>();
+    this->target = target;
     resetTime();
     for(int i = 0; i < 5; i++) createAsteroid();
 }
@@ -69,6 +69,7 @@ void Cosmic::AsteroidManager::createAsteroid()
     asteroid->addComponent<Health>()->setHealth(10 * ((scale.x * 10.f) - 4.f) + 20);
     asteroid->getComponent<Engine::Transform>()->setWorldPosition(origin);
     asteroid->getComponent<Engine::Transform>()->setWorldScale(scale);
+    asteroid->getComponent<Engine::Transform>()->setWorldRotation(glm::vec3(0.f, 0.f, std::rand() % 360));
 
     Asteroid* script = asteroid->addComponent<Asteroid>();
     script->target = target;

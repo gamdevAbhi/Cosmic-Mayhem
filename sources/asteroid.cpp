@@ -34,7 +34,7 @@ void Cosmic::Asteroid::update()
     glm::vec3 targetPos = target->getWorldPosition();
     glm::vec3 pos = transform->getWorldPosition();
 
-    if(glm::length(targetPos - pos) >= maxDistance) getActor()->setDestroy();
+    if(glm::length(targetPos - pos) >= maxDistance) getActor()->setDestroy(true);
     else
     {
         glm::vec3 offset = direction;
@@ -55,7 +55,7 @@ void Cosmic::Asteroid::onCollisionEnter(Engine::Collider* collider)
     }
     else if(collider->getTag() == spaceshipTag)
     {
-        getActor()->setDestroy();
+        getActor()->setDestroy(true);
     }
     
     Health* health = collider->getActor()->getComponent<Health>();

@@ -4,7 +4,7 @@ void Cosmic::HealthBooster::start()
 {
     transform = getActor()->getComponent<Engine::Transform>();
     Engine::CircleCollider* collider  = getActor()->addComponent<Engine::CircleCollider>();
-    collider->setRadius(0.7f);
+    collider->setRadius(1.25f);
     collider->setTag(Engine::ColliderManager::getTag("Collectibles"));
     collider->setTrigger(true);
     desiredTag = Engine::ColliderManager::getTag("Space Ship");
@@ -18,5 +18,5 @@ void Cosmic::HealthBooster::onTriggerEnter(Engine::Collider* collider)
 
     shiphandler->getActor()->getComponent<Health>()->addHealth(healthBooster);
 
-    getActor()->setDestroy(); 
+    getActor()->setDestroy(true); 
 }
