@@ -18,4 +18,3 @@ P        - PAUSE THE GAME
 
 # LINKS
 Hazard Game Engine : https://github.com/gamdevAbhi/Hazard-Game-Engine.git
-Game Github : https://github.com/gamdevAbhi/Cosmic-Mayhem.git
