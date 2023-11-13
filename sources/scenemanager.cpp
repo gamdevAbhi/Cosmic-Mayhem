@@ -38,6 +38,16 @@ void Cosmic::SceneManager::loadMenuScene()
     // clearing previous scene
     Engine::Actor::clearActors();
 
+    // adding audio
+    if(Engine::Actor::getActor("Audio") == nullptr)
+    {
+        Engine::Audio* audio = Engine::Actor::createActor("Audio")->addComponent<Engine::Audio>();
+        audio->load("\\resources\\musics\\punchdeck.mp3", Engine::Audio::MP3);
+        audio->setVolume(100);
+        audio->play(true);
+        audio->getActor()->setManualDestroyStatus(true);
+    }
+
     // changing camera background
     Engine::Camera* camera = Engine::Camera::getRenderCamera();
     camera->setBackgroundColor(glm::vec3(0.01f, 0.074f, 0.121f));

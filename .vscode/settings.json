@@ -92,5 +92,6 @@
         "typeindex": "cpp",
         "valarray": "cpp"
     },
-    "explorer.autoReveal" : false
+    "explorer.autoReveal": false,
+    "C_Cpp.errorSquiggles": "disabled"
 }
